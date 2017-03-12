@@ -1,0 +1,36 @@
+const request = require('test/support/request');
+const factory = require('test/support/factory');
+const { expect } = require('chai');
+
+describe('API :: GET /users', () => {
+  context('when there are users', () => {
+    it('return success with array of users', () => {
+      return factory
+        .createMany('user', [
+          { name: 'First' },
+          { name: 'Second' }
+        ])
+        .then(() => request().get('/users')
+          .expect(200))
+        .then(({ body }) => {
+          expect(body).to.have.lengthOf(2);
+
+          expect(body[0].name).to.equal('First');
+          expect(body[0]).to.have.all.keys('id', 'name');
+
+          expect(body[1].name).to.equal('Second');
+          expect(body[1]).to.have.all.keys('id', 'name');
+        });
+    });
+  });
+
+  context('when there are no users', () => {
+    it('return success with empty array', () => {
+      return request().get('/users')
+        .expect(200)
+        .then(({ body }) => {
+          expect(body).to.have.lengthOf(0);
+        });
+    });
+  });
+});

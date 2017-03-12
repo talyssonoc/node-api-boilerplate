@@ -1,0 +1,4 @@
+*.log
+node_modules
+config/database.js
+coverage/

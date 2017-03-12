@@ -1,0 +1,3 @@
+test/setup.js
+test/**/*.spec.js
+--recursive
