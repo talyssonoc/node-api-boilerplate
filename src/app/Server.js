@@ -1,9 +1,11 @@
 const express = require('express');
 
 class Server {
-  constructor({ config }) {
+  constructor({ config, router, createLogger }) {
     this.config = config;
+    this.logger = createLogger('web');
     this.express = express();
+    this.use(router);
   }
 
   use(...args) {
@@ -16,7 +18,7 @@ class Server {
         .listen(this.config.web.port, () => {
           const { port } = http.address();
           /* eslint-disable no-console */
-          console.log(`Listening at port ${port}`);
+          this.logger.info(`Listening at port ${port}`);
           /* eslint-enable no-console */
           resolve();
         });

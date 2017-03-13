@@ -1,11 +1,11 @@
 const request = require('test/support/request');
 const { expect } = require('chai');
 
-describe('API :: POST /users', () => {
+describe('API :: POST /api/users', () => {
   context('when sent data is ok', () => {
     it('creates and returns 200 and the new user', () => {
       return request()
-        .post('/users')
+        .post('/api/users')
         .send({
           name: 'New User'
         })
@@ -21,7 +21,7 @@ describe('API :: POST /users', () => {
   context('when name is missing', () => {
     it('does not create and returns 400 with the validation error', () => {
       return request()
-        .post('/users')
+        .post('/api/users')
         .expect(400)
         .then(({ body }) => {
           expect(body.type).to.equal('ValidationError');

@@ -1,14 +1,10 @@
-require('dotenv').load();
+const container = require('src/container');
 
-const Application = require('src/app/Application');
-const server = require('src/app/web/server');
-const config = require('config');
-
-const app = new Application({ config, server });
+const app = container.resolve('app');
 
 app
   .start()
   .catch((error) => {
-    console.error(error);
+    console.error(error.stack);
     process.exit();
   });

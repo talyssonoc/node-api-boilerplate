@@ -1,3 +1,3 @@
-const { sequelize } = require('src/infra/database/models');
+const { database } = require('src/infra/database/models');
 
-module.exports = () => sequelize.truncate({ cascade: true });
+module.exports = () => database.truncate({ cascade: true });

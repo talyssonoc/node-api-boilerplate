@@ -1,7 +1,7 @@
 {
   "name": "node-api-boilerplate",
   "version": "1.0.0",
-  "description": "A boilerplate for REST APIs using Node",
+  "description": "A boilerplate for web APIs using Node",
   "main": "index.js",
   "engines": {
     "node": ">=6.0.0"
@@ -10,10 +10,11 @@
     "start": "cross-env NODE_PATH=. NODE_ENV=production node index.js",
     "dev": "cross-env NODE_PATH=. NODE_ENV=development nodemon index.js",
     "test": "cross-env NODE_PATH=. NODE_ENV=test mocha",
-    "coverage": "cross-env NODE_PATH=. NODE_ENV=test istanbul cover --report html --report lcov node_modules/mocha/bin/_mocha",
+    "coverage": "cross-env NODE_PATH=. NODE_ENV=test istanbul cover node_modules/mocha/bin/_mocha",
     "lint": "eslint {src,test,config}/**/*.js",
     "sequelize": "cross-env NODE_PATH=. sequelize",
-    "console": "cross-env NODE_PATH=. NODE_ENV=development node scripts/console.js"
+    "console": "cross-env NODE_PATH=. NODE_ENV=development node scripts/console.js",
+    "inst": "istanbul"
   },
   "repository": {},
   "author": "Talysson <talyssonoc@gmail.com>",
@@ -30,6 +31,7 @@
     "express-status-monitor": "^0.1.9",
     "hpp": "^0.2.1",
     "http-status": "^1.0.1",
+    "log4js": "^1.1.1",
     "method-override": "^2.3.7",
     "morgan": "^1.8.1",
     "pg": "^6.1.3",

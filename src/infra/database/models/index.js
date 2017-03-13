@@ -2,11 +2,10 @@ const fs = require('fs');
 const path = require('path');
 const Sequelize = require('sequelize');
 
-const ENV = process.env.NODE_ENV || 'development';
-const config = require('config/database')[ENV];
+const config = require('config').db;
 
 const basename = path.basename(module.filename);
-const DB = {};
+module.exports = {};
 
 const sequelize = new Sequelize(config);
 
@@ -18,16 +17,14 @@ fs
   .forEach((file) => {
     const model = sequelize['import'](path.join(__dirname, file));
     const modelName = file.split('.')[0];
-    DB[modelName] = model;
+    module.exports[modelName] = model;
   });
 
-Object.keys(DB).forEach((modelName) => {
-  if(DB[modelName].associate) {
-    DB[modelName].associate(DB);
+Object.keys(module.exports).forEach((modelName) => {
+  if(module.exports[modelName].associate) {
+    module.exports[modelName].associate(module.exports);
   }
 });
 
-DB.sequelize = sequelize;
-DB.Sequelize = Sequelize;
-
-module.exports = DB;
+module.exports.database = sequelize;
+module.exports.Sequelize = Sequelize;

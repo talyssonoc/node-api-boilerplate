@@ -2,7 +2,7 @@ const request = require('test/support/request');
 const factory = require('test/support/factory');
 const { expect } = require('chai');
 
-describe('API :: GET /users', () => {
+describe('API :: GET /api/users', () => {
   context('when there are users', () => {
     it('return success with array of users', () => {
       return factory
@@ -10,7 +10,7 @@ describe('API :: GET /users', () => {
           { name: 'First' },
           { name: 'Second' }
         ])
-        .then(() => request().get('/users')
+        .then(() => request().get('/api/users')
           .expect(200))
         .then(({ body }) => {
           expect(body).to.have.lengthOf(2);
@@ -26,7 +26,7 @@ describe('API :: GET /users', () => {
 
   context('when there are no users', () => {
     it('return success with empty array', () => {
-      return request().get('/users')
+      return request().get('/api/users')
         .expect(200)
         .then(({ body }) => {
           expect(body).to.have.lengthOf(0);

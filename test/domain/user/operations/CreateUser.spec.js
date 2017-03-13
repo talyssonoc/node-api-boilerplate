@@ -38,7 +38,7 @@ describe('Domain :: User :: CreateUser', () => {
       });
     });
 
-    it('creates the user and emits SUCCESS', (done) => {
+    it('emits VALIDATION_ERROR with the error', (done) => {
       const userData = { name: 'New User' };
 
       createUser.on(createUser.VALIDATION_ERROR, (response) => {
@@ -53,7 +53,7 @@ describe('Domain :: User :: CreateUser', () => {
   context('when there is an internal error', () => {
     before(() => {
       const MockUsersRepository = {
-        add: () => Promise.reject(Error('Some Error'))
+        add: () => Promise.reject(new Error('Some Error'))
       };
 
       createUser = new CreateUser({
@@ -61,7 +61,7 @@ describe('Domain :: User :: CreateUser', () => {
       });
     });
 
-    it('creates the user and emits SUCCESS', (done) => {
+    it('emits ERROR with the error', (done) => {
       const userData = { name: 'New User' };
 
       createUser.on(createUser.ERROR, (response) => {
