@@ -8,7 +8,7 @@ const envConfig = require(path.join(__dirname, 'environments', ENV));
 const config = Object.assign({
   [ENV]: true,
   env: ENV,
-  db: require('./database')[ENV]
+  db: require(ENV === 'production' ? './prodDatabase' : './database')[ENV]
 }, envConfig);
 
 module.exports = config;
