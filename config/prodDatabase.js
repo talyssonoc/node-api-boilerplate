@@ -8,7 +8,7 @@ const {
 module.exports = {
   production: {
     username, password,
-    database, host
+    database, host,
     dialect: 'postgres'
   }
 };
