@@ -20,6 +20,7 @@
   "author": "Talysson <talyssonoc@gmail.com>",
   "license": "MIT",
   "dependencies": {
+    "@risingstack/trace": "^3.5.1",
     "awilix": "^2.2.3",
     "awilix-express": "^0.9.0",
     "bluebird": "^3.5.0",
