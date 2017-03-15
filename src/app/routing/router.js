@@ -1,13 +1,14 @@
+const path = require('path');
 const { Router } = require('express');
+const { controllerRouterFactory } = require('tbp/routing');
 const statusMonitor = require('express-status-monitor');
 const cors = require('cors');
 const bodyParser = require('body-parser');
-const hpp = require('hpp');
 const compression = require('compression');
 const methodOverride = require('method-override');
-const controller = require('./createControllerRoute');
+const controller = controllerRouterFactory({ baseFolder: path.resolve(__dirname, '..') });
 
-module.exports = ({ config, containerMiddleware, requestLoggerMiddleware , errorHandler }) => {
+module.exports = ({ config, containerMiddleware, loggerMiddleware, errorHandler }) => {
   const router = Router();
 
   /* istanbul ignore if */
@@ -19,12 +20,11 @@ module.exports = ({ config, containerMiddleware, requestLoggerMiddleware , error
     .use(methodOverride('X-HTTP-Method-Override'))
     .use(cors())
     .use(bodyParser.json())
-    .use(hpp())
     .use(compression());
 
   /* istanbul ignore if */
   if(config.env !== 'test') {
-    router.use(requestLoggerMiddleware);
+    router.use(loggerMiddleware);
   }
 
   const apiRouter = Router();

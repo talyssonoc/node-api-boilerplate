@@ -1,12 +1,11 @@
 class Application {
-  constructor({ config, server, database, createLogger }) {
+  constructor({ config, server, database, logger }) {
     this.config = config;
     this.server = server;
     this.database = database;
 
     if(this.database.options.logging) {
-      const dbLogger = createLogger('db');
-      this.database.options.logging = dbLogger.info.bind(dbLogger);
+      this.database.options.logging = logger.info.bind(logger);
     }
 
   }

@@ -5,8 +5,8 @@ const config = require('../config');
 const Application = require('./app/Application');
 const Server = require('./app/Server');
 const router = require('./app/routing/router');
-const loggerFactory = require('./app/logging/loggerFactory');
-const requestLoggerMiddleware = require('./app/logging/requestLoggerMiddleware');
+const logger = require('./app/logging/logger');
+const loggerMiddleware = require('./app/logging/loggerMiddleware');
 const errorHandler = require('./app/errors/errorHandler');
 const devErrorHandler = require('./app/errors/devErrorHandler');
 const { CreateUser, GetAllUsers } = require('./domain/user/operations');
@@ -23,14 +23,14 @@ container
   })
   .registerFunction({
     router: [router, { lifetime: Lifetime.SINGLETON }],
-    createLogger: [loggerFactory, { lifetime: Lifetime.SINGLETON }]
+    logger: [logger, { lifetime: Lifetime.SINGLETON }]
   })
   .registerValue({ config });
 
 // Middlewares
 container
   .registerFunction({
-    requestLoggerMiddleware: [requestLoggerMiddleware, { lifetime: Lifetime.SINGLETON }]
+    loggerMiddleware: [loggerMiddleware, { lifetime: Lifetime.SINGLETON }]
   })
   .registerValue({
     containerMiddleware: scopePerRequest(container),

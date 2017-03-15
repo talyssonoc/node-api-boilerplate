@@ -1,7 +1,7 @@
 const { expect } = require('chai');
-const Operation = require('src/app/Operation');
+const Operation = require('tbp/Operation');
 
-describe('App :: Operation', () => {
+describe('Operation', () => {
   var CustomOperation;
 
   beforeEach(() => {
