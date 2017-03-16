@@ -15,12 +15,6 @@ module.exports = ({ config, containerMiddleware, loggerMiddleware, errorHandler 
     router.use(statusMonitor());
   }
 
-  router
-    .use(methodOverride('X-HTTP-Method-Override'))
-    .use(cors())
-    .use(bodyParser.json())
-    .use(compression());
-
   /* istanbul ignore if */
   if(config.env !== 'test') {
     router.use(loggerMiddleware);
@@ -28,7 +22,13 @@ module.exports = ({ config, containerMiddleware, loggerMiddleware, errorHandler 
 
   const apiRouter = Router();
 
-  apiRouter.use(containerMiddleware);
+  apiRouter
+    .use(methodOverride('X-HTTP-Method-Override'))
+    .use(cors())
+    .use(bodyParser.json())
+    .use(compression())
+    .use(containerMiddleware);
+
   apiRouter.use('/users', controller('user/UsersController'));
 
   router.use('/api', apiRouter);
