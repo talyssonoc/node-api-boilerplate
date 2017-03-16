@@ -1,4 +1,4 @@
-const { ModelsLoder } = require('tbp/sequelize');
+const { ModelsLoder } = require('src/infra/sequelize');
 const Sequelize = require('sequelize');
 const config = require('config').db;
 

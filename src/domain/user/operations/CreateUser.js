@@ -1,4 +1,4 @@
-const Operation = require('tbp/Operation');
+const Operation = require('src/app/Operation');
 const User = require('src/domain/user/User');
 
 class CreateUser extends Operation {

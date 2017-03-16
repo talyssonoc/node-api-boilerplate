@@ -1,5 +1,6 @@
 process.env.NODE_ENV = process.env.NODE_ENV || 'development';
-const Console = require('tbp/Console');
+
+const Console = require('src/app/Console');
 const container = require('src/container');
 
 Console.start({

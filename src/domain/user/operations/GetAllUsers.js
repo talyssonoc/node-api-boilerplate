@@ -1,4 +1,4 @@
-const Operation = require('tbp/Operation');
+const Operation = require('src/app/Operation');
 
 class GetAllUsers extends Operation {
   constructor({ UsersRepository }) {

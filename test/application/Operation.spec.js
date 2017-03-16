@@ -1,5 +1,5 @@
 const { expect } = require('chai');
-const Operation = require('tbp/Operation');
+const Operation = require('src/app/Operation');
 
 describe('Operation', () => {
   var CustomOperation;
