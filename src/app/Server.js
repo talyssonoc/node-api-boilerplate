@@ -13,7 +13,7 @@ class Server {
       const http = this.express
         .listen(this.config.web.port, () => {
           const { port } = http.address();
-          this.logger.info(`Listening at port ${port}`);
+          this.logger.info(`[p ${process.pid}] Listening at port ${port}`);
           resolve();
         });
     });
