@@ -1,4 +1,3 @@
-const path = require('path');
 const { Router } = require('express');
 const statusMonitor = require('express-status-monitor');
 const cors = require('cors');
