@@ -5,6 +5,8 @@ class Server {
     this.config = config;
     this.logger = logger;
     this.express = express();
+
+    this.express.disable('x-powered-by');
     this.express.use(router);
   }
 
