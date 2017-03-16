@@ -36,11 +36,10 @@ describe('Infra :: User :: SequelizeUsersRepository', () => {
           name: 'The User'
         });
 
-        expect(user.validate().valid).to.be.ok;
+        expect(user.validate().valid).to.be.ok();
 
         return expect(() => {
-          return repo
-            .add(user)
+          return repo.add(user)
             .then((persistedUser) => {
               expect(persistedUser.id).to.exist;
               expect(persistedUser.name).to.equal('The User');
