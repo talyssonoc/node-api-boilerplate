@@ -6,7 +6,7 @@ describe('API :: GET /api/users', () => {
   context('when there are users', () => {
     it('return success with array of users', () => {
       return factory
-        .createMany('user', [
+        .createMany('user', 2, [
           { name: 'First' },
           { name: 'Second' }
         ])

@@ -13,6 +13,6 @@ It comes setup with:
 - [PM2](https://www.npmjs.com/package/pm2)
 - [Mocha](https://www.npmjs.com/package/mocha)
 - [Chai](https://www.npmjs.com/package/chai)
-- [Istanbul](https://www.npmjs.com/package/istanbul)
 - [FactoryGirl](https://www.npmjs.com/package/factory-girl)
+- [Istanbul](https://www.npmjs.com/package/istanbul)
 - [ESLint](https://www.npmjs.com/package/eslint)

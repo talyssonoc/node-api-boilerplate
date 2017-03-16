@@ -1,13 +1,10 @@
-const { Factory } = require('factory-girl');
-const factoryGirlSequelize = require('factory-girl-sequelize');
-const Bluebird = require('bluebird');
 const path = require('path');
-
+const { factory, SequelizeAdapter } = require('factory-girl');
 const { FactoriesLoader } = require('src/infra/factoryGirl');
 const models = require('src/infra/database/models');
 
-const factoryGirl = new Factory().promisify(Bluebird);
-factoryGirl.setAdapter(factoryGirlSequelize());
+const factoryGirl = new factory.FactoryGirl();
+factoryGirl.setAdapter(new SequelizeAdapter());
 
 module.exports = FactoriesLoader.load({
   factoryGirl,

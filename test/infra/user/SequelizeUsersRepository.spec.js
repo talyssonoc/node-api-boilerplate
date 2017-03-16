@@ -10,7 +10,7 @@ describe('Infra :: User :: SequelizeUsersRepository', () => {
       const repository = new SequelizeUsersRepository({ UserModel });
 
       return factory
-        .createMany('user', [
+        .createMany('user', 2, [
           { name: 'User 1' },
           { name: 'User 2' }
         ])

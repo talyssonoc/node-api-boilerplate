@@ -23,7 +23,6 @@
   "dependencies": {
     "awilix": "^2.2.3",
     "awilix-express": "^0.9.0",
-    "bluebird": "^3.5.0",
     "body-parser": "^1.17.1",
     "compression": "^1.6.2",
     "cors": "^2.8.1",
@@ -47,8 +46,7 @@
     "chance": "^1.0.6",
     "dirty-chai": "^1.2.2",
     "eslint": "^3.17.1",
-    "factory-girl": "^3.1.0",
-    "factory-girl-sequelize": "^1.0.1",
+    "factory-girl": "^4.0.0",
     "istanbul": "^0.4.5",
     "mocha": "^3.2.0",
     "nodemon": "^1.11.0",
