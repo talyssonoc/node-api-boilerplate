@@ -31,7 +31,6 @@
     "dotenv": "^4.0.0",
     "express": "^4.15.2",
     "express-status-monitor": "^0.1.9",
-    "hpp": "^0.2.1",
     "http-status": "^1.0.1",
     "log4js": "^1.1.1",
     "method-override": "^2.3.7",
@@ -53,7 +52,6 @@
     "istanbul": "^0.4.5",
     "mocha": "^3.2.0",
     "nodemon": "^1.11.0",
-    "sinon": "^1.17.7",
     "supertest": "^3.0.0",
     "supertest-as-promised": "^4.0.2"
   }
