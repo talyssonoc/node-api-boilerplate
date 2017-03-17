@@ -2,7 +2,7 @@ const { Router } = require('express');
 const Status = require('http-status');
 
 class UsersController {
-  getRouter() {
+  get router() {
     const router = Router();
 
     router.get('/', this.index);

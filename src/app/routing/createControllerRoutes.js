@@ -6,5 +6,5 @@ module.exports = function createControllerRoutes(_controllerPath) {
 
   const controller = new Controller();
 
-  return controller.getRouter();
+  return controller.router;
 };
