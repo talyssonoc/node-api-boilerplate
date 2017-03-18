@@ -1,18 +1,19 @@
 const { Router } = require('express');
+const { inject } = require('awilix-express');
 const Status = require('http-status');
 
 class UsersController {
   get router() {
     const router = Router();
 
-    router.get('/', this.index);
-    router.post('/', this.create);
+    router.get('/', inject('getAllUsers'), this.index);
+    router.post('/', inject('createUser'), this.create);
 
     return router;
   }
 
   index(req, res, next) {
-    const { getAllUsers } = req.container.cradle;
+    const { getAllUsers } = req;
     const { SUCCESS, ERROR } = getAllUsers;
 
     getAllUsers
@@ -25,7 +26,7 @@ class UsersController {
   }
 
   create(req, res, next) {
-    const { createUser } = req.container.cradle;
+    const { createUser } = req;
     const { SUCCESS, ERROR, VALIDATION_ERROR } = createUser;
 
     createUser

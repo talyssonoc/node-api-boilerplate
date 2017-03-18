@@ -183,9 +183,9 @@ asynckit@^0.4.0:
   version "0.4.0"
   resolved "https://registry.yarnpkg.com/asynckit/-/asynckit-0.4.0.tgz#c79ed97f7f34cb8f2ba1bc9790bcc366474b4b79"
 
-awilix-express@^0.9.0:
-  version "0.9.0"
-  resolved "https://registry.yarnpkg.com/awilix-express/-/awilix-express-0.9.0.tgz#c5e94f9d45c2a382c45d6639adc7435432961b4c"
+awilix-express@^0.11.0:
+  version "0.11.0"
+  resolved "https://registry.yarnpkg.com/awilix-express/-/awilix-express-0.11.0.tgz#6c41d30219dea53b83982045c5235b4804791425"
 
 awilix@^2.2.3:
   version "2.2.3"
