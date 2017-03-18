@@ -11,7 +11,7 @@ describe('Domain :: User :: CreateUser', () => {
       };
 
       createUser = new CreateUser({
-        UsersRepository: MockUsersRepository
+        usersRepository: MockUsersRepository
       });
     });
 
@@ -34,7 +34,7 @@ describe('Domain :: User :: CreateUser', () => {
       };
 
       createUser = new CreateUser({
-        UsersRepository: MockUsersRepository
+        usersRepository: MockUsersRepository
       });
     });
 
@@ -57,7 +57,7 @@ describe('Domain :: User :: CreateUser', () => {
       };
 
       createUser = new CreateUser({
-        UsersRepository: MockUsersRepository
+        usersRepository: MockUsersRepository
       });
     });
 

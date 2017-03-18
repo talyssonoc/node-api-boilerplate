@@ -1,15 +1,15 @@
 const Operation = require('src/app/Operation');
 
 class GetAllUsers extends Operation {
-  constructor({ UsersRepository }) {
+  constructor({ usersRepository }) {
     super();
-    this.UsersRepository = UsersRepository;
+    this.usersRepository = usersRepository;
   }
 
   execute() {
     const { SUCCESS, ERROR } = this;
 
-    this.UsersRepository
+    this.usersRepository
       .getAll({
         attributes: ['id', 'name']
       })

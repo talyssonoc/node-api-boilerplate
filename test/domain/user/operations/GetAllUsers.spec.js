@@ -11,7 +11,7 @@ describe('Domain :: User :: GetAllUsers', () => {
       };
 
       getAllUsers = new GetAllUsers({
-        UsersRepository: MockUsersRepository
+        usersRepository: MockUsersRepository
       });
     });
 
@@ -32,7 +32,7 @@ describe('Domain :: User :: GetAllUsers', () => {
       };
 
       getAllUsers = new GetAllUsers({
-        UsersRepository: MockUsersRepository
+        usersRepository: MockUsersRepository
       });
     });
 

@@ -39,7 +39,7 @@ container
 
 // Repositories
 container.registerClass({
-  UsersRepository: [SequelizeUsersRepository, { lifetime: Lifetime.SINGLETON }]
+  usersRepository: [SequelizeUsersRepository, { lifetime: Lifetime.SINGLETON }]
 });
 
 // Database
