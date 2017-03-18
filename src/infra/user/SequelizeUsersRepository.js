@@ -1,4 +1,4 @@
-const UserAdapter = require('./SequelizeUserAdapter');
+const UserMapper = require('./SequelizeUserMapper');
 
 class SequelizeUsersRepository {
   constructor({ UserModel }) {
@@ -8,7 +8,7 @@ class SequelizeUsersRepository {
   getAll(...args) {
     return this.UserModel
       .findAll(...args)
-      .then((users) => users.map(UserAdapter.toEntity));
+      .then((users) => users.map(UserMapper.toEntity));
   }
 
   add(user) {
@@ -22,8 +22,8 @@ class SequelizeUsersRepository {
     }
 
     return this.UserModel
-      .create(UserAdapter.toDatabase(user))
-      .then(UserAdapter.toEntity);
+      .create(UserMapper.toDatabase(user))
+      .then(UserMapper.toEntity);
   }
 
   count() {

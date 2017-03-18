@@ -1,6 +1,6 @@
 const User = require('src/domain/user/User');
 
-const SequelizeUserAdapter = {
+const SequelizeUserMapper = {
   toEntity({ dataValues }) {
     const { id, name } = dataValues;
 
@@ -14,4 +14,4 @@ const SequelizeUserAdapter = {
   }
 };
 
-module.exports = SequelizeUserAdapter;
+module.exports = SequelizeUserMapper;
