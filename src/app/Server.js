@@ -10,7 +10,7 @@ class Server {
     this.express.use(router);
   }
 
-  start /* istanbul ignore next */ () {
+  start() {
     return new Promise((resolve) => {
       const http = this.express
         .listen(this.config.web.port, () => {

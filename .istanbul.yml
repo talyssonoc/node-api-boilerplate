@@ -1,6 +1,6 @@
 instrumentation:
   root: 'src'
-  excludes: ['container.js', 'app/Application.js']
+  excludes: ['container.js', 'app/Application.js', 'app/Server.js']
 reporting:
   reports:
     - html
