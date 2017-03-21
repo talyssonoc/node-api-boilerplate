@@ -1,7 +1,7 @@
 const { expect } = require('chai');
 const LoggerStreamAdapter = require('src/infra/logging/LoggerStreamAdapter');
 
-describe('LoggerStreamAdapter', () => {
+describe('Infra :: Logging :: LoggerStreamAdapter', () => {
   describe('.toStream', () => {
     it('wraps the logger into a stream', () => {
       const fakeLogger = {};
