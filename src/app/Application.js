@@ -3,11 +3,11 @@ class Application {
     this.config = config;
     this.server = server;
     this.database = database;
+    this.logger = logger;
 
     if(this.database.options.logging) {
       this.database.options.logging = logger.info.bind(logger);
     }
-
   }
 
   start() {

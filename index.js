@@ -5,6 +5,6 @@ const app = container.resolve('app');
 app
   .start()
   .catch((error) => {
-    console.error(error.stack);
+    app.logger.error(error.stack);
     process.exit();
   });
