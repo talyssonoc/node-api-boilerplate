@@ -1,10 +1,8 @@
 const path = require('path');
 
-module.exports = function createControllerRoutes(_controllerPath) {
-  const controllerPath = path.resolve('src/interfaces/http', _controllerPath);
+module.exports = function createControllerRoutes(controllerUri) {
+  const controllerPath = path.resolve('src/interfaces/http', controllerUri);
   const Controller = require(controllerPath);
 
-  const controller = new Controller();
-
-  return controller.router;
+  return Controller.router;
 };

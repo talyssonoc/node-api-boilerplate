@@ -2,7 +2,7 @@ const { Router } = require('express');
 const { inject } = require('awilix-express');
 const Status = require('http-status');
 
-class UsersController {
+const UsersController = {
   get router() {
     const router = Router();
 
@@ -10,7 +10,7 @@ class UsersController {
     router.post('/', inject('createUser'), this.create);
 
     return router;
-  }
+  },
 
   index(req, res, next) {
     const { getAllUsers } = req;
@@ -23,7 +23,7 @@ class UsersController {
       .on(ERROR, next);
 
     getAllUsers.execute();
-  }
+  },
 
   create(req, res, next) {
     const { createUser } = req;
