@@ -4,7 +4,7 @@ It's a boilerplate for Node web APIs.
 
 It comes setup with:
 
-- [Express](npmjs.com/package/express)
+- [Express](https://npmjs.com/package/express)
 - [Sequelize](https://www.npmjs.com/package/sequelize)
 - [Awilix](https://www.npmjs.com/package/awilix)
 - [Structure](https://www.npmjs.com/package/structure)
