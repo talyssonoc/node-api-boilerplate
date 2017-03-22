@@ -13,7 +13,7 @@
     "coverage": "cross-env NODE_PATH=. NODE_ENV=test istanbul cover node_modules/mocha/bin/_mocha",
     "lint": "eslint {src,test,config}/**/*.js",
     "sequelize": "cross-env NODE_PATH=. sequelize",
-    "console": "cross-env NODE_PATH=. node scripts/console.js",
+    "console": "cross-env NODE_PATH=. node src/interfaces/console/index.js",
     "heroku-postbuild": "NODE_ENV=production NODE_PATH=. sequelize db:migrate --url=$DATABASE_URL",
     "pm2": "pm2"
   },
