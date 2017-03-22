@@ -1,6 +1,5 @@
 class Application {
-  constructor({ config, server, database, logger }) {
-    this.config = config;
+  constructor({ server, database, logger }) {
     this.server = server;
     this.database = database;
     this.logger = logger;

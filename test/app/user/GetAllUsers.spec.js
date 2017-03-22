@@ -1,7 +1,7 @@
 const { expect } = require('chai');
-const GetAllUsers = require('src/domain/user/operations/GetAllUsers');
+const GetAllUsers = require('src/app/user/GetAllUsers');
 
-describe('Domain :: User :: GetAllUsers', () => {
+describe('App :: User :: GetAllUsers', () => {
   var getAllUsers;
 
   context('when query is successful', () => {

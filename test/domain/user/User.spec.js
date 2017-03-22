@@ -2,20 +2,20 @@ const { expect } = require('chai');
 const User = require('src/domain/user/User');
 
 describe('Domain :: User', () => {
-  describe('#getInitial', () => {
-    context('when user has a name', () => {
-      it('returns first char of the name', () => {
-        const user = new User({ name: 'Thing' });
+  describe('#isLegal', () => {
+    context('when user is younger than 21', () => {
+      it('returns false', () => {
+        const user = new User({ age: 20 });
 
-        expect(user.getInitial()).to.equal('T');
+        expect(user.isLegal()).to.be.false();
       });
     });
 
-    context('when user has no name', () => {
-      it('returns empty string', () => {
-        const user = new User();
+    context('when user is 21 years old', () => {
+      it('returns true', () => {
+        const user = new User({ age: 21 });
 
-        expect(user.getInitial()).to.equal('');
+        expect(user.isLegal()).to.be.true();
       });
     });
   });

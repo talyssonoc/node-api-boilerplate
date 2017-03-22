@@ -1,7 +1,7 @@
 const { expect } = require('chai');
-const CreateUser = require('src/domain/user/operations/CreateUser');
+const CreateUser = require('src/app/user/CreateUser');
 
-describe('Domain :: User :: CreateUser', () => {
+describe('App :: User :: CreateUser', () => {
   var createUser;
 
   context('when user is valid', () => {
