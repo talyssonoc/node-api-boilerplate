@@ -8,7 +8,7 @@ class CreateUser extends Operation {
   }
 
   execute(userData) {
-    const { SUCCESS, ERROR, VALIDATION_ERROR } = this;
+    const { SUCCESS, ERROR, VALIDATION_ERROR } = this.outputs;
 
     const user = new User(userData);
 

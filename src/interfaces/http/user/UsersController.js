@@ -14,7 +14,7 @@ const UsersController = {
 
   index(req, res, next) {
     const { getAllUsers } = req;
-    const { SUCCESS, ERROR } = getAllUsers;
+    const { SUCCESS, ERROR } = getAllUsers.outputs;
 
     getAllUsers
       .on(SUCCESS, (users) => {
@@ -27,7 +27,7 @@ const UsersController = {
 
   create(req, res, next) {
     const { createUser } = req;
-    const { SUCCESS, ERROR, VALIDATION_ERROR } = createUser;
+    const { SUCCESS, ERROR, VALIDATION_ERROR } = createUser.outputs;
 
     createUser
       .on(SUCCESS, (user) => {

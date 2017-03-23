@@ -18,7 +18,7 @@ describe('App :: Operation', () => {
         const operation = new CustomOperation();
 
         expect(() => {
-          operation.on(operation.SUCCESS, () => {});
+          operation.on(operation.outputs.SUCCESS, () => {});
         }).to.not.throw;
       });
     });

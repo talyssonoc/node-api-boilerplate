@@ -7,7 +7,7 @@ class GetAllUsers extends Operation {
   }
 
   execute() {
-    const { SUCCESS, ERROR } = this;
+    const { SUCCESS, ERROR } = this.outputs;
 
     this.usersRepository
       .getAll({

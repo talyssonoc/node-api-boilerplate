@@ -16,7 +16,7 @@ describe('App :: User :: GetAllUsers', () => {
     });
 
     it('emits SUCCESS with all the users', (done) => {
-      getAllUsers.on(getAllUsers.SUCCESS, (response) => {
+      getAllUsers.on(getAllUsers.outputs.SUCCESS, (response) => {
         expect(response).to.equal('Imagine all the users...');
         done();
       });
@@ -37,7 +37,7 @@ describe('App :: User :: GetAllUsers', () => {
     });
 
     it('emits ERROR with the error', (done) => {
-      getAllUsers.on(getAllUsers.ERROR, (response) => {
+      getAllUsers.on(getAllUsers.outputs.ERROR, (response) => {
         expect(response.message).to.equal('Failed');
 
         done();
