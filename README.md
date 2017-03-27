@@ -8,6 +8,7 @@ It comes setup with:
 - [Sequelize](https://www.npmjs.com/package/sequelize)
 - [Awilix](https://www.npmjs.com/package/awilix)
 - [Structure](https://www.npmjs.com/package/structure)
+- [HTTP Status](https://www.npmjs.com/package/http-status)
 - [Log4js](https://www.npmjs.com/package/log4js)
 - [Nodemon](https://www.npmjs.com/package/nodemon)
 - [PM2](https://www.npmjs.com/package/pm2)
