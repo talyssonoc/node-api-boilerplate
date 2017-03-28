@@ -69,6 +69,8 @@ _Notice that the boilerplate comes with a small application for user management 
 7. Run the application in development mode with `npm run dev`
 8. Access `http://localhost:3000/api/users` and you're ready to go!
 
+After playing a little bit with the boilerplate and before implementing a real application with it I recommend you to read at least the `Setup` and the `Organization and architecture` sections of our [Wiki](https://github.com/talyssonoc/node-api-boilerplate/wiki)
+
 ## Aditional info:
 
 - Don't forget to run the migrations for the test environment as well (including when you create a new migration) with `npm run sequelize db:migrate -- --env=test`
