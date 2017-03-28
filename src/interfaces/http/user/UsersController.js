@@ -43,6 +43,6 @@ const UsersController = {
 
     createUser.execute(req.body);
   }
-}
+};
 
 module.exports = UsersController;

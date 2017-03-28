@@ -1,10 +1,12 @@
 require('dotenv').load();
 
+const fs = require('fs');
+
 const path = require('path');
 const ENV = process.env.NODE_ENV || 'development';
 
 const envConfig = require(path.join(__dirname, 'environments', ENV));
-const dbConfig = process.env.DATABASE_URL || require('./database')[ENV];
+const dbConfig = loadDbConfig();
 
 const config = Object.assign({
   [ENV]: true,
@@ -13,3 +15,13 @@ const config = Object.assign({
 }, envConfig);
 
 module.exports = config;
+
+function loadDbConfig() {
+  if(process.env.DATABASE_URL) {
+    return process.env.DATABASE_URL;
+  }
+
+  if(fs.existsSync('./database')) {
+    return require('./database')[ENV];
+  }
+}

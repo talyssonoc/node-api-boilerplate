@@ -4,14 +4,14 @@ class Application {
     this.database = database;
     this.logger = logger;
 
-    if(this.database.options.logging) {
-      this.database.options.logging = logger.info.bind(logger);
+    if(database && database.options.logging) {
+      database.options.logging = logger.info.bind(logger);
     }
   }
 
   start() {
     return Promise.resolve()
-      .then(() => this.database.authenticate())
+      .then(() => this.database && this.database.authenticate())
       .then(() => this.server.start());
   }
 }
