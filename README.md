@@ -58,7 +58,7 @@ It's an opinionated boilerplate for Node web APIs focused on separation of conce
 
 ## Quick start
 
-_Notice that the boilerplate comes with a small application for user management already, you can delete it after you understand how the boilerplate works but please do the quick start first!_ 😊
+_Notice that the boilerplate comes with a small application for user management already, you can delete it with a npm script after you understand how the boilerplate works but please do the quick start first!_ 😊
 
 1. Clone the repository with `git clone --depth=1 https://github.com/talyssonoc/node-api-boilerplate`
 2. Setup the database on `config/database.js` (there's an example file there to be used with PostgreSQL 😉 )
@@ -85,7 +85,8 @@ This boilerplate comes with a collection of npm scripts to make your life easier
 - `coverage`: Run the test suite and generate code coverage, the output will be on `coverage` folder
 - `lint`: Run the linter
 - `sequelize`: Alias to use the [Sequelize CLI](https://github.com/sequelize/cli)
-- `console`: Open a pre-built console, you can access the DI container through the `container` variable once it's open, the console is promise-friendly 
+- `console`: Open a pre-built console, you can access the DI container through the `container` variable once it's open, the console is promise-friendly
+- `cleanup`: Removes the files from example application
 
 ## Tech
 

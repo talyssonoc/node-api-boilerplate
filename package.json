@@ -15,7 +15,8 @@
     "sequelize": "cross-env NODE_PATH=. sequelize",
     "console": "cross-env NODE_PATH=. node src/interfaces/console/index.js",
     "heroku-postbuild": "NODE_ENV=production NODE_PATH=. sequelize db:migrate --url=$DATABASE_URL",
-    "pm2": "pm2"
+    "pm2": "pm2",
+    "cleanup": "node scripts/cleanup.js"
   },
   "repository": {},
   "author": "Talysson <talyssonoc@gmail.com>",
@@ -27,6 +28,7 @@
     "compression": "^1.6.2",
     "cors": "^2.8.1",
     "cross-env": "^3.2.3",
+    "del": "^2.2.2",
     "dotenv": "^4.0.0",
     "express": "^4.15.2",
     "express-status-monitor": "^0.1.9",
@@ -50,6 +52,7 @@
     "istanbul": "^0.4.5",
     "mocha": "^3.2.0",
     "nodemon": "^1.11.0",
+    "replace-in-file": "^2.5.0",
     "supertest": "^3.0.0",
     "supertest-as-promised": "^4.0.2"
   }
