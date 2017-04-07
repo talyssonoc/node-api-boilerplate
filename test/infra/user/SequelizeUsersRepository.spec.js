@@ -6,15 +6,17 @@ const { User: UserModel } = require('src/infra/database/models');
 
 describe('Infra :: User :: SequelizeUsersRepository', () => {
   describe('#getAll', () => {
+    beforeEach(() => {
+      return factory.createMany('user', 2, [
+        { name: 'User 1' },
+        { name: 'User 2' }
+      ]);
+    });
+
     it('returns all users from the database', () => {
       const repository = new SequelizeUsersRepository({ UserModel });
 
-      return factory
-        .createMany('user', 2, [
-          { name: 'User 1' },
-          { name: 'User 2' }
-        ])
-        .then(() => repository.getAll())
+      return repository.getAll()
         .then((users) => {
           expect(users).to.have.lengthOf(2);
 

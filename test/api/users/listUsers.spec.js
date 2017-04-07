@@ -4,14 +4,16 @@ const { expect } = require('chai');
 
 describe('API :: GET /api/users', () => {
   context('when there are users', () => {
+    beforeEach(() => {
+      return factory.createMany('user', 2, [
+        { name: 'First' },
+        { name: 'Second' }
+      ]);
+    });
+
     it('return success with array of users', () => {
-      return factory
-        .createMany('user', 2, [
-          { name: 'First' },
-          { name: 'Second' }
-        ])
-        .then(() => request().get('/api/users')
-          .expect(200))
+      return request().get('/api/users')
+        .expect(200)
         .then(({ body }) => {
           expect(body).to.have.lengthOf(2);
 
