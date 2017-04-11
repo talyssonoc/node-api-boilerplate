@@ -8,7 +8,7 @@
   },
   "scripts": {
     "start": "node cluster.js",
-    "dev": "cross-env NODE_PATH=. NODE_ENV=development nodemon index.js",
+    "dev": "cross-env NODE_PATH=. NODE_ENV=development nodemon",
     "test": "cross-env NODE_PATH=. NODE_ENV=test mocha",
     "coverage": "cross-env NODE_PATH=. NODE_ENV=test istanbul cover node_modules/mocha/bin/_mocha",
     "lint": "eslint {src,test,config}/**/*.js",
