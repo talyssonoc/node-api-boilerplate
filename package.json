@@ -1,8 +1,9 @@
 {
   "name": "node-api-boilerplate",
-  "version": "1.0.0",
+  "version": "1.1.1",
   "description": "A boilerplate for web APIs using Node",
   "main": "index.js",
+  "private": true,
   "engines": {
     "node": ">=6.0.0"
   },
