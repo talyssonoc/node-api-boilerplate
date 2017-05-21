@@ -1,23 +1,23 @@
 # Node API boilerplate
 
-It's an opinionated boilerplate for Node web APIs focused on separation of concerns and scalability.
+An opinionated boilerplate for Node web APIs focused on separation of concerns and scalability.
 
 ## Features
 
 <dl>
   <dt>Multilayer folder structure</dt>
   <dd>
-    Code organization inspired by <a href="http://dddcommunity.org/">DDD</a> and <a href="https://8thlight.com/blog/uncle-bob/2012/08/13/the-clean-architecture.html">Clean Architecture</a>
+    <a href="https://github.com/talyssonoc/node-api-boilerplate/wiki/Folder-structure">Code organization</a> inspired by <a href="http://dddcommunity.org/">DDD</a> and <a href="https://8thlight.com/blog/uncle-bob/2012/08/13/the-clean-architecture.html">Clean Architecture</a> focused on codebase scalability.
   </dd>
 
-  <dt>Instant feedback</dt>
+  <dt>Instant feedback and reload</dt>
   <dd>
     Use <a href="https://www.npmjs.com/package/nodemon">Nodemon</a> to automatically reload the server after a file change when on development mode, makes the development faster and easier.
   </dd>
 
   <dt>Ready for production</dt>
   <dd>
-    Setup with <a href="https://www.npmjs.com/package/pm2">PM2</a> process manager ready to go live on production. If you use Heroku there's also a Procfile and a post-build task to run the migrations on production.
+    Setup with <a href="https://www.npmjs.com/package/pm2">PM2</a> process manager ready to go live on production. It's also out-of-box ready to be deployed at Heroku, you can read more about it <a href="https://github.com/talyssonoc/node-api-boilerplate/wiki/Setup-in-Heroku">here</a>.
   </dd>
 
   <dt>Scalable and easy to use web server</dt>
@@ -27,17 +27,17 @@ It's an opinionated boilerplate for Node web APIs focused on separation of conce
 
   <dt>Database integration</dt>
   <dd>
-    <a href="https://www.npmjs.com/package/sequelize">Sequelize</a>, an ORM for SQL databases, is already integrated, you just have to set the authentication configurations.
+    <a href="https://www.npmjs.com/package/sequelize">Sequelize</a>, an ORM for SQL databases, is already integrated, you just have to set the <a href="https://github.com/talyssonoc/node-api-boilerplate/wiki/Database-setup">authentication configurations</a>.
   </dd>
 
   <dt>Prepared for testing</dt>
   <dd>
-    The test suite uses <a href="https://www.npmjs.com/package/mocha">Mocha</a>/<a href="https://www.npmjs.com/package/chai">Chai</a> and is prepared to run unit, integration and functional tests right from the beginning. There are helpers to make it easy to make requests to the web app during the tests and for cleaning the database after each test. A <a href="https://www.npmjs.com/package/factory-girl">FactoryGirl</a> adapter for Sequelize is setup as well to make your tests DRY, and the tests generate code coverage measurement with <a href="https://www.npmjs.com/package/istanbul">Istanbul</a>.
+    The test suite uses <a href="https://www.npmjs.com/package/mocha">Mocha</a>/<a href="https://www.npmjs.com/package/chai">Chai</a> and is prepared to run unit, integration and functional tests right from the beginning. There are helpers to <a href="https://github.com/talyssonoc/node-api-boilerplate/wiki/The-test-suite">make it easy to make requests to the web app during the tests and for cleaning the database after each test</a>. A <a href="https://www.npmjs.com/package/factory-girl">FactoryGirl</a> adapter for Sequelize is setup to make your tests DRY as well, and the tests generate code coverage measurement with <a href="https://www.npmjs.com/package/istanbul">Istanbul</a>. You should read about the <a href="https://github.com/talyssonoc/node-api-boilerplate/wiki/Chai-plugins">Chai plugins that are setup by default too</a>.
   </dd>
 
   <dt>Dependency injection</dt>
   <dd>
-    With <a href="https://www.npmjs.com/package/awilix">Awilix</a>, a practical dependency injection library, the code will not be coupled and it'll still be easy to resolve automatically the dependencies on the runtime and mock them during the tests. It's even possible inject dependencies on your controllers with the <a href="https://www.npmjs.com/package/awilix-express">Awilix Express adapter</a>.
+    With <a href="https://www.npmjs.com/package/awilix">Awilix</a>, a practical dependency injection library, the code will not be coupled and it'll still be easy to resolve automatically the dependencies on the runtime and mock them during the tests. It's even possible inject dependencies on your controllers with the <a href="https://www.npmjs.com/package/awilix-express">Awilix Express adapter</a>. Click <a href="https://github.com/talyssonoc/node-api-boilerplate/wiki/Dependency-injection-container">here</a> if you want to read more about how to use dependency injection with this boilerplate.
   </dd>
 
   <dt>CLI integration</dt>
@@ -62,14 +62,14 @@ _Notice that the boilerplate comes with a small application for user management 
 
 1. Clone the repository with `git clone --depth=1 https://github.com/talyssonoc/node-api-boilerplate`
 2. Setup the database on `config/database.js` (there's an example file there to be used with PostgreSQL 😉 )
-3. Install the dependencies with `yarn` (click here if you [don't have Yarn installed](https://yarnpkg.com/docs/install))
+3. Install the dependencies with `yarn` (click here if [you don't have Yarn installed](https://yarnpkg.com/docs/install))
 4. Create the development and test databases you have setup on `config/database.js`
 5. Run the database migrations with `npm run sequelize db:migrate`
 6. Add some seed data to the development database with `npm run sequelize db:seed:all`
 7. Run the application in development mode with `npm run dev`
 8. Access `http://localhost:3000/api/users` and you're ready to go!
 
-After playing a little bit with the boilerplate and before implementing a real application with it I recommend you to read at least the `Setup` and the `Organization and architecture` sections of our [Wiki](https://github.com/talyssonoc/node-api-boilerplate/wiki). After that you'll be able to remove the example application files running `npm run cleanup`
+After playing a little bit with the boilerplate and _before_ implementing a real application with it I recommend you to read at least the `Setup` and the `Organization and architecture` sections of our [Wiki](https://github.com/talyssonoc/node-api-boilerplate/wiki). After that you'll be able to remove the example application files running `npm run cleanup`
 
 ## Aditional info:
 
@@ -77,16 +77,16 @@ After playing a little bit with the boilerplate and before implementing a real a
 
 ## Scripts
 
-This boilerplate comes with a collection of npm scripts to make your life easier, you'll run them with `npm run <script name>`:
+This boilerplate comes with a collection of npm scripts to make your life easier, you'll run them with `npm run <script name>` or `yarn run <script name>`:
 
-- `dev`: Open the application in development mode
-- `start` Open the application ready to production (prefer not to do that in development) 
+- `dev`: Run the application in development mode
+- `start` Run the application in production mode (prefer not to do that in development) 
 - `test`: Run the test suite
 - `coverage`: Run the test suite and generate code coverage, the output will be on `coverage` folder
-- `lint`: Run the linter
-- `sequelize`: Alias to use the [Sequelize CLI](https://github.com/sequelize/cli)
-- `console`: Open a pre-built console, you can access the DI container through the `container` variable once it's open, the console is promise-friendly
-- `cleanup`: Removes the files from example application
+- `lint`: Lint the codebase
+- `sequelize`: Alias to the [Sequelize CLI](https://github.com/sequelize/cli)
+- `console`: Open the built-in console, you can access the DI container through the `container` variable once it's open, the console is promise-friendly. Click [here](https://github.com/talyssonoc/node-api-boilerplate/wiki/Application-console) to know more about the built-in console
+- `cleanup`: Removes the files from the example application
 
 ## Tech
 
@@ -107,6 +107,6 @@ This boilerplate comes with a collection of npm scripts to make your life easier
 - [Istanbul](https://www.npmjs.com/package/istanbul)
 - [ESLint](https://www.npmjs.com/package/eslint)
 
-## Disclaimer and contributing
+## Contributing
 
-It's the first version of the documentation of this boilerplate, feel free to contribute to it.
+This boilerplate is open to suggestions and contributions, documentation contributions are also important! :)
