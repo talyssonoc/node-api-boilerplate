@@ -6,19 +6,18 @@ class GetAllUsers extends Operation {
     this.usersRepository = usersRepository;
   }
 
-  execute() {
+  async execute() {
     const { SUCCESS, ERROR } = this.outputs;
 
-    this.usersRepository
-      .getAll({
+    try {
+      const users = await this.usersRepository.getAll({
         attributes: ['id', 'name']
-      })
-      .then((users) => {
-        this.emit(SUCCESS, users);
-      })
-      .catch((error) => {
-        this.emit(ERROR, error);
       });
+
+      this.emit(SUCCESS, users);
+    } catch(error) {
+      this.emit(ERROR, error);
+    }
   }
 }
 
