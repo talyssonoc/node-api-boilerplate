@@ -7,6 +7,7 @@ const UsersController = {
     const router = Router();
 
     router.get('/', inject('getAllUsers'), this.index);
+    router.get('/:id', inject('getUser'), this.show);
     router.post('/', inject('createUser'), this.create);
 
     return router;
@@ -23,6 +24,26 @@ const UsersController = {
       .on(ERROR, next);
 
     getAllUsers.execute();
+  },
+
+  show(req, res, next) {
+    const { getUser } = req;
+
+    const { SUCCESS, ERROR, NOT_FOUND } = getUser.outputs;
+
+    getUser
+      .on(SUCCESS, (user) => {
+        res.status(Status.OK).json(user);
+      })
+      .on(NOT_FOUND, (error) => {
+        res.status(Status.NOT_FOUND).json({
+          type: 'NotFoundError',
+          details: error.details
+        });
+      })
+      .on(ERROR, next);
+
+    getUser.execute(req.params.id)
   },
 
   create(req, res, next) {

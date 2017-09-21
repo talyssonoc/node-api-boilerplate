@@ -5,6 +5,12 @@ const User = require('src/domain/user/User');
 const { User: UserModel } = require('src/infra/database/models');
 
 describe('Infra :: User :: SequelizeUsersRepository', () => {
+  let repository;
+
+  beforeEach(() => {
+    repository = new SequelizeUsersRepository({ UserModel });
+  });
+
   describe('#getAll', () => {
     beforeEach(() => {
       return factory.createMany('user', 2, [
@@ -14,8 +20,6 @@ describe('Infra :: User :: SequelizeUsersRepository', () => {
     });
 
     it('returns all users from the database', async () => {
-      const repository = new SequelizeUsersRepository({ UserModel });
-
       const users = await repository.getAll();
 
       expect(users).to.have.lengthOf(2);
@@ -28,11 +32,36 @@ describe('Infra :: User :: SequelizeUsersRepository', () => {
     });
   });
 
+  describe('#getById', () => {
+    context('when user exists', () => {
+      it('returns the user', async () => {
+        const user = await factory.create('user', {
+          name: 'User'
+        });
+
+        const foundUser = await repository.getById(user.id);
+
+        expect(foundUser).to.be.instanceOf(User);
+        expect(foundUser.id).to.equal(user.id);
+        expect(foundUser.name).to.equal('User');
+      });
+    });
+
+    context('when the user does not exist', () => {
+      it('rejects with an error', async () => {
+        try {
+          await repository.getById(0);
+        } catch(error) {
+          expect(error.message).to.equal('NotFoundError');
+          expect(error.details).to.equal('User with id 0 can\'t be found.');
+        }
+      });
+    });
+  });
+
   describe('#add', () => {
     context('when user is valid', () => {
       it('persists the user', () => {
-        const repo  = new SequelizeUsersRepository({ UserModel });
-
         const user = new User({
           name: 'The User'
         });
@@ -40,11 +69,30 @@ describe('Infra :: User :: SequelizeUsersRepository', () => {
         expect(user.validate().valid).to.be.ok();
 
         return expect(async () => {
-          const persistedUser = await repo.add(user);
+          const persistedUser = await repository.add(user);
 
           expect(persistedUser.id).to.exist;
           expect(persistedUser.name).to.equal('The User');
-        }).to.alter(() => repo.count(), { by: 1 });
+        }).to.alter(() => repository.count(), { by: 1 });
+      });
+    });
+
+    context('when user is invalid', () => {
+      it('does not persist the user and rejects with an error', () => {
+        const user = new User();
+
+        expect(user.validate().valid).to.not.be.ok();
+
+        return expect(async () => {
+          try {
+            await repository.add(user);
+          } catch(error) {
+            expect(error.message).to.equal('ValidationError');
+            expect(error.details).to.eql([
+              { message: '"name" is required', path: 'name' }
+            ]);
+          }
+        }).to.not.alter(() => repository.count());
       });
     });
   });
