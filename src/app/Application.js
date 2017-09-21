@@ -9,10 +9,12 @@ class Application {
     }
   }
 
-  start() {
-    return Promise.resolve()
-      .then(() => this.database && this.database.authenticate())
-      .then(() => this.server.start());
+  async start() {
+    if(this.database) {
+      await this.database.authenticate();
+    }
+
+    await this.server.start();
   }
 }
 

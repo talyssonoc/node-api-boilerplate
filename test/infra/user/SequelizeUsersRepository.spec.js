@@ -13,19 +13,18 @@ describe('Infra :: User :: SequelizeUsersRepository', () => {
       ]);
     });
 
-    it('returns all users from the database', () => {
+    it('returns all users from the database', async () => {
       const repository = new SequelizeUsersRepository({ UserModel });
 
-      return repository.getAll()
-        .then((users) => {
-          expect(users).to.have.lengthOf(2);
+      const users = await repository.getAll();
 
-          expect(users[0]).to.be.instanceOf(User);
-          expect(users[0].name).to.equal('User 1');
+      expect(users).to.have.lengthOf(2);
 
-          expect(users[1]).to.be.instanceOf(User);
-          expect(users[1].name).to.equal('User 2');
-        });
+      expect(users[0]).to.be.instanceOf(User);
+      expect(users[0].name).to.equal('User 1');
+
+      expect(users[1]).to.be.instanceOf(User);
+      expect(users[1].name).to.equal('User 2');
     });
   });
 
@@ -40,12 +39,11 @@ describe('Infra :: User :: SequelizeUsersRepository', () => {
 
         expect(user.validate().valid).to.be.ok();
 
-        return expect(() => {
-          return repo.add(user)
-            .then((persistedUser) => {
-              expect(persistedUser.id).to.exist;
-              expect(persistedUser.name).to.equal('The User');
-            });
+        return expect(async () => {
+          const persistedUser = await repo.add(user);
+
+          expect(persistedUser.id).to.exist;
+          expect(persistedUser.name).to.equal('The User');
         }).to.alter(() => repo.count(), { by: 1 });
       });
     });

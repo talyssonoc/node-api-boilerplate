@@ -5,7 +5,7 @@
   "main": "index.js",
   "private": true,
   "engines": {
-    "node": ">=6.0.0"
+    "node": ">=7.0.0"
   },
   "scripts": {
     "start": "node cluster.js",
@@ -44,10 +44,10 @@
     "structure": "^1.2.0"
   },
   "devDependencies": {
-    "chai": "^3.5.0",
+    "chai": "^4.1.2",
     "chai-change": "^2.1.2",
     "chance": "^1.0.6",
-    "dirty-chai": "^1.2.2",
+    "dirty-chai": "^2.0.1",
     "eslint": "^3.17.1",
     "factory-girl": "^4.0.0",
     "istanbul": "^0.4.5",

@@ -5,29 +5,28 @@ class SequelizeUsersRepository {
     this.UserModel = UserModel;
   }
 
-  getAll(...args) {
-    return this.UserModel
-      .findAll(...args)
-      .then((users) => users.map(UserMapper.toEntity));
+  async getAll(...args) {
+    const users = await this.UserModel.findAll(...args);
+
+    return users.map(UserMapper.toEntity);
   }
 
-  add(user) {
+  async add(user) {
     const { valid, errors } = user.validate();
 
     if(!valid) {
       const error = new Error('ValidationError');
       error.details = errors;
 
-      return Promise.reject(error);
+      throw error;
     }
 
-    return this.UserModel
-      .create(UserMapper.toDatabase(user))
-      .then(UserMapper.toEntity);
+    const newUser = await this.UserModel.create(UserMapper.toDatabase(user));
+    return UserMapper.toEntity(newUser);
   }
 
-  count() {
-    return this.UserModel.count();
+  async count() {
+    return await this.UserModel.count();
   }
 }
 

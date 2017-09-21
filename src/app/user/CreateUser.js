@@ -7,23 +7,22 @@ class CreateUser extends Operation {
     this.usersRepository = usersRepository;
   }
 
-  execute(userData) {
+  async execute(userData) {
     const { SUCCESS, ERROR, VALIDATION_ERROR } = this.outputs;
 
     const user = new User(userData);
 
-    this.usersRepository
-      .add(user)
-      .then((newUser) => {
-        this.emit(SUCCESS, newUser);
-      })
-      .catch((error) => {
-        if(error.message === 'ValidationError') {
-          return this.emit(VALIDATION_ERROR, error);
-        }
+    try {
+      const newUser = await this.usersRepository.add(user);
 
-        this.emit(ERROR, error);
-      });
+      this.emit(SUCCESS, newUser);
+    } catch(error) {
+      if(error.message === 'ValidationError') {
+        return this.emit(VALIDATION_ERROR, error);
+      }
+
+      this.emit(ERROR, error);
+    }
   }
 }
 
