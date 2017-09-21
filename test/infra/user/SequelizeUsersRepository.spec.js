@@ -96,4 +96,54 @@ describe('Infra :: User :: SequelizeUsersRepository', () => {
       });
     });
   });
+
+
+  describe('#update', () => {
+    context('when the user exists', () => {
+      context('when data is valid', () => {
+        it('updates and returns the updated user', async () => {
+          const user = await factory.create('user', {
+            name: 'User'
+          });
+
+          return expect(async () => {
+            return await repository.update(user.id, { name: 'New User' });
+          }).to.alter(async () => {
+            const dbUser = await UserModel.findById(user.id);
+            return dbUser.name
+          }, { from: 'User', to: 'New User' });
+        });
+      });
+
+      context('when data is not valid', () => {
+        it('does not update and returns the error', async () => {
+          const user = await factory.create('user', {
+            name: 'User'
+          });
+
+          return expect(async () => {
+            try {
+              await repository.update(user.id, { name: '' });
+            } catch(error) {
+              expect(error.message).to.equal('ValidationError');
+            }
+          }).to.not.alter(async () => {
+            const dbUser = await UserModel.findById(user.id);
+            return dbUser.name
+          });
+        });
+      });
+    });
+
+    context('when the user does not exist', () => {
+      it('returns an error', async () => {
+        try {
+          await repository.update(0, { name: 'New User' });
+        } catch(error) {
+          expect(error.message).to.equal('NotFoundError');
+          expect(error.details).to.equal('User with id 0 can\'t be found.');
+        }
+      });
+    });
+  });
 });
