@@ -4,6 +4,9 @@
     "es6": true,
     "mocha": true
   },
+  "parserOptions": {
+    "ecmaVersion": 2017
+  },
   "extends": "eslint:recommended",
   "rules": {
     "comma-spacing": ["error", { "before": false, "after": true }],
