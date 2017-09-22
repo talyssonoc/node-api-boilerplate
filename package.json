@@ -5,7 +5,7 @@
   "main": "index.js",
   "private": true,
   "engines": {
-    "node": ">=7.0.0"
+    "node": ">=7.6.0"
   },
   "scripts": {
     "start": "node cluster.js",
