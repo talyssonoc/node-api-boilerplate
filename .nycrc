@@ -3,7 +3,7 @@
   "exclude": [
     "container.js",
     "app/Application.js",
-    "interfaces/http/Server.js"
+    "interfaces/http"
   ],
   "reporter": [
     "html",
