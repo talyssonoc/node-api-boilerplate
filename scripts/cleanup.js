@@ -5,7 +5,7 @@ const Listr = require('listr');
 
 const srcPath = path.join(__dirname, '..', 'src');
 const testPath = path.join(__dirname, '..', 'test');
-const srcAndTestPath = `{${testPath},${srcPath}}`;
+const srcAndTestPath = `{${testPath}/unit,${srcPath}}`;
 const routerPath = path.join(srcPath, 'interfaces', 'http', 'router.js');
 const containerPath = path.join(srcPath, 'container.js');
 
@@ -48,7 +48,7 @@ const tasks = new Listr([
         path.join(srcPath, 'infra', 'database', 'seeds', '*.js'),
         path.join(srcPath, 'infra', 'database', 'models', 'User.js'),
         path.join(srcPath, 'interfaces', 'http', 'user', '**'),
-        path.join(testPath, 'api', 'users', '**'),
+        path.join(testPath, 'features', 'api', 'users', '**'),
         path.join(testPath, 'support', 'factories', '*.js')
       ]);
     }
