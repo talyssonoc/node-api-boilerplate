@@ -97,6 +97,30 @@ describe('Infra :: User :: SequelizeUsersRepository', () => {
     });
   });
 
+  describe('#remove', () => {
+    context('when the user exists', () => {
+      it('removes the user', async () => {
+        const user = await factory.create('user', {
+          name: 'User'
+        });
+
+        return expect(async () => {
+          return await repository.remove(user.id);
+        }).to.alter(() => repository.count(), { by: -1 });
+      });
+    });
+
+    context('when the user does not exist', () => {
+      it('returns an error', async () => {
+        try {
+          await repository.remove(0);
+        } catch(error) {
+          expect(error.message).to.equal('NotFoundError');
+          expect(error.details).to.equal('User with id 0 can\'t be found.');
+        }
+      });
+    });
+  });
 
   describe('#update', () => {
     context('when the user exists', () => {

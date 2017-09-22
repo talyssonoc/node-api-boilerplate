@@ -7,7 +7,8 @@ const {
   CreateUser,
   GetAllUsers,
   GetUser,
-  UpdateUser
+  UpdateUser,
+  DeleteUser
 } = require('./app/user');
 
 const Server = require('./interfaces/http/Server');
@@ -60,7 +61,8 @@ container.registerClass({
   createUser: CreateUser,
   getAllUsers: GetAllUsers,
   getUser: GetUser,
-  updateUser: UpdateUser
+  updateUser: UpdateUser,
+  deleteUser: DeleteUser
 });
 
 module.exports = container;

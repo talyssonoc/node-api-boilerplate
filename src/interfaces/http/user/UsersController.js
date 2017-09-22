@@ -10,6 +10,7 @@ const UsersController = {
     router.get('/:id', inject('getUser'), this.show);
     router.post('/', inject('createUser'), this.create);
     router.put('/:id', inject('updateUser'), this.update);
+    router.delete('/:id', inject('deleteUser'), this.delete);
 
     return router;
   },
@@ -89,6 +90,25 @@ const UsersController = {
       .on(ERROR, next);
 
     updateUser.execute(Number(req.params.id), req.body);
+  },
+
+  delete(req, res, next) {
+    const { deleteUser } = req;
+    const { SUCCESS, ERROR,  NOT_FOUND } = deleteUser.outputs;
+
+    deleteUser
+      .on(SUCCESS, () => {
+        res.status(Status.ACCEPTED).end();
+      })
+      .on(NOT_FOUND, (error) => {
+        res.status(Status.NOT_FOUND).json({
+          type: 'NotFoundError',
+          details: error.details
+        });
+      })
+      .on(ERROR, next);
+
+    deleteUser.execute(Number(req.params.id));
   }
 };
 

@@ -31,6 +31,13 @@ class SequelizeUsersRepository {
     return UserMapper.toEntity(newUser);
   }
 
+  async remove(id) {
+    const user = await this._getById(id);
+
+    await user.destroy();
+    return;
+  }
+
   async update(id, newData) {
     const user = await this._getById(id);
 
