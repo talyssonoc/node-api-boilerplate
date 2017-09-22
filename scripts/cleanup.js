@@ -26,13 +26,12 @@ const tasks = new Listr([
       return replace({
         files: containerPath,
         from: [
-          /\s*const.*app\/user'\);/,
+          /\s*const \{(\n.*)+.*app\/user'\);/,
           /\s*const.*UsersRepository'\);/,
           /\, User: UserModel/,
           /\s*usersRepository.*\}\]/,
           /\,\s*UserModel/,
-          /createUser.*\n/,
-          /\s*getAllUsers.*GetAllUsers/,
+          /\s+createUser(.|\n)+.*DeleteUser\n/,
         ],
         to: ''
       });
