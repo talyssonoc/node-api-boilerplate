@@ -1,0 +1,13 @@
+{
+  "cwd": "./src",
+  "exclude": [
+    "container.js",
+    "app/Application.js",
+    "interfaces/http/Server.js"
+  ],
+  "reporter": [
+    "html",
+    "lcov",
+    "text-summary"
+  ]
+}

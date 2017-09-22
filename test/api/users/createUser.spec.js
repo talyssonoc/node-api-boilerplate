@@ -3,7 +3,7 @@ const { expect } = require('chai');
 
 describe('API :: POST /api/users', () => {
   context('when sent data is ok', () => {
-    it('creates and returns 200 and the new user', async () => {
+    it('creates and returns 201 and the new user', async () => {
       const { body } = await request()
         .post('/api/users')
         .send({
