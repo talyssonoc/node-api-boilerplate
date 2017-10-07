@@ -6,6 +6,8 @@ const UsersController = {
   get router() {
     const router = Router();
 
+    router.use(inject('userSerializer'));
+
     router.get('/', inject('getAllUsers'), this.index);
     router.get('/:id', inject('getUser'), this.show);
     router.post('/', inject('createUser'), this.create);
@@ -16,12 +18,14 @@ const UsersController = {
   },
 
   index(req, res, next) {
-    const { getAllUsers } = req;
+    const { getAllUsers, userSerializer } = req;
     const { SUCCESS, ERROR } = getAllUsers.outputs;
 
     getAllUsers
       .on(SUCCESS, (users) => {
-        res.status(Status.OK).json(users);
+        res
+          .status(Status.OK)
+          .json(users.map(userSerializer.serialize));
       })
       .on(ERROR, next);
 
@@ -29,13 +33,15 @@ const UsersController = {
   },
 
   show(req, res, next) {
-    const { getUser } = req;
+    const { getUser, userSerializer } = req;
 
     const { SUCCESS, ERROR, NOT_FOUND } = getUser.outputs;
 
     getUser
       .on(SUCCESS, (user) => {
-        res.status(Status.OK).json(user);
+        res
+          .status(Status.OK)
+          .json(userSerializer.serialize(user));
       })
       .on(NOT_FOUND, (error) => {
         res.status(Status.NOT_FOUND).json({
@@ -49,12 +55,14 @@ const UsersController = {
   },
 
   create(req, res, next) {
-    const { createUser } = req;
+    const { createUser, userSerializer } = req;
     const { SUCCESS, ERROR, VALIDATION_ERROR } = createUser.outputs;
 
     createUser
       .on(SUCCESS, (user) => {
-        res.status(Status.CREATED).json(user);
+        res
+          .status(Status.CREATED)
+          .json(userSerializer.serialize(user));
       })
       .on(VALIDATION_ERROR, (error) => {
         res.status(Status.BAD_REQUEST).json({
@@ -68,12 +76,14 @@ const UsersController = {
   },
 
   update(req, res, next) {
-    const { updateUser } = req;
+    const { updateUser, userSerializer } = req;
     const { SUCCESS, ERROR, VALIDATION_ERROR, NOT_FOUND } = updateUser.outputs;
 
     updateUser
       .on(SUCCESS, (user) => {
-        res.status(Status.ACCEPTED).json(user);
+        res
+          .status(Status.ACCEPTED)
+          .json(userSerializer.serialize(user));
       })
       .on(VALIDATION_ERROR, (error) => {
         res.status(Status.BAD_REQUEST).json({
