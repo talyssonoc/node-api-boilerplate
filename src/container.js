@@ -11,6 +11,8 @@ const {
   DeleteUser
 } = require('./app/user');
 
+const UserSerializer = require('./interfaces/http/user/UserSerializer');
+
 const Server = require('./interfaces/http/Server');
 const router = require('./interfaces/http/router');
 const loggerMiddleware = require('./interfaces/http/logging/loggerMiddleware');
@@ -63,6 +65,11 @@ container.registerClass({
   getUser: GetUser,
   updateUser: UpdateUser,
   deleteUser: DeleteUser
+});
+
+// Serializers
+container.registerValue({
+  userSerializer: UserSerializer
 });
 
 module.exports = container;
