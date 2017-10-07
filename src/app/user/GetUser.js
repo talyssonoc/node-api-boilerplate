@@ -21,6 +21,6 @@ class GetUser extends Operation {
   }
 }
 
-GetUser.setOutputs(['SUCCESS', 'ERROR', 'NOT_FOUND'])
+GetUser.setOutputs(['SUCCESS', 'ERROR', 'NOT_FOUND']);
 
 module.exports = GetUser;

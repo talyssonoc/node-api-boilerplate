@@ -7,7 +7,7 @@ describe('App :: User :: DeleteUser', () => {
   context('when user exists', () => {
     before(() => {
       const MockUsersRepository = {
-        remove: (id) => Promise.resolve()
+        remove: () => Promise.resolve()
       };
 
       deleteUser = new DeleteUser({

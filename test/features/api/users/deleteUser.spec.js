@@ -9,7 +9,7 @@ describe('API :: DELETE /api/users/:id', () => {
         name: 'User'
       });
 
-      const { body } = await request()
+      await request()
         .delete(`/api/users/${user.id}`)
         .expect(202);
     });

@@ -32,7 +32,7 @@ describe('App :: User :: GetUser', () => {
   context('when user does not exist', () => {
     beforeEach(() => {
       const MockUsersRepository = {
-        getById: (userId) => Promise.reject({
+        getById: () => Promise.reject({
           details: 'User with id 123 can\'t be found.'
         })
       };
