@@ -28,10 +28,12 @@ const tasks = new Listr([
         from: [
           /\s*const \{(\n.*)+.*app\/user'\);/,
           /\s*const.*UsersRepository'\);/,
+          /\s*const.*UserSerializer'\);/,
           /\, User: UserModel/,
           /\s*usersRepository.*\}\]/,
           /\,\s*UserModel/,
           /\s+createUser(.|\n)+.*DeleteUser\n/,
+          /\s+userSerializer: UserSerializer\n/
         ],
         to: ''
       });
@@ -44,10 +46,10 @@ const tasks = new Listr([
         path.join(srcAndTestPath, 'app', 'user', '**'),
         path.join(srcAndTestPath, 'domain', 'user', '**'),
         path.join(srcAndTestPath, 'infra', 'user', '**'),
+        path.join(srcAndTestPath, 'interfaces', 'http', 'user', '**'),
         path.join(srcPath, 'infra', 'database', 'migrate', '*.js'),
         path.join(srcPath, 'infra', 'database', 'seeds', '*.js'),
         path.join(srcPath, 'infra', 'database', 'models', 'User.js'),
-        path.join(srcPath, 'interfaces', 'http', 'user', '**'),
         path.join(testPath, 'features', 'api', 'users', '**'),
         path.join(testPath, 'support', 'factories', '*.js')
       ]);
