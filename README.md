@@ -82,7 +82,9 @@ This boilerplate comes with a collection of npm scripts to make your life easier
 - `dev`: Run the application in development mode
 - `start` Run the application in production mode (prefer not to do that in development) 
 - `test`: Run the test suite
-- `coverage`: Run the test suite and generate code coverage, the output will be on `coverage` folder
+- `test:unit`: Run only the unit tests
+- `test:features`: Run only the features tests
+- `coverage`: Run only the unit tests and generate code coverage for them, the output will be on `coverage` folder
 - `lint`: Lint the codebase
 - `sequelize`: Alias to the [Sequelize CLI](https://github.com/sequelize/cli)
 - `console`: Open the built-in console, you can access the DI container through the `container` variable once it's open, the console is promise-friendly. Click [here](https://github.com/talyssonoc/node-api-boilerplate/wiki/Application-console) to know more about the built-in console
@@ -90,7 +92,7 @@ This boilerplate comes with a collection of npm scripts to make your life easier
 
 ## Tech
 
-- [Node v6+](http://nodejs.org/)
+- [Node v7.6+](http://nodejs.org/)
 - [Express](https://npmjs.com/package/express)
 - [Sequelize](https://www.npmjs.com/package/sequelize)
 - [Awilix](https://www.npmjs.com/package/awilix)
@@ -104,7 +106,7 @@ This boilerplate comes with a collection of npm scripts to make your life easier
 - [Mocha](https://www.npmjs.com/package/mocha)
 - [Chai](https://www.npmjs.com/package/chai)
 - [FactoryGirl](https://www.npmjs.com/package/factory-girl)
-- [Istanbul](https://www.npmjs.com/package/istanbul)
+- [Istanbul](https://www.npmjs.com/package/istanbul) + [NYC](https://www.npmjs.com/package/nyc)
 - [ESLint](https://www.npmjs.com/package/eslint)
 
 ## Contributing
