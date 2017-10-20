@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 const pm2 = require('pm2');
 
 const instances = process.env.WEB_CONCURRENCY || -1;
@@ -23,7 +24,7 @@ pm2.connect(() => {
       console.log('[PM2] Log streaming started');
 
       bus.on('log:out', (packet) => {
-       console.log('[App:%s] %s', packet.process.name, packet.data);
+        console.log('[App:%s] %s', packet.process.name, packet.data);
       });
 
       bus.on('log:err', (packet) => {
@@ -32,4 +33,3 @@ pm2.connect(() => {
     });
   });
 });
-
