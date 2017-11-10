@@ -4,7 +4,7 @@ describe('App :: User :: DeleteUser', () => {
   var deleteUser;
 
   describe('when user exists', () => {
-    beforeEach(() => {
+    beforeAll(() => {
       const MockUsersRepository = {
         remove: () => Promise.resolve()
       };
@@ -25,7 +25,7 @@ describe('App :: User :: DeleteUser', () => {
   });
 
   describe('when the user does not exist', () => {
-    beforeEach(() => {
+    beforeAll(() => {
       const MockUsersRepository = {
         remove: () => Promise.reject(new Error('NotFoundError'))
       };
@@ -47,7 +47,7 @@ describe('App :: User :: DeleteUser', () => {
 
 
   describe('when there is an internal error', () => {
-    beforeEach(() => {
+    beforeAll(() => {
       const MockUsersRepository = {
         remove: () => Promise.reject(new Error('Some Error'))
       };

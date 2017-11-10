@@ -5,7 +5,7 @@ describe('App :: User :: UpdateUser', () => {
 
   describe('when user exists', () => {
     describe('when data is valid', () => {
-      beforeEach(() => {
+      beforeAll(() => {
         const MockUsersRepository = {
           update: (id, data) => Promise.resolve(data)
         };
@@ -28,7 +28,7 @@ describe('App :: User :: UpdateUser', () => {
     });
 
     describe('when data is invalid', () => {
-      beforeEach(() => {
+      beforeAll(() => {
         const MockUsersRepository = {
           update: () => Promise.reject(Error('ValidationError'))
         };
@@ -76,7 +76,7 @@ describe('App :: User :: UpdateUser', () => {
 
 
   describe('when there is an internal error', () => {
-    beforeEach(() => {
+    beforeAll(() => {
       const MockUsersRepository = {
         update: () => Promise.reject(new Error('Some Error'))
       };

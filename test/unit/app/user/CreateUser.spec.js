@@ -4,7 +4,7 @@ describe('App :: User :: CreateUser', () => {
   var createUser;
 
   describe('when user is valid', () => {
-    beforeEach(() => {
+    beforeAll(() => {
       const MockUsersRepository = {
         add: (user) => Promise.resolve(user)
       };
@@ -27,7 +27,7 @@ describe('App :: User :: CreateUser', () => {
   });
 
   describe('when user is invalid', () => {
-    beforeEach(() => {
+    beforeAll(() => {
       const MockUsersRepository = {
         add: () => Promise.reject(Error('ValidationError'))
       };

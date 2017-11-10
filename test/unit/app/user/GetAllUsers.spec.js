@@ -4,7 +4,7 @@ describe('App :: User :: GetAllUsers', () => {
   var getAllUsers;
 
   describe('when query is successful', () => {
-    beforeEach(() => {
+    beforeAll(() => {
       const MockUsersRepository = {
         getAll: () => Promise.resolve('Imagine all the users...')
       };
@@ -25,7 +25,7 @@ describe('App :: User :: GetAllUsers', () => {
   });
 
   describe('when there is an internal error', () => {
-    beforeEach(() => {
+    beforeAll(() => {
       const MockUsersRepository = {
         getAll: () => Promise.reject(new Error('Failed'))
       };
