@@ -1,11 +1,10 @@
 const request = require('test/support/request');
 const factory = require('test/support/factory');
-const { expect } = require('chai');
 
 describe('API :: PUT /api/users/:id', () => {
-  context('when user exists', () => {
-    context('when sent data is ok', () => {
-      it('updates and returns 202 with the updated user', async () => {
+  describe('when user exists', () => {
+    describe('when sent data is ok', () => {
+      test('updates and returns 202 with the updated user', async () => {
         const user = await factory.create('user', {
           name: 'User'
         });
@@ -17,13 +16,13 @@ describe('API :: PUT /api/users/:id', () => {
           })
           .expect(202);
 
-        expect(body.id).to.equal(user.id);
-        expect(body.name).to.equal('Updated User');
+        expect(body.id).toBe(user.id);
+        expect(body.name).toBe('Updated User');
       });
     });
 
-    context('when name is empty', () => {
-      it('does update and returns 400 with the validation error', async () => {
+    describe('when name is empty', () => {
+      test('does update and returns 400 with the validation error', async () => {
         const user = await factory.create('user', {
           name: 'User'
         });
@@ -35,15 +34,15 @@ describe('API :: PUT /api/users/:id', () => {
           })
           .expect(400);
 
-        expect(body.type).to.equal('ValidationError');
-        expect(body.details).to.have.lengthOf(1);
-        expect(body.details[0].message).to.equal('"name" is not allowed to be empty');
+        expect(body.type).toBe('ValidationError');
+        expect(body.details).toHaveLength(1);
+        expect(body.details[0].message).toBe('"name" is not allowed to be empty');
       });
     });
   });
 
-  context('when user does not exist', () => {
-    it('returns the not found message and status 404', async () => {
+  describe('when user does not exist', () => {
+    test('returns the not found message and status 404', async () => {
       const { body } = await request()
         .put('/api/users/0')
         .send({
@@ -51,8 +50,8 @@ describe('API :: PUT /api/users/:id', () => {
         })
         .expect(404);
 
-      expect(body.type).to.equal('NotFoundError');
-      expect(body.details).to.equal('User with id 0 can\'t be found.');
+      expect(body.type).toBe('NotFoundError');
+      expect(body.details).toBe('User with id 0 can\'t be found.');
     });
   });
 });

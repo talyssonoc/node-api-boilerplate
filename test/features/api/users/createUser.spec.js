@@ -1,9 +1,8 @@
 const request = require('test/support/request');
-const { expect } = require('chai');
 
 describe('API :: POST /api/users', () => {
-  context('when sent data is ok', () => {
-    it('creates and returns 201 and the new user', async () => {
+  describe('when sent data is ok', () => {
+    test('creates and returns 201 and the new user', async () => {
       const { body } = await request()
         .post('/api/users')
         .send({
@@ -11,21 +10,22 @@ describe('API :: POST /api/users', () => {
         })
         .expect(201);
 
-      expect(body.id).to.exist;
-      expect(body.name).to.equal('New User');
-      expect(body).to.have.all.keys('id', 'name');
+      expect(body.id).toBeDefined();
+      expect(body.name).toBe('New User');
+      expect(body).toHaveProperty('id');
+      expect(body).toHaveProperty('name');
     });
   });
 
-  context('when name is missing', () => {
-    it('does not create and returns 400 with the validation error', async () => {
+  describe('when name is missing', () => {
+    test('does not create and returns 400 with the validation error', async () => {
       const { body } = await request()
         .post('/api/users')
         .expect(400);
 
-      expect(body.type).to.equal('ValidationError');
-      expect(body.details).to.have.lengthOf(1);
-      expect(body.details[0].message).to.equal('"name" is required');
+      expect(body.type).toBe('ValidationError');
+      expect(body.details).toHaveLength(1);
+      expect(body.details[0].message).toBe('"name" is required');
     });
   });
 });
