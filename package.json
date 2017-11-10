@@ -14,7 +14,7 @@
     "test:all": "npm run test:unit && npm run test:features",
     "test:unit": "cross-env NODE_PATH=. jest test/unit --coverage=false --config jest.config.js",
     "test:features": "cross-env NODE_PATH=. jest test/features --coverage=false --config jest.config.js",
-    "coverage": "cross-env NODE_PATH=. jest --config jest.config.js",
+    "coverage": "cross-env NODE_PATH=. jest test/ --config jest.config.js",
     "lint": "eslint {src,test,config}/**/*.js",
     "sequelize": "cross-env NODE_PATH=. sequelize",
     "console": "cross-env NODE_PATH=. node src/interfaces/console/index.js",
