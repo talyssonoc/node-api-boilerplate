@@ -1,12 +1,11 @@
-const { expect } = require('chai');
 const UpdateUser = require('src/app/user/UpdateUser');
 
 describe('App :: User :: UpdateUser', () => {
   var updateUser;
 
-  context('when user exists', () => {
-    context('when data is valid', () => {
-      before(() => {
+  describe('when user exists', () => {
+    describe('when data is valid', () => {
+      beforeEach(() => {
         const MockUsersRepository = {
           update: (id, data) => Promise.resolve(data)
         };
@@ -16,11 +15,11 @@ describe('App :: User :: UpdateUser', () => {
         });
       });
 
-      it('updates the user and emits SUCCESS', (done) => {
+      test('updates the user and emits SUCCESS', (done) => {
         const userData = { name: 'Updated User' };
 
         updateUser.on(updateUser.outputs.SUCCESS, (response) => {
-          expect(response.name).to.equal('Updated User');
+          expect(response.name).toBe('Updated User');
           done();
         });
 
@@ -28,8 +27,8 @@ describe('App :: User :: UpdateUser', () => {
       });
     });
 
-    context('when data is invalid', () => {
-      before(() => {
+    describe('when data is invalid', () => {
+      beforeEach(() => {
         const MockUsersRepository = {
           update: () => Promise.reject(Error('ValidationError'))
         };
@@ -39,11 +38,11 @@ describe('App :: User :: UpdateUser', () => {
         });
       });
 
-      it('emits VALIDATION_ERROR with the error', (done) => {
+      test('emits VALIDATION_ERROR with the error', (done) => {
         const userData = { name: 'New User' };
 
         updateUser.on(updateUser.outputs.VALIDATION_ERROR, (response) => {
-          expect(response.message).to.equal('ValidationError');
+          expect(response.message).toBe('ValidationError');
           done();
         });
 
@@ -52,8 +51,8 @@ describe('App :: User :: UpdateUser', () => {
     });
   });
 
-  context('when the user does not exist', () => {
-    before(() => {
+  describe('when the user does not exist', () => {
+    beforeEach(() => {
       const MockUsersRepository = {
         update: () => Promise.reject(new Error('NotFoundError'))
       };
@@ -63,11 +62,11 @@ describe('App :: User :: UpdateUser', () => {
       });
     });
 
-    it('emits NOT_FOUND with the error', (done) => {
+    test('emits NOT_FOUND with the error', (done) => {
       const userData = { name: 'New User' };
 
       updateUser.on(updateUser.outputs.NOT_FOUND, (response) => {
-        expect(response.message).to.equal('NotFoundError');
+        expect(response.message).toBe('NotFoundError');
         done();
       });
 
@@ -76,8 +75,8 @@ describe('App :: User :: UpdateUser', () => {
   });
 
 
-  context('when there is an internal error', () => {
-    before(() => {
+  describe('when there is an internal error', () => {
+    beforeEach(() => {
       const MockUsersRepository = {
         update: () => Promise.reject(new Error('Some Error'))
       };
@@ -87,11 +86,11 @@ describe('App :: User :: UpdateUser', () => {
       });
     });
 
-    it('emits ERROR with the error', (done) => {
+    test('emits ERROR with the error', (done) => {
       const userData = { name: 'New User' };
 
       updateUser.on(updateUser.outputs.ERROR, (response) => {
-        expect(response.message).to.equal('Some Error');
+        expect(response.message).toBe('Some Error');
         done();
       });
 

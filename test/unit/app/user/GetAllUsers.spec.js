@@ -1,11 +1,10 @@
-const { expect } = require('chai');
 const GetAllUsers = require('src/app/user/GetAllUsers');
 
 describe('App :: User :: GetAllUsers', () => {
   var getAllUsers;
 
-  context('when query is successful', () => {
-    before(() => {
+  describe('when query is successful', () => {
+    beforeEach(() => {
       const MockUsersRepository = {
         getAll: () => Promise.resolve('Imagine all the users...')
       };
@@ -15,9 +14,9 @@ describe('App :: User :: GetAllUsers', () => {
       });
     });
 
-    it('emits SUCCESS with all the users', (done) => {
+    test('emits SUCCESS with all the users', (done) => {
       getAllUsers.on(getAllUsers.outputs.SUCCESS, (response) => {
-        expect(response).to.equal('Imagine all the users...');
+        expect(response).toBe('Imagine all the users...');
         done();
       });
 
@@ -25,8 +24,8 @@ describe('App :: User :: GetAllUsers', () => {
     });
   });
 
-  context('when there is an internal error', () => {
-    before(() => {
+  describe('when there is an internal error', () => {
+    beforeEach(() => {
       const MockUsersRepository = {
         getAll: () => Promise.reject(new Error('Failed'))
       };
@@ -36,9 +35,9 @@ describe('App :: User :: GetAllUsers', () => {
       });
     });
 
-    it('emits ERROR with the error', (done) => {
+    test('emits ERROR with the error', (done) => {
       getAllUsers.on(getAllUsers.outputs.ERROR, (response) => {
-        expect(response.message).to.equal('Failed');
+        expect(response.message).toBe('Failed');
 
         done();
       });

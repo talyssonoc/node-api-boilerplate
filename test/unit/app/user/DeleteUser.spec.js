@@ -1,11 +1,10 @@
-const { expect } = require('chai');
 const DeleteUser = require('src/app/user/DeleteUser');
 
 describe('App :: User :: DeleteUser', () => {
   var deleteUser;
 
-  context('when user exists', () => {
-    before(() => {
+  describe('when user exists', () => {
+    beforeEach(() => {
       const MockUsersRepository = {
         remove: () => Promise.resolve()
       };
@@ -15,9 +14,9 @@ describe('App :: User :: DeleteUser', () => {
       });
     });
 
-    it('deletes the user and emits SUCCESS with no payload', (done) => {
+    test('deletes the user and emits SUCCESS with no payload', (done) => {
       deleteUser.on(deleteUser.outputs.SUCCESS, (response) => {
-        expect(response).to.be.undefined();
+        expect(response).toBeUndefined();
         done();
       });
 
@@ -25,8 +24,8 @@ describe('App :: User :: DeleteUser', () => {
     });
   });
 
-  context('when the user does not exist', () => {
-    before(() => {
+  describe('when the user does not exist', () => {
+    beforeEach(() => {
       const MockUsersRepository = {
         remove: () => Promise.reject(new Error('NotFoundError'))
       };
@@ -36,9 +35,9 @@ describe('App :: User :: DeleteUser', () => {
       });
     });
 
-    it('emits NOT_FOUND with the error', (done) => {
+    test('emits NOT_FOUND with the error', (done) => {
       deleteUser.on(deleteUser.outputs.NOT_FOUND, (response) => {
-        expect(response.message).to.equal('NotFoundError');
+        expect(response.message).toBe('NotFoundError');
         done();
       });
 
@@ -47,8 +46,8 @@ describe('App :: User :: DeleteUser', () => {
   });
 
 
-  context('when there is an internal error', () => {
-    before(() => {
+  describe('when there is an internal error', () => {
+    beforeEach(() => {
       const MockUsersRepository = {
         remove: () => Promise.reject(new Error('Some Error'))
       };
@@ -58,9 +57,9 @@ describe('App :: User :: DeleteUser', () => {
       });
     });
 
-    it('emits ERROR with the error', (done) => {
+    test('emits ERROR with the error', (done) => {
       deleteUser.on(deleteUser.outputs.ERROR, (response) => {
-        expect(response.message).to.equal('Some Error');
+        expect(response.message).toBe('Some Error');
         done();
       });
 

@@ -1,4 +1,3 @@
-const { expect } = require('chai');
 const Operation = require('src/app/Operation');
 
 describe('App :: Operation', () => {
@@ -13,23 +12,23 @@ describe('App :: Operation', () => {
   });
 
   describe('#on', () => {
-    context('when added handler for a valid output', () => {
-      it('does not throw', () => {
+    describe('when added handler for a valid output', () => {
+      test('does not throw', () => {
         const operation = new CustomOperation();
 
         expect(() => {
           operation.on(operation.outputs.SUCCESS, () => {});
-        }).to.not.throw;
+        }).toNotThrow;
       });
     });
 
-    context('when added handler for a invalid output', () => {
-      it('does not throw', () => {
+    describe('when added handler for a invalid output', () => {
+      test('does not throw', () => {
         const operation = new CustomOperation();
 
         expect(() => {
           operation.on('INVALID', () => {});
-        }).to.throw(Error, /Invalid output "INVALID" to operation CustomOperation/);
+        }).toThrowError(Error);
       });
     });
   });
