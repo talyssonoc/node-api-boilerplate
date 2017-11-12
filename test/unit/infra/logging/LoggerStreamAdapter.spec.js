@@ -1,18 +1,17 @@
-const { expect } = require('chai');
 const LoggerStreamAdapter = require('src/infra/logging/LoggerStreamAdapter');
 
 describe('Infra :: Logging :: LoggerStreamAdapter', () => {
   describe('.toStream', () => {
-    it('wraps the logger into a stream', () => {
+    test('wraps the logger into a stream', () => {
       const fakeLogger = {};
 
-      expect(LoggerStreamAdapter.toStream(fakeLogger)).to.have.all.keys('write');
+      expect(LoggerStreamAdapter.toStream(fakeLogger)).toHaveProperty('write');
     });
 
-    it('removes the \\n character from the message', () => {
+    test('removes the \\n character from the message', () => {
       const fakeLogger = {
         info(message) {
-          expect(message).to.equal('Sliced message');
+          expect(message).toBe('Sliced message');
         }
       };
 

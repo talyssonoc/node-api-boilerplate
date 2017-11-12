@@ -1,11 +1,10 @@
-const { expect } = require('chai');
 const CreateUser = require('src/app/user/CreateUser');
 
 describe('App :: User :: CreateUser', () => {
   var createUser;
 
-  context('when user is valid', () => {
-    before(() => {
+  describe('when user is valid', () => {
+    beforeAll(() => {
       const MockUsersRepository = {
         add: (user) => Promise.resolve(user)
       };
@@ -15,11 +14,11 @@ describe('App :: User :: CreateUser', () => {
       });
     });
 
-    it('creates the user and emits SUCCESS', (done) => {
+    test('creates the user and emits SUCCESS', (done) => {
       const userData = { name: 'New User' };
 
       createUser.on(createUser.outputs.SUCCESS, (response) => {
-        expect(response.name).to.equal('New User');
+        expect(response.name).toBe('New User');
         done();
       });
 
@@ -27,8 +26,8 @@ describe('App :: User :: CreateUser', () => {
     });
   });
 
-  context('when user is invalid', () => {
-    before(() => {
+  describe('when user is invalid', () => {
+    beforeAll(() => {
       const MockUsersRepository = {
         add: () => Promise.reject(Error('ValidationError'))
       };
@@ -38,11 +37,11 @@ describe('App :: User :: CreateUser', () => {
       });
     });
 
-    it('emits VALIDATION_ERROR with the error', (done) => {
+    test('emits VALIDATION_ERROR with the error', (done) => {
       const userData = { name: 'New User' };
 
       createUser.on(createUser.outputs.VALIDATION_ERROR, (response) => {
-        expect(response.message).to.equal('ValidationError');
+        expect(response.message).toBe('ValidationError');
         done();
       });
 
@@ -50,8 +49,8 @@ describe('App :: User :: CreateUser', () => {
     });
   });
 
-  context('when there is an internal error', () => {
-    before(() => {
+  describe('when there is an internal error', () => {
+    beforeEach(() => {
       const MockUsersRepository = {
         add: () => Promise.reject(new Error('Some Error'))
       };
@@ -61,11 +60,11 @@ describe('App :: User :: CreateUser', () => {
       });
     });
 
-    it('emits ERROR with the error', (done) => {
+    test('emits ERROR with the error', (done) => {
       const userData = { name: 'New User' };
 
       createUser.on(createUser.outputs.ERROR, (response) => {
-        expect(response.message).to.equal('Some Error');
+        expect(response.message).toBe('Some Error');
         done();
       });
 

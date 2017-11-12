@@ -32,7 +32,8 @@ An opinionated boilerplate for Node web APIs focused on separation of concerns a
 
   <dt>Prepared for testing</dt>
   <dd>
-    The test suite uses <a href="https://www.npmjs.com/package/mocha">Mocha</a>/<a href="https://www.npmjs.com/package/chai">Chai</a> and is prepared to run unit, integration and functional tests right from the beginning. There are helpers to <a href="https://github.com/talyssonoc/node-api-boilerplate/wiki/The-test-suite">make it easy to make requests to the web app during the tests and for cleaning the database after each test</a>. A <a href="https://www.npmjs.com/package/factory-girl">FactoryGirl</a> adapter for Sequelize is setup to make your tests DRY as well, and the tests generate code coverage measurement with <a href="https://www.npmjs.com/package/istanbul">Istanbul</a>. You should read about the <a href="https://github.com/talyssonoc/node-api-boilerplate/wiki/Chai-plugins">Chai plugins that are setup by default too</a>.
+    The test suite uses <a href="https://www.npmjs.com/package/jest">Jest</a>
+    There are helpers to <a href="https://github.com/talyssonoc/node-api-boilerplate/wiki/The-test-suite">make it easy to make requests to the web app during the tests and for cleaning the database after each test</a>. A <a href="https://www.npmjs.com/package/factory-girl">FactoryGirl</a> adapter for Sequelize is setup to make your tests DRY as well, and the tests generate code coverage measurement out of the box.
   </dd>
 
   <dt>Dependency injection</dt>
@@ -80,7 +81,7 @@ After playing a little bit with the boilerplate and _before_ implementing a real
 This boilerplate comes with a collection of npm scripts to make your life easier, you'll run them with `npm run <script name>` or `yarn run <script name>`:
 
 - `dev`: Run the application in development mode
-- `start` Run the application in production mode (prefer not to do that in development) 
+- `start` Run the application in production mode (prefer not to do that in development)
 - `test`: Run the test suite
 - `test:unit`: Run only the unit tests
 - `test:features`: Run only the features tests
