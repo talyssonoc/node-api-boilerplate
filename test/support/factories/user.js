@@ -1,7 +1,7 @@
 const dataFaker = require('src/infra/support/dataFaker');
 
-module.exports = (factory, { User }) => {
-  factory.define('user', User, {
+module.exports = (factory, { UserModel }) => {
+  factory.define('user', UserModel, {
     name: dataFaker.name()
   });
 };

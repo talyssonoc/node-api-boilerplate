@@ -2,7 +2,7 @@ const { expect } = require('chai');
 const factory = require('test/support/factory');
 const SequelizeUsersRepository = require('src/infra/user/SequelizeUsersRepository');
 const User = require('src/domain/user/User');
-const { User: UserModel } = require('src/infra/database/models');
+const { UserModel } = require('src/infra/database/models');
 
 describe('Infra :: User :: SequelizeUsersRepository', () => {
   let repository;

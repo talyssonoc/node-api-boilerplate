@@ -12,8 +12,7 @@ module.exports = {
       })
       .forEach((file) => {
         const model = sequelize['import'](path.join(baseFolder, file));
-        const modelName = file.split('.')[0];
-        loaded[modelName] = model;
+        loaded[model.name] = model;
       });
 
     Object.keys(loaded).forEach((modelName) => {

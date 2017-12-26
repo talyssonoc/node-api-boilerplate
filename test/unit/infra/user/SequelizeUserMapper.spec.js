@@ -6,10 +6,10 @@ describe('Infra :: User :: SequelizeUserMapper', () => {
   describe('.toEntity', () => {
     it('returns user instance with passed attributes', () => {
       const mockedSequelizeUser = {
-        dataValues: {
+        get: () => ({
           id: 1,
           name: 'The Name'
-        }
+        })
       };
 
       const entity = SequelizeUserMapper.toEntity(mockedSequelizeUser);
