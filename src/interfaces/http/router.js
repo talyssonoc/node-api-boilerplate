@@ -5,6 +5,8 @@ const bodyParser = require('body-parser');
 const compression = require('compression');
 const methodOverride = require('method-override');
 const controller = require('./utils/createControllerRoutes');
+var swaggerUi = require('swagger-ui-express'),
+  swaggerDocument = require('./utils/swagger/swagger.json');
 
 module.exports = ({ config, containerMiddleware, loggerMiddleware, errorHandler }) => {
   const router = Router();
@@ -40,6 +42,7 @@ module.exports = ({ config, containerMiddleware, loggerMiddleware, errorHandler 
   apiRouter.use('/users', controller('user/UsersController'));
 
   router.use('/api', apiRouter);
+  router.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
   router.use(errorHandler);
 

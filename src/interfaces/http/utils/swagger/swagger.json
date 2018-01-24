@@ -1,0 +1,154 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "title": "API Phalcon ATM",
+        "version": "v1"
+    },
+    "basePath": "/api",
+    "schemes": [
+        "http"
+    ],
+    "consumes": [
+        "application/json"
+    ],
+    "paths": {
+        "/users": {
+            "get": {
+                "operationId": "usersList",
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "List of users",
+                        "examples": {
+                            "application/json": "[\n  {\n      \"id\": 1,\n      \"name\": \"test\"\n  }\n]"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "operationId": "userCreate",
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "examples": {
+                            "application/json": "{\n  \"id\": 2,\n  \"name\": \"test2\"\n}"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "examples": {
+                            "application/json": "{\n  \"type\": \"ValidationError\",\n  \"details\": [\n      {\n          \"message\": \"\\\"name\\\" is required\",\n          \"path\": \"name\"\n      }\n  ]\n}"
+                        }
+                    }
+                }
+            }
+        },
+        "/users/{userId}": {
+            "put": {
+                "operationId": "userUpdate",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "userId",
+                        "in": "path",
+                        "description": "ID of user to update",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int64"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Accepted",
+                        "examples": {
+                            "application/json": "{\n  \"id\": 1,\n  \"name\": \"test test\"\n}"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "examples": {
+                            "application/json": "{\n  \"type\": \"NotFoundError\",\n  \"details\": \"User with id 3 can't be found.\"\n}"
+                        }
+                    }
+                }
+            }
+        },
+        "/users/{uId}": {
+            "delete": {
+                "operationId": "userDelete",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "uId",
+                        "in": "path",
+                        "description": "ID of user to delete",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int64"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Retorna todos os dados do cliente identificado",
+                        "examples": {
+                            "application/json": "{[\n\n]}"
+                        }
+                    },
+                    "400": {
+                        "description": "Erro de negócio",
+                        "examples": {
+                            "application/json": "{\n  \"type\": \"InternalServerError\",\n  \"message\": \"Informe o código do canal, \",\n  \"stack\": \"Error: Informe o código do canal, \\n\"\n}"
+                        }
+                    },
+                    "500": {
+                        "description": "Erro de Sistema",
+                        "examples": {
+                            "application/json": "{\n  \"type\": \"InternalServerError\",\n  \"message\": \"Tempo excedido\",\n  \"stack\": \"Error: connect ETIMEDOUT 10.0.2.205:80\"\n}"
+                        }
+                    }
+                }
+            }
+        },
+        "/users/{id}": {
+            "get": {
+                "operationId": "userList",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of user to fetch",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int64"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Return a specific user",
+                        "examples": {
+                            "application/json": "{\n  \"id\": 1,\n  \"name\": \"test\"\n}"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found Error",
+                        "examples": {
+                            "application/json": "{\n  \"type\": \"NotFoundError\",\n  \"details\": \"User with id 2 can't be found.\"\n}"
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
