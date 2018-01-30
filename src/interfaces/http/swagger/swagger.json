@@ -1,118 +1,69 @@
 {
-  "swagger": "2.0",
+  "openapi": "3.0.0",
   "info": {
     "title": "Node API boilerplate",
     "version": "v1"
   },
-  "basePath": "/api",
-  "schemes": [
-    "http"
-  ],
-  "consumes": [
-    "application/json"
+  "servers": [
+    {
+      "description": "Local server",
+      "url": "/api"
+    }
   ],
   "paths": {
     "/users": {
       "get": {
-        "operationId": "usersList",
-        "produces": [
-          "application/json"
-        ],
+        "operationId": "listUsers",
+        "tags": [ "Users" ],
         "responses": {
           "200": {
-            "description": "List of users",
-            "examples": {
-              "application/json": "[\n  {\n      \"id\": 1,\n      \"name\": \"test\"\n  }\n]"
+            "description": "List of all users",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/User"
+                  }
+                }
+              }
             }
           }
         }
       },
       "post": {
-        "operationId": "userCreate",
-        "produces": [
-          "application/json"
-        ],
+        "operationId": "createUser",
+        "tags": [ "Users" ],
+        "requestBody": {
+          "description": "User data",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewUser"
+              }
+            }
+          }
+        },
         "responses": {
           "201": {
-            "description": "Created",
-            "examples": {
-              "application/json": "{\n  \"id\": 2,\n  \"name\": \"test2\"\n}"
+            "description": "User created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
             }
           },
           "400": {
-            "description": "Bad Request",
-            "examples": {
-              "application/json": "{\n  \"type\": \"ValidationError\",\n  \"details\": [\n      {\n          \"message\": \"\\\"name\\\" is required\",\n          \"path\": \"name\"\n      }\n  ]\n}"
-            }
-          }
-        }
-      }
-    },
-    "/users/{userId}": {
-      "put": {
-        "operationId": "userUpdate",
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "name": "userId",
-            "in": "path",
-            "description": "ID of user to update",
-            "required": true,
-            "type": "integer",
-            "format": "int64"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Accepted",
-            "examples": {
-              "application/json": "{\n  \"id\": 1,\n  \"name\": \"test test\"\n}"
-            }
-          },
-          "404": {
-            "description": "Not Found",
-            "examples": {
-              "application/json": "{\n  \"type\": \"NotFoundError\",\n  \"details\": \"User with id 3 can't be found.\"\n}"
-            }
-          }
-        }
-      }
-    },
-    "/users/{uId}": {
-      "delete": {
-        "operationId": "userDelete",
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "name": "uId",
-            "in": "path",
-            "description": "ID of user to delete",
-            "required": true,
-            "type": "integer",
-            "format": "int64"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Retorna todos os dados do cliente identificado",
-            "examples": {
-              "application/json": "{[\n\n]}"
-            }
-          },
-          "400": {
-            "description": "Erro de negócio",
-            "examples": {
-              "application/json": "{\n  \"type\": \"InternalServerError\",\n  \"message\": \"Informe o código do canal, \",\n  \"stack\": \"Error: Informe o código do canal, \\n\"\n}"
-            }
-          },
-          "500": {
-            "description": "Erro de Sistema",
-            "examples": {
-              "application/json": "{\n  \"type\": \"InternalServerError\",\n  \"message\": \"Tempo excedido\",\n  \"stack\": \"Error: connect ETIMEDOUT 10.0.2.205:80\"\n}"
+            "description": "User not created because of validation error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationError"
+                }
+              }
             }
           }
         }
@@ -120,15 +71,13 @@
     },
     "/users/{id}": {
       "get": {
-        "operationId": "userList",
-        "produces": [
-          "application/json"
-        ],
+        "operationId": "showUser",
+        "tags": [ "Users" ],
         "parameters": [
           {
             "name": "id",
             "in": "path",
-            "description": "ID of user to fetch",
+            "description": "Id of user to show",
             "required": true,
             "type": "integer",
             "format": "int64"
@@ -136,16 +85,162 @@
         ],
         "responses": {
           "200": {
-            "description": "Return a specific user",
-            "examples": {
-              "application/json": "{\n  \"id\": 1,\n  \"name\": \"test\"\n}"
+            "description": "Return user with given id",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
             }
           },
           "404": {
-            "description": "Not Found Error",
-            "examples": {
-              "application/json": "{\n  \"type\": \"NotFoundError\",\n  \"details\": \"User with id 2 can't be found.\"\n}"
+            "description": "User not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFoundError"
+                }
+              }
             }
+          }
+        }
+      },
+      "put": {
+        "operationId": "updateUser",
+        "tags": [ "Users" ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Id of user to update",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "requestBody": {
+          "description": "User new data",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewUser"
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "User updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFoundError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "operationId": "deleteUser",
+        "tags": [ "Users" ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Id of user to delete",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "User deleted successfully"
+          },
+          "404": {
+            "description": "User not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFoundError"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "User": {
+        "allOf": [
+          { "$ref": "#/components/schemas/NewUser" },
+          {
+            "required": [ "id" ],
+            "properties": {
+              "id": {
+                "type": "integer",
+                "format": "int64"
+              }
+            }
+          }
+        ]
+      },
+      "NewUser": {
+        "required": [ "name" ],
+        "properties": {
+          "name": {
+            "type": "string"
+          }
+        }
+      },
+      "ValidationError": {
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [ "ValidationError" ]
+          },
+          "details": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ValidationErrorDetail"
+            }
+          }
+        }
+      },
+      "ValidationErrorDetail": {
+        "properties": {
+          "message": {
+            "type": "string"
+          },
+          "path": {
+            "type": "string"
+          }
+        }
+      },
+      "NotFoundError": {
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [ "NotFoundError" ]
+          },
+          "details": {
+            "type": "string",
+            "enum": [ "User with id {id} not found" ]
           }
         }
       }
