@@ -26,7 +26,8 @@ module.exports = ({ config, containerMiddleware, loggerMiddleware, errorHandler,
     .use(cors())
     .use(bodyParser.json())
     .use(compression())
-    .use(containerMiddleware);
+    .use(containerMiddleware)
+    .use('/docs', swaggerMiddleware);
 
   /*
    * Add your API routes here
@@ -40,7 +41,6 @@ module.exports = ({ config, containerMiddleware, loggerMiddleware, errorHandler,
   apiRouter.use('/users', controller('user/UsersController'));
 
   router.use('/api', apiRouter);
-  router.use('/api-docs', swaggerMiddleware);
 
   router.use(errorHandler);
 
