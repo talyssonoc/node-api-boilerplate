@@ -2,6 +2,7 @@ const path = require('path');
 const replace = require('replace-in-file');
 const remove = require('del');
 const Listr = require('listr');
+const { writeFileSync } = require('fs');
 
 const srcPath = path.join(__dirname, '..', 'src');
 const testPath = path.join(__dirname, '..', 'test');
@@ -53,6 +54,27 @@ const tasks = new Listr([
         path.join(testPath, 'features', 'api', 'users', '**'),
         path.join(testPath, 'support', 'factories', '*.js')
       ]);
+    }
+  },
+  {
+    title: 'Remove example data from swagger.json',
+    task() {
+      writeFileSync(
+        path.join(srcPath, 'interfaces', 'http', 'swagger', 'swagger.json'),
+        JSON.stringify({
+          openapi: '3.0.0',
+          info: {
+            title: 'Node API boilerplate',
+            version: 'v1'
+          },
+          servers: [
+            {
+              description: 'Local server',
+              url: '/api'
+            }
+          ]
+        }, null, '  ')
+      );
     }
   },
   {
