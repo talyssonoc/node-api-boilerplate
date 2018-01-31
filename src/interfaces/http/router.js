@@ -6,7 +6,7 @@ const compression = require('compression');
 const methodOverride = require('method-override');
 const controller = require('./utils/createControllerRoutes');
 
-module.exports = ({ config, containerMiddleware, loggerMiddleware, errorHandler }) => {
+module.exports = ({ config, containerMiddleware, loggerMiddleware, errorHandler, swaggerMiddleware }) => {
   const router = Router();
 
   /* istanbul ignore if */
@@ -26,7 +26,8 @@ module.exports = ({ config, containerMiddleware, loggerMiddleware, errorHandler 
     .use(cors())
     .use(bodyParser.json())
     .use(compression())
-    .use(containerMiddleware);
+    .use(containerMiddleware)
+    .use('/docs', swaggerMiddleware);
 
   /*
    * Add your API routes here
