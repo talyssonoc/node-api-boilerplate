@@ -1,4 +1,4 @@
-const { createContainer, Lifetime } = require('awilix');
+const { createContainer, asClass, asFunction, asValue } = require('awilix');
 const { scopePerRequest } = require('awilix-express');
 
 const config = require('../config');
@@ -28,50 +28,52 @@ const container = createContainer();
 
 // System
 container
-  .registerClass({
-    app: [Application, { lifetime: Lifetime.SINGLETON }],
-    server: [Server, { lifetime: Lifetime.SINGLETON }]
+  .register({
+    app: asClass(Application).singleton(),
+    server: asClass(Server).singleton()
   })
-  .registerFunction({
-    router: [router, { lifetime: Lifetime.SINGLETON }],
-    logger: [logger, { lifetime: Lifetime.SINGLETON }]
+  .register({
+    router: asFunction(router).singleton(),
+    logger: asFunction(logger).singleton()
   })
-  .registerValue({ config });
+  .register({
+    config: asValue(config)
+  });
 
 // Middlewares
 container
-  .registerFunction({
-    loggerMiddleware: [loggerMiddleware, { lifetime: Lifetime.SINGLETON }]
+  .register({
+    loggerMiddleware: asFunction(loggerMiddleware).singleton()
   })
-  .registerValue({
-    containerMiddleware: scopePerRequest(container),
-    errorHandler: config.production ? errorHandler : devErrorHandler,
-    swaggerMiddleware: [swaggerMiddleware]
+  .register({
+    containerMiddleware: asValue(scopePerRequest(container)),
+    errorHandler: asValue(config.production ? errorHandler : devErrorHandler),
+    swaggerMiddleware: asValue([swaggerMiddleware])
   });
 
 // Repositories
-container.registerClass({
-  usersRepository: [SequelizeUsersRepository, { lifetime: Lifetime.SINGLETON }]
+container.register({
+  usersRepository: asClass(SequelizeUsersRepository).singleton()
 });
 
 // Database
-container.registerValue({
-  database,
-  UserModel
+container.register({
+  database: asValue(database),
+  UserModel: asValue(UserModel)
 });
 
 // Operations
-container.registerClass({
-  createUser: CreateUser,
-  getAllUsers: GetAllUsers,
-  getUser: GetUser,
-  updateUser: UpdateUser,
-  deleteUser: DeleteUser
+container.register({
+  createUser: asClass(CreateUser),
+  getAllUsers: asClass(GetAllUsers),
+  getUser: asClass(GetUser),
+  updateUser: asClass(UpdateUser),
+  deleteUser: asClass(DeleteUser)
 });
 
 // Serializers
-container.registerValue({
-  userSerializer: UserSerializer
+container.register({
+  userSerializer: asValue(UserSerializer)
 });
 
 module.exports = container;
