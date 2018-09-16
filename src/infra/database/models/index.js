@@ -1,6 +1,6 @@
 const { ModelsLoader } = require('src/infra/sequelize');
 const Sequelize = require('sequelize');
-const config = require('config').db;
+const { db: config } = require('config');
 
 if(config) {
   const sequelize = new Sequelize(config);
@@ -11,7 +11,7 @@ if(config) {
   });
 } else {
   /* eslint-disable no-console */
-  console.error('Database config file log found, disabling database.');
+  console.error('Database configuration not found, disabling database.');
   /* eslint-enable no-console */
 }
 
