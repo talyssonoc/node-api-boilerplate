@@ -1,125 +1,127 @@
-const { Router } = require('express');
-const { inject } = require('awilix-express');
+const {Router} = require('express');
+const {inject} = require('awilix-express');
 const Status = require('http-status');
 
 const UsersController = {
-  get router() {
+  get router () {
     const router = Router();
 
-    router.use(inject('userSerializer'));
-
-    router.get('/', inject('getAllUsers'), this.index);
-    router.get('/:id', inject('getUser'), this.show);
-    router.post('/', inject('createUser'), this.create);
-    router.put('/:id', inject('updateUser'), this.update);
-    router.delete('/:id', inject('deleteUser'), this.delete);
+    router.get('/', this.index);
+    router.get('/:id', this.show);
+    router.post('/', this.create);
+    router.put('/:id', this.update);
+    router.delete('/:id', this.delete);
 
     return router;
   },
 
-  index(req, res, next) {
-    const { getAllUsers, userSerializer } = req;
-    const { SUCCESS, ERROR } = getAllUsers.outputs;
+  index: inject(({getAllUsers, userSerializer}) =>
+    (req, res, next) => {
+      const {SUCCESS, ERROR} = getAllUsers.outputs;
 
-    getAllUsers
-      .on(SUCCESS, (users) => {
-        res
-          .status(Status.OK)
-          .json(users.map(userSerializer.serialize));
-      })
-      .on(ERROR, next);
+      getAllUsers
+        .on(SUCCESS, (users) => {
+          res
+            .status(Status.OK)
+            .json(users.map(userSerializer.serialize));
+        })
+        .on(ERROR, next);
 
-    getAllUsers.execute();
-  },
+      getAllUsers.execute();
+    }
+  ),
 
-  show(req, res, next) {
-    const { getUser, userSerializer } = req;
+  show: inject(({getUser, userSerializer}) =>
+    (req, res, next) => {
+      const {SUCCESS, ERROR, NOT_FOUND} = getUser.outputs;
 
-    const { SUCCESS, ERROR, NOT_FOUND } = getUser.outputs;
+      getUser
+        .on(SUCCESS, (user) => {
+          res
+            .status(Status.OK)
+            .json(userSerializer.serialize(user));
+        })
+        .on(NOT_FOUND, (error) => {
+          res.status(Status.NOT_FOUND).json({
+            type: 'NotFoundError',
+            details: error.details
+          });
+        })
+        .on(ERROR, next);
 
-    getUser
-      .on(SUCCESS, (user) => {
-        res
-          .status(Status.OK)
-          .json(userSerializer.serialize(user));
-      })
-      .on(NOT_FOUND, (error) => {
-        res.status(Status.NOT_FOUND).json({
-          type: 'NotFoundError',
-          details: error.details
-        });
-      })
-      .on(ERROR, next);
+      getUser.execute(Number(req.params.id));
+    }
+  ),
 
-    getUser.execute(Number(req.params.id));
-  },
+  create: inject(({createUser, userSerializer}) =>
+    (req, res, next) => {
+      const {SUCCESS, ERROR, VALIDATION_ERROR} = createUser.outputs;
 
-  create(req, res, next) {
-    const { createUser, userSerializer } = req;
-    const { SUCCESS, ERROR, VALIDATION_ERROR } = createUser.outputs;
+      createUser
+        .on(SUCCESS, (user) => {
+          res
+            .status(Status.CREATED)
+            .json(userSerializer.serialize(user));
+        })
+        .on(VALIDATION_ERROR, (error) => {
+          res.status(Status.BAD_REQUEST).json({
+            type: 'ValidationError',
+            details: error.details
+          });
+        })
+        .on(ERROR, next);
 
-    createUser
-      .on(SUCCESS, (user) => {
-        res
-          .status(Status.CREATED)
-          .json(userSerializer.serialize(user));
-      })
-      .on(VALIDATION_ERROR, (error) => {
-        res.status(Status.BAD_REQUEST).json({
-          type: 'ValidationError',
-          details: error.details
-        });
-      })
-      .on(ERROR, next);
+      createUser.execute(req.body);
+    }
+  ),
 
-    createUser.execute(req.body);
-  },
+  update: inject(({updateUser, userSerializer}) =>
+    (req, res, next) => {
+      const {SUCCESS, ERROR, VALIDATION_ERROR, NOT_FOUND} = updateUser.outputs;
 
-  update(req, res, next) {
-    const { updateUser, userSerializer } = req;
-    const { SUCCESS, ERROR, VALIDATION_ERROR, NOT_FOUND } = updateUser.outputs;
+      updateUser
+        .on(SUCCESS, (user) => {
+          res
+            .status(Status.ACCEPTED)
+            .json(userSerializer.serialize(user));
+        })
+        .on(VALIDATION_ERROR, (error) => {
+          res.status(Status.BAD_REQUEST).json({
+            type: 'ValidationError',
+            details: error.details
+          });
+        })
+        .on(NOT_FOUND, (error) => {
+          res.status(Status.NOT_FOUND).json({
+            type: 'NotFoundError',
+            details: error.details
+          });
+        })
+        .on(ERROR, next);
 
-    updateUser
-      .on(SUCCESS, (user) => {
-        res
-          .status(Status.ACCEPTED)
-          .json(userSerializer.serialize(user));
-      })
-      .on(VALIDATION_ERROR, (error) => {
-        res.status(Status.BAD_REQUEST).json({
-          type: 'ValidationError',
-          details: error.details
-        });
-      })
-      .on(NOT_FOUND, (error) => {
-        res.status(Status.NOT_FOUND).json({
-          type: 'NotFoundError',
-          details: error.details
-        });
-      })
-      .on(ERROR, next);
+      updateUser.execute(Number(req.params.id), req.body);
+    }
+  ),
 
-    updateUser.execute(Number(req.params.id), req.body);
-  },
+  delete: inject(({deleteUser}) =>
+    (req, res, next) => {
+      const {SUCCESS, ERROR, NOT_FOUND} = deleteUser.outputs;
 
-  delete(req, res, next) {
-    const { deleteUser } = req;
-    const { SUCCESS, ERROR,  NOT_FOUND } = deleteUser.outputs;
+      deleteUser
+        .on(SUCCESS, () => {
+          res.status(Status.ACCEPTED).end();
+        })
+        .on(NOT_FOUND, (error) => {
+          res.status(Status.NOT_FOUND).json({
+            type: 'NotFoundError',
+            details: error.details
+          });
+        })
+        .on(ERROR, next);
 
-    deleteUser
-      .on(SUCCESS, () => {
-        res.status(Status.ACCEPTED).end();
-      })
-      .on(NOT_FOUND, (error) => {
-        res.status(Status.NOT_FOUND).json({
-          type: 'NotFoundError',
-          details: error.details
-        });
-      })
-      .on(ERROR, next);
-
-    deleteUser.execute(Number(req.params.id));
-  }
+      deleteUser.execute(Number(req.params.id));
+    }
+  )
 };
 
 module.exports = UsersController;
