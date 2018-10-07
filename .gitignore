@@ -23,3 +23,6 @@ coverage/
 
 # IDE files
 .idea/
+
+# Console
+.node_repl_history
