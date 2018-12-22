@@ -21,7 +21,7 @@ function loadDbConfig() {
     return process.env.DATABASE_URL;
   }
 
-  if(fs.existsSync(path.join(__dirname, './database.js'))) {
-    return require('./database')[ENV];
+  if(fs.existsSync(path.join(__dirname, './config.js'))) {
+    return require('./config')[ENV];
   }
 }
