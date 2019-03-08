@@ -46,7 +46,7 @@ const UsersController = {
       .on(NOT_FOUND, (error) => {
         res.status(Status.NOT_FOUND).json({
           type: 'NotFoundError',
-          details: error.details
+          details: error.details,
         });
       })
       .on(ERROR, next);
@@ -67,7 +67,7 @@ const UsersController = {
       .on(VALIDATION_ERROR, (error) => {
         res.status(Status.BAD_REQUEST).json({
           type: 'ValidationError',
-          details: error.details
+          details: error.details,
         });
       })
       .on(ERROR, next);
@@ -77,7 +77,9 @@ const UsersController = {
 
   update(req, res, next) {
     const { updateUser, userSerializer } = req;
-    const { SUCCESS, ERROR, VALIDATION_ERROR, NOT_FOUND } = updateUser.outputs;
+    const {
+      SUCCESS, ERROR, VALIDATION_ERROR, NOT_FOUND,
+    } = updateUser.outputs;
 
     updateUser
       .on(SUCCESS, (user) => {
@@ -88,13 +90,13 @@ const UsersController = {
       .on(VALIDATION_ERROR, (error) => {
         res.status(Status.BAD_REQUEST).json({
           type: 'ValidationError',
-          details: error.details
+          details: error.details,
         });
       })
       .on(NOT_FOUND, (error) => {
         res.status(Status.NOT_FOUND).json({
           type: 'NotFoundError',
-          details: error.details
+          details: error.details,
         });
       })
       .on(ERROR, next);
@@ -104,7 +106,7 @@ const UsersController = {
 
   delete(req, res, next) {
     const { deleteUser } = req;
-    const { SUCCESS, ERROR,  NOT_FOUND } = deleteUser.outputs;
+    const { SUCCESS, ERROR, NOT_FOUND } = deleteUser.outputs;
 
     deleteUser
       .on(SUCCESS, () => {
@@ -113,13 +115,13 @@ const UsersController = {
       .on(NOT_FOUND, (error) => {
         res.status(Status.NOT_FOUND).json({
           type: 'NotFoundError',
-          details: error.details
+          details: error.details,
         });
       })
       .on(ERROR, next);
 
     deleteUser.execute(Number(req.params.id));
-  }
+  },
 };
 
 module.exports = UsersController;

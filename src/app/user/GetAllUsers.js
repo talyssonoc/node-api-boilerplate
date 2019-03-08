@@ -11,11 +11,11 @@ class GetAllUsers extends Operation {
 
     try {
       const users = await this.usersRepository.getAll({
-        attributes: ['id', 'name']
+        attributes: ['id', 'name'],
       });
 
       this.emit(SUCCESS, users);
-    } catch(error) {
+    } catch (error) {
       this.emit(ERROR, error);
     }
   }

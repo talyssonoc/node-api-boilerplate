@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 const UserMapper = require('./SequelizeUserMapper');
 
 class SequelizeUsersRepository {
@@ -20,7 +21,7 @@ class SequelizeUsersRepository {
   async add(user) {
     const { valid, errors } = user.validate();
 
-    if(!valid) {
+    if (!valid) {
       const error = new Error('ValidationError');
       error.details = errors;
 
@@ -35,7 +36,6 @@ class SequelizeUsersRepository {
     const user = await this._getById(id);
 
     await user.destroy();
-    return;
   }
 
   async update(id, newData) {
@@ -49,7 +49,7 @@ class SequelizeUsersRepository {
 
       const { valid, errors } = userEntity.validate();
 
-      if(!valid) {
+      if (!valid) {
         const error = new Error('ValidationError');
         error.details = errors;
 
@@ -59,7 +59,7 @@ class SequelizeUsersRepository {
       await transaction.commit();
 
       return userEntity;
-    } catch(error) {
+    } catch (error) {
       await transaction.rollback();
 
       throw error;
@@ -67,7 +67,8 @@ class SequelizeUsersRepository {
   }
 
   async count() {
-    return await this.UserModel.count();
+    const result = await this.UserModel.count();
+    return result;
   }
 
   // Private
@@ -75,8 +76,8 @@ class SequelizeUsersRepository {
   async _getById(id) {
     try {
       return await this.UserModel.findById(id, { rejectOnEmpty: true });
-    } catch(error) {
-      if(error.name === 'SequelizeEmptyResultError') {
+    } catch (error) {
+      if (error.name === 'SequelizeEmptyResultError') {
         const notFoundError = new Error('NotFoundError');
         notFoundError.details = `User with id ${id} can't be found.`;
 

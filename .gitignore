@@ -4,9 +4,6 @@
 # Node
 node_modules/
 
-# Project specific
-config/database.js
-
 # Unit test / coverage reports
 coverage/
 .nyc_output
@@ -23,3 +20,5 @@ coverage/
 
 # IDE files
 .idea/
+
+.env

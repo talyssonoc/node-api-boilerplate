@@ -1,0 +1,87 @@
+version: '3'
+
+volumes:
+  db-data:
+    driver: local
+  dynamodb-data:
+    driver: local
+
+services:
+  base: &base
+    hostname: base
+    image: node:boilerplate
+    ports: []
+    stdin_open: true
+    tty: true
+    build:
+      context: .
+      dockerfile: dev.Dockerfile
+    volumes:
+      - .:/home/node/app
+
+  swagger:
+    hostname: swagger
+    image: swaggerapi/swagger-ui
+    ports:
+      - 5003:8080
+    volumes:
+      - ./swagger.json:/home/node/app/swagger.json
+    environment:
+      SWAGGER_JSON: /home/node/app/swagger.json
+
+  db:
+    hostname: db
+    image: postgres
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_PASSWORD: 'zrp@1234'
+
+  pgadmin4:
+    hostname: pgadmin4
+    image: dpage/pgadmin4
+    ports:
+     - 6003:80
+    environment:
+      PGADMIN_DEFAULT_EMAIL: 'dev@zrp.com.br'
+      PGADMIN_DEFAULT_PASSWORD: 'zrp@1234'
+    depends_on:
+      - db
+
+  app: &app
+    <<: *base
+    hostname: app
+    command: npm run dev
+    environment: &env
+      NODE_ENV: development
+      NODE_PATH: '.'
+      DB_HOST: 'db'
+      DB_DATABASE: user
+      DB_USER: 'postgres'
+      DB_PASSWORD: 'zrp@1234'
+    ports:
+      - '3003:80'
+    depends_on:
+      - db
+
+  debug:
+    <<: *app
+    command: npm run start:debug
+    ports:
+      - '3003:80'
+      - '9229:9229'
+
+
+  specs:
+    <<: *base
+    command: /bin/ash -c "npm test"
+    environment:
+      <<: *env
+      NODE_ENV: test
+      BASE_URL: 'https://dummy.com.br/v1'
+    depends_on:
+      - db
+
+  lint:
+    <<: *base
+    command: /bin/ash -c "npm run lint"

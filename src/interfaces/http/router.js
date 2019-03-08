@@ -6,16 +6,18 @@ const compression = require('compression');
 const methodOverride = require('method-override');
 const controller = require('./utils/createControllerRoutes');
 
-module.exports = ({ config, containerMiddleware, loggerMiddleware, errorHandler, swaggerMiddleware }) => {
+module.exports = ({
+  config, containerMiddleware, loggerMiddleware, errorHandler, swaggerMiddleware,
+}) => {
   const router = Router();
 
   /* istanbul ignore if */
-  if(config.env === 'development') {
+  if (config.env === 'development') {
     router.use(statusMonitor());
   }
 
   /* istanbul ignore if */
-  if(config.env !== 'test') {
+  if (config.env !== 'test') {
     router.use(loggerMiddleware);
   }
 
@@ -37,6 +39,8 @@ module.exports = ({ config, containerMiddleware, loggerMiddleware, errorHandler,
    *
    * The `controllerPath` is relative to the `interfaces/http` folder
    */
+
+  apiRouter.use('/status', (_, res) => res.json({ message: 'Hello! I am here.' }));
 
   apiRouter.use('/users', controller('user/UsersController'));
 

@@ -11,7 +11,7 @@ const SequelizeUserMapper = {
     const { name } = survivor;
 
     return { name };
-  }
+  },
 };
 
 module.exports = SequelizeUserMapper;

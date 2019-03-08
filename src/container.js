@@ -1,4 +1,6 @@
-const { createContainer, asClass, asFunction, asValue } = require('awilix');
+const {
+  createContainer, asClass, asFunction, asValue,
+} = require('awilix');
 const { scopePerRequest } = require('awilix-express');
 
 const config = require('../config');
@@ -8,7 +10,7 @@ const {
   GetAllUsers,
   GetUser,
   UpdateUser,
-  DeleteUser
+  DeleteUser,
 } = require('./app/user');
 
 const UserSerializer = require('./interfaces/http/user/UserSerializer');
@@ -20,7 +22,7 @@ const errorHandler = require('./interfaces/http/errors/errorHandler');
 const devErrorHandler = require('./interfaces/http/errors/devErrorHandler');
 const swaggerMiddleware = require('./interfaces/http/swagger/swaggerMiddleware');
 
-const logger = require('./infra/logging/logger');
+const { logger } = require('./infra/logging/logger');
 const SequelizeUsersRepository = require('./infra/user/SequelizeUsersRepository');
 const { database, User: UserModel } = require('./infra/database/models');
 
@@ -30,36 +32,36 @@ const container = createContainer();
 container
   .register({
     app: asClass(Application).singleton(),
-    server: asClass(Server).singleton()
+    server: asClass(Server).singleton(),
   })
   .register({
     router: asFunction(router).singleton(),
-    logger: asFunction(logger).singleton()
+    logger: asValue(logger),
   })
   .register({
-    config: asValue(config)
+    config: asValue(config),
   });
 
 // Middlewares
 container
   .register({
-    loggerMiddleware: asFunction(loggerMiddleware).singleton()
+    loggerMiddleware: asFunction(loggerMiddleware).singleton(),
   })
   .register({
     containerMiddleware: asValue(scopePerRequest(container)),
     errorHandler: asValue(config.production ? errorHandler : devErrorHandler),
-    swaggerMiddleware: asValue([swaggerMiddleware])
+    swaggerMiddleware: asValue([swaggerMiddleware]),
   });
 
 // Repositories
 container.register({
-  usersRepository: asClass(SequelizeUsersRepository).singleton()
+  usersRepository: asClass(SequelizeUsersRepository).singleton(),
 });
 
 // Database
 container.register({
   database: asValue(database),
-  UserModel: asValue(UserModel)
+  UserModel: asValue(UserModel),
 });
 
 // Operations
@@ -68,12 +70,12 @@ container.register({
   getAllUsers: asClass(GetAllUsers),
   getUser: asClass(GetUser),
   updateUser: asClass(UpdateUser),
-  deleteUser: asClass(DeleteUser)
+  deleteUser: asClass(DeleteUser),
 });
 
 // Serializers
 container.register({
-  userSerializer: asValue(UserSerializer)
+  userSerializer: asValue(UserSerializer),
 });
 
 module.exports = container;

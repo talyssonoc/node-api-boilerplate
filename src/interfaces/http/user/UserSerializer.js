@@ -2,9 +2,9 @@ const UserSerializer = {
   serialize({ id, name }) {
     return {
       id,
-      name
+      name,
     };
-  }
+  },
 };
 
 module.exports = UserSerializer;

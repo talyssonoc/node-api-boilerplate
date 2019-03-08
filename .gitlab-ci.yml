@@ -1,0 +1,87 @@
+image: zrpaplicacoes/docker-compose:latest
+
+variables:
+  DOCKER_DRIVER: overlay
+  CONTAINER_RELEASE_IMAGE: $CI_REGISTRY_IMAGE:nightly
+  COMPOSE_REFERENCE_IMAGE: wl_transaction:nightly
+  AWS_ACCOUNT_ID: '277048801940'
+  PROJECT: wl_transaction
+  CLUSTER_DEV: wl-staging
+  CLUSTER_DEMO: wl-demo
+  CLUSTER_PROD: production
+  BACKEND_SERVICE: transaction
+  BACKEND_SERVICE_DEMO: Transaction
+  BACKEND_SERVICE_PROD: Transaction
+
+cache:
+  untracked: true
+  key: "$CI_BUILD_REF_NAME"
+  paths:
+    - node_modules/
+
+services:
+  - docker:dind
+
+before_script:
+  - docker info
+  - docker-compose --version
+  - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN registry.gitlab.com
+  - docker pull $CONTAINER_RELEASE_IMAGE || true
+
+
+stages:
+  - lint
+  - build
+  - specs
+  - deploy
+
+lint:
+  stage: lint
+  script:
+    - docker-compose run lint
+
+
+specs:
+  stage: specs
+  script:
+    - docker tag $CONTAINER_RELEASE_IMAGE $COMPOSE_REFERENCE_IMAGE
+    - docker-compose run --rm specs npm i
+    - docker-compose run --rm specs ./node_modules/.bin/sequelize db:create
+    - docker-compose run --rm specs ./node_modules/.bin/sequelize db:migrate
+    - docker-compose run --rm specs
+
+build-dev:
+  stage: build
+  script:
+    - docker build --cache-from $CONTAINER_RELEASE_IMAGE -t $CONTAINER_RELEASE_IMAGE -f dev.Dockerfile .
+    - docker push $CONTAINER_RELEASE_IMAGE
+
+deploy-staging:
+  stage: deploy
+  script:
+    - aws ecr get-login --no-include-email --region us-east-1 | ash
+    - docker build -t $AWS_ACCOUNT_ID.dkr.ecr.us-east-1.amazonaws.com/$PROJECT:$CI_COMMIT_SHA .
+    - docker push $AWS_ACCOUNT_ID.dkr.ecr.us-east-1.amazonaws.com/$PROJECT:$CI_COMMIT_SHA
+    - ecs-deploy -c $CLUSTER_DEV -n $BACKEND_SERVICE -i $AWS_ACCOUNT_ID.dkr.ecr.us-east-1.amazonaws.com/$PROJECT -e CI_COMMIT_SHA -t 300 --max-definitions 3 --enable-rollback --verbose
+  only:
+    - dev
+
+deploy-demo:
+  stage: deploy
+  script:
+    - aws ecr get-login --no-include-email --region us-east-1 | ash
+    - docker build -t $AWS_ACCOUNT_ID.dkr.ecr.us-east-1.amazonaws.com/$PROJECT:$CI_COMMIT_SHA .
+    - docker push $AWS_ACCOUNT_ID.dkr.ecr.us-east-1.amazonaws.com/$PROJECT:$CI_COMMIT_SHA
+    - ecs-deploy -c $CLUSTER_DEMO -n $BACKEND_SERVICE_DEMO -i $AWS_ACCOUNT_ID.dkr.ecr.us-east-1.amazonaws.com/$PROJECT -e CI_COMMIT_SHA -t 300 --max-definitions 3 --enable-rollback --verbose
+  only:
+    - prod
+
+deploy-production:
+  stage: deploy
+  script:
+    - aws ecr get-login --no-include-email --region us-east-1 | ash
+    - docker build -t $AWS_ACCOUNT_ID.dkr.ecr.us-east-1.amazonaws.com/$PROJECT:$CI_COMMIT_SHA .
+    - docker push $AWS_ACCOUNT_ID.dkr.ecr.us-east-1.amazonaws.com/$PROJECT:$CI_COMMIT_SHA
+    - ecs-deploy -c $CLUSTER_PROD -n $BACKEND_SERVICE_PROD -i $AWS_ACCOUNT_ID.dkr.ecr.us-east-1.amazonaws.com/$PROJECT -e CI_COMMIT_SHA -t 300 --max-definitions 3 --enable-rollback --verbose
+  only:
+    - prod

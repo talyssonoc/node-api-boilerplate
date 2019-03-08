@@ -3,5 +3,5 @@ module.exports = {
   CreateUser: require('./CreateUser'),
   GetUser: require('./GetUser'),
   UpdateUser: require('./UpdateUser'),
-  DeleteUser: require('./DeleteUser')
+  DeleteUser: require('./DeleteUser'),
 };

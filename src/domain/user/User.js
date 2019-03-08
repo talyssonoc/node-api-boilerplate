@@ -4,9 +4,9 @@ const User = attributes({
   id: Number,
   name: {
     type: String,
-    required: true
+    required: true,
   },
-  age: Number
+  age: Number,
 })(class User {
   isLegal() {
     return this.age >= User.MIN_LEGAL_AGE;

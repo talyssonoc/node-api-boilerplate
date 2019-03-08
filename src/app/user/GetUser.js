@@ -12,10 +12,10 @@ class GetUser extends Operation {
     try {
       const user = await this.usersRepository.getById(userId);
       this.emit(SUCCESS, user);
-    } catch(error) {
+    } catch (error) {
       this.emit(NOT_FOUND, {
         type: error.message,
-        details: error.details
+        details: error.details,
       });
     }
   }

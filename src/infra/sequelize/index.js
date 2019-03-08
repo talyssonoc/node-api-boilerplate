@@ -1,3 +1,3 @@
 module.exports = {
-  ModelsLoader: require('./ModelsLoader')
+  ModelsLoader: require('./ModelsLoader'),
 };

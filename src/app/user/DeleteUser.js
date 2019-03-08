@@ -6,14 +6,15 @@ class DeleteUser extends Operation {
     this.usersRepository = usersRepository;
   }
 
+  // eslint-disable-next-line consistent-return
   async execute(userId) {
     const { SUCCESS, ERROR, NOT_FOUND } = this.outputs;
 
     try {
       await this.usersRepository.remove(userId);
       this.emit(SUCCESS);
-    } catch(error) {
-      if(error.message === 'NotFoundError') {
+    } catch (error) {
+      if (error.message === 'NotFoundError') {
         return this.emit(NOT_FOUND, error);
       }
 

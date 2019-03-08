@@ -7,6 +7,7 @@ class CreateUser extends Operation {
     this.usersRepository = usersRepository;
   }
 
+  // eslint-disable-next-line consistent-return
   async execute(userData) {
     const { SUCCESS, ERROR, VALIDATION_ERROR } = this.outputs;
 
@@ -16,8 +17,8 @@ class CreateUser extends Operation {
       const newUser = await this.usersRepository.add(user);
 
       this.emit(SUCCESS, newUser);
-    } catch(error) {
-      if(error.message === 'ValidationError') {
+    } catch (error) {
+      if (error.message === 'ValidationError') {
         return this.emit(VALIDATION_ERROR, error);
       }
 

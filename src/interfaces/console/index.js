@@ -4,5 +4,5 @@ const Console = require('./Console');
 const container = require('src/container');
 
 Console.start({
-  expose: { container }
+  expose: { container },
 });
