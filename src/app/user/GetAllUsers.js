@@ -7,6 +7,7 @@ class GetAllUsers extends Operation {
   }
 
   async execute() {
+    super.execute();
     const { SUCCESS, ERROR } = this.outputs;
 
     try {
