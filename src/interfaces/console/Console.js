@@ -3,10 +3,12 @@ const vm = require('vm');
 
 module.exports = {
   start(options = {}) {
-    const { expose } = options;
-
+    const { expose, socket } = options;
     const repl = REPL.start({
-      eval: promisableEval
+      eval: promisableEval,
+      terminal:true,
+      input: socket,
+      output: socket,
     });
 
     Object.assign(repl.context, expose);

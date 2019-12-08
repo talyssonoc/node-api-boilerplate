@@ -15,6 +15,7 @@ const UserSerializer = require('./interfaces/http/user/UserSerializer');
 
 const LogAppender = require('../src/infra/logging/MemoryAppender.js');
 const Server = require('./interfaces/http/Server');
+const appMetrics = require('./app/appMetrics');
 const router = require('./interfaces/http/router');
 const loggerMiddleware = require('./interfaces/http/logging/loggerMiddleware');
 const loggerIdInjectorMiddleware = require('./interfaces/http/MiddleWare/LogIdInjectorMiddleware');
@@ -35,7 +36,8 @@ const container = createContainer();
 container
   .register({
     app: asClass(Application).singleton(),
-    server: asClass(Server).singleton()
+    server: asClass(Server).singleton(),
+    appMetrics: asClass(appMetrics)
   })
   .register({
     router: asFunction(router).singleton(),
