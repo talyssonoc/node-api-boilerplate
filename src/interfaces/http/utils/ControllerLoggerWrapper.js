@@ -8,7 +8,7 @@ const { inject } = require('awilix-express');
  * @returns {*[]}
  */
 module.exports=(module)=>{
-  console.log(module);
+
   return [inject(module), (req, res, next)=>{
     req[module]= new req.ControllerLogger(req, req[module]);
     next();

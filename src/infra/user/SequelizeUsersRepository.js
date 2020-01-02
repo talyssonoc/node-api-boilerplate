@@ -9,3 +9,13 @@ class SequelizeUsersRepository extends BaseSequelizeRepository{
 }
 
 module.exports = SequelizeUsersRepository;
+
+
+function  x (){
+  let promise = new Promise();
+
+  let generateConfigREturnedValue = createUser(null, usercreationInput).
+      sendEmail(createUSerReturnedValue, sendEmailInput).
+      generateConfig(sendEmailReturnedValue, generateConfigInput).
+      finish();
+};

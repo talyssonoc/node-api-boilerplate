@@ -1,0 +1,97 @@
+{
+  "web": {
+    "port": 4000
+  },
+  "logging": {
+    "appenders": {
+      "console": {
+        "type": "console"
+      },
+      "file": {
+        "type": "file",
+        "filename": ""
+      },
+      "trace": {
+        "type": {
+          "configure":""
+        },
+        "layout": {
+          "type": "pattern",
+          "pattern": "%d %p %c %x{user} %m%n"
+        }
+      },
+      "traceFile": {
+        "type": "file",
+        "filename": "",
+        "layout": {
+          "type": "pattern",
+          "pattern": "%m%n"
+        }
+      }
+    },
+    "categories": {
+      "default": {
+        "appenders": [
+          "console",
+          "file"
+        ],
+        "level": "debug"
+      },
+      "trace": {
+        "appenders": [
+          "trace"
+        ],
+        "level": "TRACE"
+      },
+      "traceFile": {
+        "appenders": [
+          "traceFile"
+        ],
+        "level": "ALL"
+      }
+    }
+  },
+  "memoryloggerId": "x-test-req-ID",
+  "appMetrics": {
+    "replSocketURL": "localhost:4001",
+    "userAppMetric": true,
+    "tracking": {
+      "cpu": true,
+      "eventloop": true,
+      "profiling": true,
+      "http": {
+        "use": true,
+        "config": {
+          "filters": {
+            "pattern": "",
+            "to": ""
+          }
+        }
+      },
+      "mongo": true,
+      "socketio": true,
+      "mqlight": true,
+      "postgresql": true,
+      "mqtt": true,
+      "mysql": true,
+      "redis": true,
+      "riak": true,
+      "memcached": true,
+      "oracledb": true,
+      "oracle": true,
+      "strong-oracle": true,
+      "requests": {
+        "use": true,
+        "config": {
+          "excludeModules": []
+        }
+      },
+      "trace": {
+        "use": true,
+        "config": {
+          "includeModules": []
+        }
+      }
+    }
+  }
+}

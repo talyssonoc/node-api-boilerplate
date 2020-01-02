@@ -2,7 +2,93 @@ const path = require('path');
 const logPath = path.join(__dirname, '../../logs/development.log');
 const tracePath = path.join(__dirname, '../../logs/trace.log');
 var config = require('src/infra/logging/MemoryAppender');
+const fs = require('fs');
+const ENV = process.env.NODE_ENV || 'development';
+const configUtils = require('../../configUtils');
 
+//a global variable holding the configuration is not the ideal way since it can have
+//sensitive information so this should be moved elsewhere
+var cfg = {};
+var fileCfg ={};
+var extraConfig={
+  'logging': {
+    'appenders': {
+      'file': {
+        'filename': logPath
+      },
+      'trace': {
+        'type': {
+          'configure': config.config()
+        },
+      },
+      'traceFile': {
+        'filename': tracePath,
+      }
+    },
+
+  }
+};
+
+module.exports=({JSONFileHandlingService})=>{
+  //defining the file and setting the configuration
+  const file = path.join(__dirname,  ENV)+'.json';
+  //loading the initial configuration
+  load();
+  //setting the listener for json file changes to reload the configuration
+  fs.watchFile(file, load);
+
+  //injecting variables using the objectAssign
+
+  function load() {
+    const parsed = JSON.parse(fs.readFileSync(file));
+    Object.assign(fileCfg, parsed);
+    cfg = Object.assign({}, fileCfg, cfg);
+    configUtils.setDatawithHierarchy(cfg, extraConfig);
+
+  }
+
+
+  function setConfig(hierarchy){
+
+    if(hierarchy){
+      if(hierarchy.constructor === Object){
+        let strings = configUtils.getStringOutOfHierarchy(hierarchy);
+
+        strings.forEach((elem)=>{
+          if(fileCfg[elem.split('.')[0]]){
+            JSONFileHandlingService.setToJsonFile(file, elem, configUtils.getdataWithString(hierarchy, elem));
+          }else{
+            configUtils.setdataWithString(extraConfig, elem, configUtils.getdataWithString(hierarchy, elem));
+          }
+        });
+      }
+
+      load();
+    }else{
+      throw 'the hierarchy argument is mandatory';
+    }
+  }
+
+
+  function getConfig(){
+    return cfg;
+  }
+
+  return {
+    config:cfg,
+    set:(hierarchy)=>{
+      return setConfig(hierarchy);
+    },
+    get:()=>{
+      return getConfig();
+    }
+  };
+
+};
+
+//deprecated
+//left for comparison
+/*
 module.exports = {
   web: {
     port: 4000
@@ -101,3 +187,4 @@ module.exports = {
     }
   }
 };
+*/

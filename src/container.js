@@ -23,10 +23,15 @@ const errorHandler = require('./interfaces/http/errors/errorHandler');
 const devErrorHandler = require('./interfaces/http/errors/devErrorHandler');
 const swaggerMiddleware = require('./interfaces/http/swagger/swaggerMiddleware');
 
+
+//environment
+
+const devEnv = require('../config/environments/development/development');
+
 const logger = require('./infra/logging/logger');
 const ControllerLogger = require('./infra/logging/ControllerLogger');
 const Tracelogger = require('./infra/logging/dataTraceLogger');
-
+const JSONFileHandlingService = require('./infra/files').JSONFileHandler;
 const SequelizeUsersRepository = require('./infra/user/SequelizeUsersRepository');
 const { database, User: UserModel } = require('./infra/database/models');
 
@@ -46,13 +51,15 @@ container
     ControllerLogger:asFunction(ControllerLogger).singleton()
   })
   .register({
-    config: asValue(config)
+    config: asFunction(config).singleton(),
+    devConfig: asFunction(devEnv).singleton(),
   });
 
 // Middlewares
 container
   .register({
-    loggerMiddleware: asFunction(loggerMiddleware).singleton()
+    loggerMiddleware: asFunction(loggerMiddleware).singleton(),
+    JSONFileHandlingService:asValue(JSONFileHandlingService)
   })
   .register({
     containerMiddleware: asValue(scopePerRequest(container)),

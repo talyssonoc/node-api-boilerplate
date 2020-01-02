@@ -35,7 +35,7 @@ module.exports = ({ config }) => {
     },
     setuserID:(id)=>{
       TraceData.user_id=id;
-      console.log(TraceData);
+
     },
     traceStaticData:TraceData
   };
