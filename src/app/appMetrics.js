@@ -1,10 +1,10 @@
-var appmetrics = require('appmetrics');
 const Operation = require('../app/Operation');
 
 class appMetrics extends Operation {
 
 
   constructor({config, logger}){
+
     super();
     this.config=config;
     this.logger=logger;
@@ -14,6 +14,7 @@ class appMetrics extends Operation {
       return undefined;
     }
 
+    const appmetrics = require('appmetrics');
 
     //enabling metrics types :
 

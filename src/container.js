@@ -24,9 +24,6 @@ const devErrorHandler = require('./interfaces/http/errors/devErrorHandler');
 const swaggerMiddleware = require('./interfaces/http/swagger/swaggerMiddleware');
 
 
-//environment
-
-const devEnv = require('../config/environments/development/development');
 
 const logger = require('./infra/logging/logger');
 const ControllerLogger = require('./infra/logging/ControllerLogger');
@@ -51,8 +48,7 @@ container
     ControllerLogger:asFunction(ControllerLogger).singleton()
   })
   .register({
-    config: asFunction(config).singleton(),
-    devConfig: asFunction(devEnv).singleton(),
+    config: asValue(config),
   });
 
 // Middlewares

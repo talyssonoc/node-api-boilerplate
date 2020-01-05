@@ -5,7 +5,7 @@ var config = require('src/infra/logging/MemoryAppender');
 const fs = require('fs');
 const ENV = process.env.NODE_ENV || 'development';
 const configUtils = require('../../configUtils');
-
+const JSONFileHandlingService = require('src/infra/files').JSONFileHandler;
 //a global variable holding the configuration is not the ideal way since it can have
 //sensitive information so this should be moved elsewhere
 var cfg = {};
@@ -29,62 +29,61 @@ var extraConfig={
   }
 };
 
-module.exports=({JSONFileHandlingService})=>{
+
   //defining the file and setting the configuration
-  const file = path.join(__dirname,  ENV)+'.json';
-  //loading the initial configuration
-  load();
-  //setting the listener for json file changes to reload the configuration
-  fs.watchFile(file, load);
+const file = path.join(__dirname,  ENV)+'.json';
+//loading the initial configuration
+load();
+//setting the listener for json file changes to reload the configuration
+fs.watchFile(file, load);
 
-  //injecting variables using the objectAssign
+//injecting variables using the objectAssign
 
-  function load() {
-    const parsed = JSON.parse(fs.readFileSync(file));
-    Object.assign(fileCfg, parsed);
-    cfg = Object.assign({}, fileCfg, cfg);
-    configUtils.setDatawithHierarchy(cfg, extraConfig);
+function load() {
+  const parsed = JSON.parse(fs.readFileSync(file));
+  Object.assign(fileCfg, parsed);
+  cfg = Object.assign({}, fileCfg, cfg);
+  configUtils.setDatawithHierarchy(cfg, extraConfig);
+}
 
-  }
 
+function setConfig(hierarchy){
 
-  function setConfig(hierarchy){
+  if(hierarchy){
+    if(hierarchy.constructor === Object){
+      let strings = configUtils.getStringOutOfHierarchy(hierarchy);
 
-    if(hierarchy){
-      if(hierarchy.constructor === Object){
-        let strings = configUtils.getStringOutOfHierarchy(hierarchy);
-
-        strings.forEach((elem)=>{
-          if(fileCfg[elem.split('.')[0]]){
-            JSONFileHandlingService.setToJsonFile(file, elem, configUtils.getdataWithString(hierarchy, elem));
-          }else{
-            configUtils.setdataWithString(extraConfig, elem, configUtils.getdataWithString(hierarchy, elem));
-          }
-        });
-      }
-
-      load();
-    }else{
-      throw 'the hierarchy argument is mandatory';
+      strings.forEach((elem)=>{
+        if(fileCfg[elem.split('.')[0]]){
+          JSONFileHandlingService.setToJsonFile(file, elem, configUtils.getdataWithString(hierarchy, elem));
+        }else{
+          configUtils.setdataWithString(extraConfig, elem, configUtils.getdataWithString(hierarchy, elem));
+        }
+      });
     }
+
+    load();
+  }else{
+    throw 'the hierarchy argument is mandatory';
   }
+}
 
 
-  function getConfig(){
-    return cfg;
+function getConfig(){
+  return cfg;
+}
+
+module.exports= {
+  config:cfg,
+  set:(hierarchy)=>{
+    return setConfig(hierarchy);
+  },
+  get:()=>{
+    return getConfig();
   }
-
-  return {
-    config:cfg,
-    set:(hierarchy)=>{
-      return setConfig(hierarchy);
-    },
-    get:()=>{
-      return getConfig();
-    }
-  };
-
 };
+
+
 
 //deprecated
 //left for comparison
