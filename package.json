@@ -34,7 +34,7 @@
     "cross-env": "^3.2.3",
     "del": "^2.2.2",
     "dotenv": "^4.0.0",
-    "eslint": "^4.7.2",
+    "eslint": "^4.18.2",
     "express": "^4.15.2",
     "express-status-monitor": "^0.1.9",
     "http-status": "^1.0.1",
