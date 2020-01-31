@@ -80,7 +80,7 @@ After playing a little bit with the boilerplate and _before_ implementing a real
 This boilerplate comes with a collection of npm scripts to make your life easier, you'll run them with `npm run <script name>` or `yarn run <script name>`:
 
 - `dev`: Run the application in development mode
-- `start` Run the application in production mode (prefer not to do that in development) 
+- `start`: Run the application in production mode (prefer not to do that in development) 
 - `test`: Run the test suite
 - `test:unit`: Run only the unit tests
 - `test:features`: Run only the features tests
