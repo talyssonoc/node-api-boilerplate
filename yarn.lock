@@ -208,9 +208,19 @@ asynckit@^0.4.0:
   version "0.4.0"
   resolved "https://registry.yarnpkg.com/asynckit/-/asynckit-0.4.0.tgz#c79ed97f7f34cb8f2ba1bc9790bcc366474b4b79"
 
-awilix-express@^0.11.0:
-  version "0.11.0"
-  resolved "https://registry.yarnpkg.com/awilix-express/-/awilix-express-0.11.0.tgz#6c41d30219dea53b83982045c5235b4804791425"
+awilix-express@^1.1.0:
+  version "1.1.0"
+  resolved "https://nexus.exelator.net/repository/npm-all/awilix-express/-/awilix-express-1.1.0.tgz#70fa02d6211f15e5ab9c7af542c5e1e58c26a1b7"
+  dependencies:
+    awilix-router-core "^1.3.2"
+    tslib "^1.8.0"
+
+awilix-router-core@^1.3.2:
+  version "1.3.2"
+  resolved "https://nexus.exelator.net/repository/npm-all/awilix-router-core/-/awilix-router-core-1.3.2.tgz#055a1b6ff62d22e59c5362221c3d8105946eec2f"
+  dependencies:
+    glob "^7.1.2"
+    tslib "^1.8.1"
 
 awilix@^3.0.9:
   version "3.0.9"
@@ -3914,6 +3924,10 @@ trim-right@^1.0.1:
 tryit@^1.0.1:
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/tryit/-/tryit-1.0.3.tgz#393be730a9446fd1ead6da59a014308f36c289cb"
+
+tslib@^1.8.0, tslib@^1.8.1:
+  version "1.9.3"
+  resolved "https://nexus.exelator.net/repository/npm-all/tslib/-/tslib-1.9.3.tgz#d7e4dd79245d85428c4d7e4822a79917954ca286"
 
 tunnel-agent@~0.4.1:
   version "0.4.3"
