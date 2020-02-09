@@ -48,6 +48,8 @@ An opinionated boilerplate for Node web APIs focused on separation of concerns a
   <dt>Logging</dt>
   <dd>
     The <a href="https://www.npmjs.com/package/log4js">Log4js</a> logger is highly pluggable, being able to append the messages to a file during the development and send them to a logging service when on production. Even the requests (through <a href="https://www.npmjs.com/package/morgan">morgan</a>) and queries will be logged.
+    a second Layer of logging called Trace Logging is implemented throu log4js and a memory appender, it serves as an error only file appender meaning that it traces your actions through 
+    operations and if an error is detected, the trace is saved to a file.
   </dd>
 
   <dt>Linter</dt>

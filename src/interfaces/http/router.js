@@ -5,8 +5,9 @@ const bodyParser = require('body-parser');
 const compression = require('compression');
 const methodOverride = require('method-override');
 const controller = require('./utils/createControllerRoutes');
+const { inject } = require('awilix-express');
 
-module.exports = ({ config, containerMiddleware, loggerMiddleware, errorHandler, swaggerMiddleware }) => {
+module.exports = ({ config, loggerIdInjectorMiddleware, containerMiddleware, loggerMiddleware, errorHandler, swaggerMiddleware }) => {
   const router = Router();
 
   /* istanbul ignore if */
@@ -27,6 +28,8 @@ module.exports = ({ config, containerMiddleware, loggerMiddleware, errorHandler,
     .use(bodyParser.json())
     .use(compression())
     .use(containerMiddleware)
+    .use(inject('ControllerLogger'))
+    .use(loggerIdInjectorMiddleware)
     .use('/docs', swaggerMiddleware);
 
   /*

@@ -5,16 +5,21 @@ const path = require('path');
 
 const ENV = process.env.NODE_ENV || 'development';
 
-const envConfig = require(path.join(__dirname, 'environments', ENV));
+//deprecated
+const envConfig = require(path.join(__dirname, 'environments', ENV, ENV)+'.js');
 const dbConfig = loadDbConfig();
 
-const config = Object.assign({
+const config = Object.assign({}, {
   [ENV]: true,
   env: ENV,
   db: dbConfig
-}, envConfig);
+});
 
-module.exports = config;
+
+//The injection is done based on two environments you should change this when adding more
+//UPDATE : we got rid of the injection due to multiple subsequent injections needed.
+
+module.exports =  Object.assign({}, config, envConfig.config);
 
 function loadDbConfig() {
   if(process.env.DATABASE_URL) {

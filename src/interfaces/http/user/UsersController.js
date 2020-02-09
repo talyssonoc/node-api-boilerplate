@@ -1,14 +1,21 @@
 const { Router } = require('express');
 const { inject } = require('awilix-express');
 const Status = require('http-status');
-
+const loggerInjector = require('../utils/ControllerLoggerWrapper');
 const UsersController = {
   get router() {
     const router = Router();
 
     router.use(inject('userSerializer'));
 
-    router.get('/', inject('getAllUsers'), this.index);
+    /**
+     * In the next injection the loggerInjector is a wrapper over the
+     * awilix inject method. what is does is still to inject the the operation
+     * using the inject method from awilix and then add the log handling by using
+     * the ControllerLogger module. see infra/logging/ControllerLogger.js.
+     * for demonstration it is only used in the first route.
+     */
+    router.get('/', loggerInjector('getAllUsers'), this.index);
     router.get('/:id', inject('getUser'), this.show);
     router.post('/', inject('createUser'), this.create);
     router.put('/:id', inject('updateUser'), this.update);
