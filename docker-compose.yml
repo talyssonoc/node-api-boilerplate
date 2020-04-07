@@ -71,7 +71,6 @@ services:
       - '3003:80'
       - '9229:9229'
 
-
   specs:
     <<: *base
     command: /bin/ash -c "npm test"
@@ -84,4 +83,4 @@ services:
 
   lint:
     <<: *base
-    command: /bin/ash -c "npm run lint"
+    command: /bin/ash -c "npm i && npm run lint"

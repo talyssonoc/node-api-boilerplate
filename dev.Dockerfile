@@ -1,4 +1,4 @@
-FROM zrpaplicacoes/docker-in-node:8.9.4-alpine
+FROM zrpaplicacoes/docker-in-node:lts-alpine
 
 # Maintainer Information
 LABEL author="ZRP Aplicações Informáticas LTDA - ME <zrp@zrp.com.br>"

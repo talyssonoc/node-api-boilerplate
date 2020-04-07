@@ -1,5 +1,4 @@
 const { Router } = require('express');
-const statusMonitor = require('express-status-monitor');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const compression = require('compression');
@@ -11,12 +10,6 @@ module.exports = ({
 }) => {
   const router = Router();
 
-  /* istanbul ignore if */
-  if (config.env === 'development') {
-    router.use(statusMonitor());
-  }
-
-  /* istanbul ignore if */
   if (config.env !== 'test') {
     router.use(loggerMiddleware);
   }
@@ -40,7 +33,10 @@ module.exports = ({
    * The `controllerPath` is relative to the `interfaces/http` folder
    */
 
-  apiRouter.use('/status', (_, res) => res.json({ message: 'Hello! I am here.' }));
+  apiRouter.get('/status', (_, res) => res.json({
+    message: 'Hello! I am here.',
+    version: process.env.npm_package_version,
+  }));
 
   apiRouter.use('/users', controller('user/UsersController'));
 

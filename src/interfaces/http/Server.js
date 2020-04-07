@@ -1,4 +1,5 @@
 const express = require('express');
+const helmet = require('helmet');
 
 class Server {
   constructor({ config, router, logger }) {
@@ -6,7 +7,7 @@ class Server {
     this.logger = logger;
     this.express = express();
 
-    this.express.disable('x-powered-by');
+    this.express.use(helmet());
     this.express.use(router);
   }
 
