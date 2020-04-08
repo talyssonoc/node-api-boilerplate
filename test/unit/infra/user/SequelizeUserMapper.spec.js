@@ -1,6 +1,6 @@
-const { expect } = require('chai');
-const User = require('src/domain/user/User');
-const SequelizeUserMapper = require('src/infra/user/SequelizeUserMapper');
+const { expect } = require('chai')
+const User = require('src/domain/user/User')
+const SequelizeUserMapper = require('src/infra/user/SequelizeUserMapper')
 
 describe('Infra :: User :: SequelizeUserMapper', () => {
   describe('.toEntity', () => {
@@ -10,26 +10,26 @@ describe('Infra :: User :: SequelizeUserMapper', () => {
           id: 1,
           name: 'The Name'
         }
-      };
+      }
 
-      const entity = SequelizeUserMapper.toEntity(mockedSequelizeUser);
+      const entity = SequelizeUserMapper.toEntity(mockedSequelizeUser)
 
-      expect(entity).to.be.instanceOf(User);
-      expect(entity.id).to.equal(1);
-      expect(entity.name).to.equal('The Name');
-    });
-  });
+      expect(entity).to.be.instanceOf(User)
+      expect(entity.id).to.equal(1)
+      expect(entity.name).to.equal('The Name')
+    })
+  })
 
   describe('.toDatabase', () => {
     it('returns user object prepared to be persisted', () => {
       const user = new User({
         name: 'Some User'
-      });
+      })
 
-      const dbUser = SequelizeUserMapper.toDatabase(user);
+      const dbUser = SequelizeUserMapper.toDatabase(user)
 
-      expect(dbUser.name).to.equal('Some User');
-      expect(dbUser).to.have.all.keys('name');
-    });
-  });
-});
+      expect(dbUser.name).to.equal('Some User')
+      expect(dbUser).to.have.all.keys('name')
+    })
+  })
+})

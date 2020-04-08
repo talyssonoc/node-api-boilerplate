@@ -1,17 +1,17 @@
-const User = require('src/domain/user/User');
+const User = require('src/domain/user/User')
 
 const SequelizeUserMapper = {
-  toEntity({ dataValues }) {
-    const { id, name } = dataValues;
+  toEntity ({ dataValues }) {
+    const { id, name } = dataValues
 
-    return new User({ id, name });
+    return new User({ id, name })
   },
 
-  toDatabase(survivor) {
-    const { name } = survivor;
+  toDatabase (survivor) {
+    const { name } = survivor
 
-    return { name };
+    return { name }
   }
-};
+}
 
-module.exports = SequelizeUserMapper;
+module.exports = SequelizeUserMapper

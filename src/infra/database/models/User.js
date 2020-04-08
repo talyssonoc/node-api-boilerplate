@@ -1,15 +1,15 @@
-'use strict';
+'use strict'
 
-module.exports = function(sequelize, DataTypes) {
+module.exports = function (sequelize, DataTypes) {
   const User = sequelize.define('user', {
     name: DataTypes.STRING
   }, {
     classMethods: {
-      associate() {
+      associate () {
         // associations can be defined here
       }
     }
-  });
+  })
 
-  return User;
-};
+  return User
+}

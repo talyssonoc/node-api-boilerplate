@@ -4,4 +4,4 @@ module.exports = {
   GetUser: require('./GetUser'),
   UpdateUser: require('./UpdateUser'),
   DeleteUser: require('./DeleteUser')
-};
+}

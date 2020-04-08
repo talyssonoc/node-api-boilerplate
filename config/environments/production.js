@@ -7,4 +7,4 @@ module.exports = {
       { type: 'console', layout: { type: 'basic' } }
     ]
   }
-};
+}

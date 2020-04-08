@@ -1,11 +1,11 @@
 const LoggerStreamAdapter = {
-  toStream(logger) {
+  toStream (logger) {
     return {
-      write(message) {
-        logger.info(message.slice(0, -1));
+      write (message) {
+        logger.info(message.slice(0, -1))
       }
-    };
+    }
   }
-};
+}
 
-module.exports = LoggerStreamAdapter;
+module.exports = LoggerStreamAdapter

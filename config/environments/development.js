@@ -1,5 +1,5 @@
-const path = require('path');
-const logPath = path.join(__dirname, '../../logs/development.log');
+const path = require('path')
+const logPath = path.join(__dirname, '../../logs/development.log')
 
 module.exports = {
   web: {
@@ -11,4 +11,4 @@ module.exports = {
       { type: 'file', filename: logPath }
     ]
   }
-};
+}

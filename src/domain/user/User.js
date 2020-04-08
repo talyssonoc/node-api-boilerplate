@@ -1,4 +1,4 @@
-const { attributes } = require('structure');
+const { attributes } = require('structure')
 
 const User = attributes({
   id: Number,
@@ -8,11 +8,11 @@ const User = attributes({
   },
   age: Number
 })(class User {
-  isLegal() {
-    return this.age >= User.MIN_LEGAL_AGE;
+  isLegal () {
+    return this.age >= User.MIN_LEGAL_AGE
   }
-});
+})
 
-User.MIN_LEGAL_AGE = 21;
+User.MIN_LEGAL_AGE = 21
 
-module.exports = User;
+module.exports = User

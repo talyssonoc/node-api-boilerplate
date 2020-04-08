@@ -1,7 +1,7 @@
-const Log4js = require('log4js');
+const Log4js = require('log4js')
 
 module.exports = ({ config }) => {
-  Log4js.configure(config.logging);
+  Log4js.configure(config.logging)
 
-  return Log4js.getLogger();
-};
+  return Log4js.getLogger()
+}
