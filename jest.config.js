@@ -1,6 +1,5 @@
 module.exports = {
   verbose: true,
-  testURL: 'http://localhost',
   collectCoverage: true,
   coverageReporters: ['text-summary', 'lcov'],
   testEnvironment: 'node',

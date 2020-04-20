@@ -4,12 +4,12 @@
   "main": "index.js",
   "private": true,
   "engines": {
-    "node": ">=7.6.0"
+    "node": ">=12.0.0"
   },
   "scripts": {
     "start": "node index.js",
     "start:debug": "nodemon --inspect-brk=0.0.0.0:9229 --config nodemon.json index.js",
-    "dev": "node scripts/dynamo.js && cross-env NODE_PATH=. NODE_ENV=development nodemon",
+    "dev": "cross-env NODE_PATH=. NODE_ENV=development nodemon",
     "test": "NODE_ENV=test jest --runInBand --detectOpenHandles --forceExit",
     "coverage": "NODE_ENV=test jest --runInBand --coverage --forceExit",
     "tdd": "NODE_ENV=test jest --runInBand --watchAll",

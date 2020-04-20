@@ -11,8 +11,7 @@ host.then(async (address) => {
   app
     .start()
     .then(() => {
-      if (process.env.APPLICATION_STAGE === 'production'
-        || process.env.APPLICATION_STAGE === 'staging') {
+      if (process.env.APPLICATION_STAGE === 'production') {
         /* eslint-disable-next-line global-require */
         require('./config/newrelic');
       }
