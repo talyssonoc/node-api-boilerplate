@@ -7,7 +7,7 @@ const ENV = process.env.NODE_ENV || 'development';
 
 const envConfig = require(path.join(__dirname, 'environments', ENV));
 const dbConfig = loadDbConfig();
-
+console.log(dbConfig)
 const config = Object.assign({
   [ENV]: true,
   env: ENV,
@@ -18,6 +18,7 @@ module.exports = config;
 
 function loadDbConfig() {
   if(process.env.DATABASE_URL) {
+    console.log(process.env.DATABASE_URL)
     return process.env.DATABASE_URL;
   }
 
