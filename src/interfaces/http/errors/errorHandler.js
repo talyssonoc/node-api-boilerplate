@@ -2,7 +2,6 @@ const Status = require('http-status');
 
 /* istanbul ignore next */
 module.exports = (err, req, res, next) => { // eslint-disable-line no-unused-vars
-  console.log(req)
   const { logger } = req.container.cradle;
   logger.error(err);
 
