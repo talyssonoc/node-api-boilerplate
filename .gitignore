@@ -5,7 +5,7 @@
 node_modules/
 
 # Project specific
-config/database.js
+# config/database.js
 
 # Unit test / coverage reports
 coverage/
