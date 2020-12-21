@@ -4,9 +4,6 @@
   "description": "A boilerplate for web APIs using Node",
   "main": "index.js",
   "private": true,
-  "engines": {
-    "node": ">=7.6.0"
-  },
   "scripts": {
     "start": "node cluster.js",
     "dev": "cross-env NODE_PATH=. NODE_ENV=development nodemon",
