@@ -1,0 +1,18 @@
+root: true
+parser: "@typescript-eslint/parser"
+
+extends:
+  - "eslint:recommended"
+  - "plugin:@typescript-eslint/recommended"
+  - "plugin:jest/recommended"
+  - "prettier"
+  - "prettier/@typescript-eslint"
+
+plugins:
+  - "node"
+  - "jest"
+  - "prettier"
+  - "@typescript-eslint"
+
+parserOptions:
+  ecmaVersion: 11
