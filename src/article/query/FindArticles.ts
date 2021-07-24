@@ -1,25 +1,28 @@
-import { ArticleCollection } from '@/article/infrastructure/ArticleCollection';
+import { ArticleCollection } from "@/article/infrastructure/ArticleCollection";
+import { MemoryDB } from "@/article/infrastructure/MemoryDB";
 
 type Dependencies = {
-  articleCollection: ArticleCollection;
-}
+  memoryDB: MemoryDB;
+};
 
 type ArticleListItemDTO = {
   id: string;
   title: string;
   publishedAt: Date;
-}
+};
 
-const makeFindArticles = ({ articleCollection }: Dependencies) => async (): Promise<ArticleListItemDTO[]> => {
-  const articles = await articleCollection.find({
-    status: 'PUBLISHED'
-  }).sort('publishedAt').toArray();
+const makeFindArticles =
+  ({ memoryDB }: Dependencies) =>
+  async (): Promise<ArticleListItemDTO[]> => {
+    const articles = Object.values(memoryDB.articles).filter(article => article.state === "PUBLISHED");
 
-  return articles.map(article => ({
-    id: article._id.toString(),
-    title: article.title,
-    publishedAt: article.publishedAt!
-  }));
-}
+    return articles.map(article => ({
+      id: article.id.toString(),
+      title: article.title,
+      publishedAt: article.publishedAt!,
+    }));
+  };
 
-export { makeFindArticles }
+export type FindArticles = ReturnType<typeof makeFindArticles>;
+
+export { makeFindArticles };

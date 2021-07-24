@@ -1,21 +1,21 @@
-import Article from '@/article/domain/Article';
-import { ArticleRepository } from '@/article/domain/ArticleRepository';
-import { ArticleCollection } from '@/article/infrastructure/ArticleCollection';
-import { ObjectId } from 'mongodb';
+import { Article } from "@/article/domain/Article";
+import { ArticleRepository } from "@/article/domain/ArticleRepository";
+import { ArticleCollection } from "@/article/infrastructure/ArticleCollection";
+import { ObjectId } from "mongodb";
 
 type Dependencies = {
-  articleCollection: ArticleCollection
-}
+  articleCollection: ArticleCollection;
+};
 
 const makeMongoArticleRepository = ({ articleCollection }: Dependencies): ArticleRepository => ({
   async getNextId(): Promise<string> {
     return Promise.resolve(ObjectId.generate().toString());
   },
-  async findById(id: string): Promise<Article> {
+  async findById(id: string): Promise<Article.Type> {
     const article = await articleCollection.findOne({ _id: id });
 
     if (!article) {
-      throw new Error('Article not found');
+      throw new Error("Article not found");
     }
 
     return {
@@ -26,26 +26,27 @@ const makeMongoArticleRepository = ({ articleCollection }: Dependencies): Articl
       publishedAt: article.publishedAt,
       createdAt: article.createdAt,
       updatedAt: article.createdAt,
-      version: article.version
-    }
+      version: article.version,
+    };
   },
-  async store(entity: Article): Promise<void> {
+  async store(entity: Article.Type): Promise<void> {
     const count = await articleCollection.countDocuments({ _id: entity.id });
 
     if (count) {
       await articleCollection.updateOne(
         { _id: entity.id },
-        { $set: {
-          title: entity.title,
-          content: entity.content,
-          status: entity.state,
-          publishedAt: entity.publishedAt,
-          createdAt: entity.createdAt,
-          updatedAt: entity.createdAt,
-          version: entity.version
+        {
+          $set: {
+            title: entity.title,
+            content: entity.content,
+            status: entity.state,
+            publishedAt: entity.publishedAt,
+            createdAt: entity.createdAt,
+            updatedAt: entity.createdAt,
+            version: entity.version,
+          },
         }
-      }
-      )
+      );
     }
 
     await articleCollection.insertOne({
@@ -56,9 +57,9 @@ const makeMongoArticleRepository = ({ articleCollection }: Dependencies): Articl
       publishedAt: entity.publishedAt,
       createdAt: entity.createdAt,
       updatedAt: entity.createdAt,
-      version: entity.version
+      version: entity.version,
     });
-  }
+  },
 });
 
-export { makeMongoArticleRepository }
+export { makeMongoArticleRepository };
