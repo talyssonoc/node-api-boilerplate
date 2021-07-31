@@ -5,7 +5,7 @@ import { makeCommentController } from "@/comment/presentation/commentController"
 import { InitFunction } from "@/_lib/AppInitializer";
 import { asFunction } from "awilix";
 
-const commentModule: InitFunction = async ({ register, build }, config) => {
+const commentModule: InitFunction = async ({ register, build }) => {
   register({
     commentRepository: asFunction(makeInMemoryCommentRepository),
     createComment: asFunction(makeCreateComment),
