@@ -22,7 +22,9 @@ const makeInMemoryArticleRepository = ({ memoryDB }: Dependencies): ArticleRepos
       return Promise.resolve(article);
     },
     async store(article: Article.Type): Promise<void> {
-      memoryDB.articles[article.id] = article;
+      memoryDB.articles[article.id] = {
+        ...article,
+      };
 
       return Promise.resolve();
     },

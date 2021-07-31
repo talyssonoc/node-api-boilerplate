@@ -1,18 +1,20 @@
 import { PublishArticle } from "@/article/application/PublishArticle";
+import { controller } from "@/_lib/wrappers/controller";
 import { Request, Response } from "express";
 
 type Dependencies = {
   publishArticle: PublishArticle;
 };
 
-const makePublishArticleHandler =
+const makePublishArticleHandler = controller(
   ({ publishArticle }: Dependencies) =>
-  async (req: Request, res: Response) => {
-    const { articleId } = req.params;
+    async (req: Request, res: Response) => {
+      const { articleId } = req.params;
 
-    await publishArticle(articleId);
+      await publishArticle(articleId);
 
-    res.sendStatus(204);
-  };
+      res.sendStatus(204);
+    }
+);
 
 export { makePublishArticleHandler };

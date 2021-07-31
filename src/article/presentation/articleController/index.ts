@@ -1,17 +1,20 @@
 import { Router } from "express";
-import { Injector } from "@/lib/di/Injector";
 import { makeCreateArticleHandler } from "./CreateArticleHandler";
 import { makeFindArticlesHandler } from "./FindArticlesHandler";
 import { makePublishArticleHandler } from "./PublishArticleHandler";
 
-const makeArticleController = ({ inject }: Injector) => {
+type Dependencies = {
+  apiRouter: Router;
+};
+
+const makeArticleController = ({ apiRouter }: Dependencies) => {
   const router = Router();
 
-  router.get("/articles", inject(makeFindArticlesHandler));
-  router.post("/articles", inject(makeCreateArticleHandler));
-  router.patch("/articles/:articleId/publish", inject(makePublishArticleHandler));
+  router.get("/articles", makeFindArticlesHandler);
+  router.post("/articles", makeCreateArticleHandler);
+  router.patch("/articles/:articleId/publish", makePublishArticleHandler);
 
-  return router;
+  apiRouter.use(router);
 };
 
 export { makeArticleController };

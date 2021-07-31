@@ -1,5 +1,8 @@
+import { Container } from "@/container";
+
 declare namespace Express {
-  export interface Application {
-    start: () => void;
+  export interface Request {
+    id: string;
+    container: Container;
   }
 }

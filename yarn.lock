@@ -3973,6 +3973,11 @@ typedarray-to-buffer@^3.1.5:
   dependencies:
     is-typedarray "^1.0.0"
 
+types-joi@^2.1.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/types-joi/-/types-joi-2.1.0.tgz#9d40f6b16b782d73ffcfd061a58502a9cb73caea"
+  integrity sha512-wdvZWNhDx9syXdes3V+YH0KLRNiwGsg7itbjL27truN1Av3YvnJDc3HGs9kbTpfzi3vV2q0scM2y6iSkm9nriQ==
+
 typescript@^4.3.5:
   version "4.3.5"
   resolved "https://registry.yarnpkg.com/typescript/-/typescript-4.3.5.tgz#4d1c37cc16e893973c45a06886b7113234f119f4"

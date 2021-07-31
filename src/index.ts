@@ -4,7 +4,6 @@ require("tsconfig-paths").register({
   addMatchAll: false,
 });
 
-require("./presentation/http")
-  .makeApp()
-  .then(app => app.start())
+require("@/_boot")
+  .bootstrap()
   .catch(console.error);
