@@ -18,7 +18,7 @@ const { getBody } = makeValidator({
 const makeCreateArticleHandler = controller(
   ({ createArticle }: Dependencies) =>
     async (req: Request, res: Response) => {
-      const { title, content } = getBody(req);
+      const { title, content } = await getBody(req);
 
       const articleId = await createArticle({ title, content });
 

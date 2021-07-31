@@ -30,7 +30,6 @@ const makeValidator = <T extends ValidationSchemas>(schemas: T): ValidationHelpe
     const { value, error } = (schemas[key] as Joi.BaseSchema<any>).validate(req[key]);
 
     if (error) {
-      console.log(error, value);
       throw ValidationError.create({ target: key, error });
     }
 

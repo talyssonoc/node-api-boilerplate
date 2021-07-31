@@ -1,8 +1,8 @@
 import { HttpException } from "@/_lib/exceptions/HttpException";
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import { ValidationError } from "@/_lib/validation/ValidationError";
 
-const errorHandler = () => (err: HttpException | Error, req: Request, res: Response) => {
+const errorHandler = () => (err: HttpException | Error, req: Request, res: Response, next: NextFunction) => {
   console.error(err.stack);
 
   if (err instanceof HttpException) {

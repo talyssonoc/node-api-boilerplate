@@ -1,4 +1,4 @@
-import express, { Router } from "express";
+import express, { NextFunction, Router } from "express";
 import { asValue } from "awilix";
 import { Application, json, urlencoded } from "express";
 import httpLogger from "pino-http";
@@ -44,8 +44,8 @@ const server: InitFunction = async (container, { http }) => {
         res.sendStatus(404);
       });
 
-      server.use((err: Error, req: Request, res: Response) => {
-        console.error(err);
+      server.use((err: Error, req: Request, res: Response, next: NextFunction) => {
+        logger.error(err);
 
         if (ValidationError.is(err)) {
           res.status(400).json({ target: err.target, message: err.message, error: err.error });
