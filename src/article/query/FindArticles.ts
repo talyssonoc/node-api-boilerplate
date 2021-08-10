@@ -1,28 +1,17 @@
-import { ArticleCollection } from "@/article/infrastructure/ArticleCollection";
-import { MemoryDB } from "@/article/infrastructure/MemoryDB";
+import { QueryHandler, QueryResult } from "@/_lib/CQRS";
 
-type Dependencies = {
-  memoryDB: MemoryDB;
-};
-
-type ArticleListItemDTO = {
+type ArticleListItemDTO = Readonly<{
   id: string;
   title: string;
+  content: string;
   publishedAt: Date;
-};
+  comments: ReadonlyArray<{
+    id: string;
+    body: string;
+    createdAt: Date;
+  }>;
+}>;
 
-const makeFindArticles =
-  ({ memoryDB }: Dependencies) =>
-  async (): Promise<ArticleListItemDTO[]> => {
-    const articles = Object.values(memoryDB.articles).filter(article => article.state === "PUBLISHED");
+type FindArticles = QueryHandler<void, QueryResult<ArticleListItemDTO[]>>;
 
-    return articles.map(article => ({
-      id: article.id.toString(),
-      title: article.title,
-      publishedAt: article.publishedAt!,
-    }));
-  };
-
-export type FindArticles = ReturnType<typeof makeFindArticles>;
-
-export { makeFindArticles };
+export { FindArticles };

@@ -1,7 +1,8 @@
+import { deleteArticleHandler } from '@/article/presentation/articleController/DeleteArticleHandler';
 import { Router } from "express";
-import { makeCreateArticleHandler } from "./CreateArticleHandler";
-import { makeFindArticlesHandler } from "./FindArticlesHandler";
-import { makePublishArticleHandler } from "./PublishArticleHandler";
+import { createArticleHandler } from "./CreateArticleHandler";
+import { findArticlesHandler } from "./FindArticlesHandler";
+import { publishArticleHandler } from "./PublishArticleHandler";
 
 type Dependencies = {
   apiRouter: Router;
@@ -10,9 +11,10 @@ type Dependencies = {
 const makeArticleController = ({ apiRouter }: Dependencies) => {
   const router = Router();
 
-  router.get("/articles", makeFindArticlesHandler);
-  router.post("/articles", makeCreateArticleHandler);
-  router.patch("/articles/:articleId/publish", makePublishArticleHandler);
+  router.get("/articles", findArticlesHandler);
+  router.post("/articles", createArticleHandler);
+  router.delete("/articles/:articleId", deleteArticleHandler);
+  router.patch("/articles/:articleId/publish", publishArticleHandler);
 
   apiRouter.use(router);
 };

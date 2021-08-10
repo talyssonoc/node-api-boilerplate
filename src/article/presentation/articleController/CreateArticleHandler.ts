@@ -15,7 +15,7 @@ const { getBody } = makeValidator({
   }).required(),
 });
 
-const makeCreateArticleHandler = controller(
+const createArticleHandler = controller(
   ({ createArticle }: Dependencies) =>
     async (req: Request, res: Response) => {
       const { title, content } = await getBody(req);
@@ -26,4 +26,4 @@ const makeCreateArticleHandler = controller(
     }
 );
 
-export { makeCreateArticleHandler };
+export { createArticleHandler };

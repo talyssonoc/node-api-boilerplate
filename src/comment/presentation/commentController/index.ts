@@ -8,7 +8,7 @@ type Dependencies = {
 const makeCommentController = ({ apiRouter }: Dependencies) => {
   const router = Router();
 
-  router.post("/comments", createCommentHandler);
+  router.post("/articles/:articleId/comments", createCommentHandler);
 
   apiRouter.use(router);
 };

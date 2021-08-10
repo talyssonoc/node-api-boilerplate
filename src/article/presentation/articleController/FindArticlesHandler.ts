@@ -6,10 +6,10 @@ type Dependencies = {
   findArticles: FindArticles;
 };
 
-const makeFindArticlesHandler = controller(({ findArticles }: Dependencies) => async (req: Request, res: Response) => {
+const findArticlesHandler = controller(({ findArticles }: Dependencies) => async (req: Request, res: Response) => {
   const articles = await findArticles();
 
   res.json(articles);
 });
 
-export { makeFindArticlesHandler };
+export { findArticlesHandler };

@@ -1,9 +1,8 @@
-import express, { NextFunction, Router } from "express";
+import express, { NextFunction, Router, Application, json, urlencoded } from "express";
 import { asValue } from "awilix";
-import { Application, json, urlencoded } from "express";
 import httpLogger from "pino-http";
 import { Request, Response } from "express-serve-static-core";
-import { InitFunction, Lifecycle } from "@/_lib/AppInitializer";
+import { initFunction, Lifecycle } from "@/_lib/AppInitializer";
 import EventEmitter from "events";
 import { logger } from "@/_lib/logger";
 import { requestId } from "@/_lib/middlewares/requestId";
@@ -21,7 +20,7 @@ type Configuration = {
   };
 };
 
-const server: InitFunction = async (container, { http }) => {
+const server = initFunction(async (container, { http }) => {
   const { register, build } = container;
   const server = express();
 
@@ -65,9 +64,10 @@ const server: InitFunction = async (container, { http }) => {
     rootRouter: asValue(rootRouter),
     apiRouter: asValue(apiRouter),
   });
-};
+});
 
 type Container = {
+  requestId?: string;
   server: Application;
   rootRouter: Router;
   apiRouter: Router;

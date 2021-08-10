@@ -1,7 +1,6 @@
-import { InitFunction } from "@/_lib/AppInitializer";
+import { initFunction } from "@/_lib/AppInitializer";
 import { makeMongoProvider, MongoProvider } from "@/_lib/MongoProvider";
-import { makeMemoryDB, MemoryDB } from "@/_sharedKernel/infrastructure/MemoryDB";
-import { asFunction, asValue } from "awilix";
+import { asValue } from "awilix";
 import { Db, MongoClient } from "mongodb";
 
 type Configuration = {
@@ -13,7 +12,7 @@ type Configuration = {
   };
 };
 
-const database: InitFunction = async ({ register }, { mongodb }) => {
+const database = initFunction(async ({ register }, { mongodb }) => {
   const client = new MongoClient(mongodb.host, {
     auth: { username: mongodb.username, password: mongodb.password },
   });
@@ -30,14 +29,12 @@ const database: InitFunction = async ({ register }, { mongodb }) => {
   const mongoProvider = makeMongoProvider({ db });
 
   register({
-    memoryDB: asFunction(makeMemoryDB).singleton(),
     mongo: asValue(db),
     mongoProvider: asValue(mongoProvider),
   });
-};
+});
 
 type Container = {
-  memoryDB: MemoryDB;
   mongo: Db;
   mongoProvider: MongoProvider;
 };

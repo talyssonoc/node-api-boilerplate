@@ -2,9 +2,20 @@ POST http://localhost:3000/api/articles
 Content-Type: application/json
 
 {
-  "title": "Teste",
-  "content": "aaaaa"
+  "title": "Test",
+  "content": "First of all..."
 }
 
 ###
 GET http://localhost:3000/api/articles
+
+###
+POST http://localhost:3000/api/articles/5fad8938-4135-4c85-92ad-72856e8744b6/comments
+Content-Type: application/json
+
+{
+  "body": "Nice!"
+}
+
+###
+PATCH http://localhost:3000/api/articles/5fad8938-4135-4c85-92ad-72856e8744b6/publish

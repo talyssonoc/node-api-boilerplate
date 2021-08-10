@@ -6,4 +6,10 @@ require("tsconfig-paths").register({
 
 require("@/_boot")
   .bootstrap()
-  .catch(console.error);
+  .catch((err) => {
+    console.error(err);
+
+    if (process.env.NODE_ENV === 'production') {
+      process.exit(1);
+    }
+  });

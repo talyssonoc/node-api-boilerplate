@@ -1,3 +1,4 @@
+import { Comment } from "@/comment/domain/Comment";
 import { makeWithInvariants } from "@/_lib/WithInvariants";
 
 namespace Article {
@@ -5,6 +6,7 @@ namespace Article {
     id: string;
     title: string;
     content: string;
+    slug: string;
     state: "DRAFT" | "PUBLISHED" | "DELETED";
     publishedAt: Date | null;
     createdAt: Date;
@@ -20,6 +22,7 @@ namespace Article {
   type ArticleProps = Readonly<{
     id: string;
     title: string;
+    slug: string;
     content: string;
   }>;
 
@@ -27,6 +30,7 @@ namespace Article {
     (props: ArticleProps): Article => ({
       id: props.id,
       title: props.title,
+      slug: props.slug,
       content: props.content,
       state: "DRAFT",
       publishedAt: null,

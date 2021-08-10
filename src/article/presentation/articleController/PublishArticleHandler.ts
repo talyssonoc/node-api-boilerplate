@@ -6,7 +6,7 @@ type Dependencies = {
   publishArticle: PublishArticle;
 };
 
-const makePublishArticleHandler = controller(
+const publishArticleHandler = controller(
   ({ publishArticle }: Dependencies) =>
     async (req: Request, res: Response) => {
       const { articleId } = req.params;
@@ -17,4 +17,4 @@ const makePublishArticleHandler = controller(
     }
 );
 
-export { makePublishArticleHandler };
+export { publishArticleHandler };

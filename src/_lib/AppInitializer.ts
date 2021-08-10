@@ -12,9 +12,11 @@ const makeAppInitializer =
     );
   };
 
+const initFunction = <T extends InitFunction>(fn: T) => fn;
+
 enum Lifecycle {
   BOOTING = "booting",
   BOOTED = "booted",
 }
 
-export { InitFunction, makeAppInitializer, Lifecycle };
+export { makeAppInitializer, initFunction, Lifecycle };
