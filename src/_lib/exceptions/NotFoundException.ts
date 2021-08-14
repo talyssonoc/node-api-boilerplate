@@ -1,5 +1,5 @@
 import { HttpException } from "./HttpException";
-import { HttpStatus } from "../HttpStatus";
+import { HttpStatus } from "../http/HttpStatus";
 
 export class NotFoundException extends HttpException {
   constructor(message?: string | Record<string, any>, error = "Not Found") {

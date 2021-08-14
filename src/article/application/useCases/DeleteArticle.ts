@@ -1,5 +1,5 @@
-import { ArticleRepository } from "../domain/ArticleRepository";
-import { Article } from "../domain/Article";
+import { ArticleRepository } from "../../domain/ArticleRepository";
+import { Article } from "../../domain/Article";
 
 type Dependencies = {
   articleRepository: ArticleRepository;

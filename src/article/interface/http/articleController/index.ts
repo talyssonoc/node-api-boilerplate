@@ -1,4 +1,4 @@
-import { deleteArticleHandler } from '@/article/presentation/articleController/DeleteArticleHandler';
+import { deleteArticleHandler } from '@/article/interface/http/articleController/DeleteArticleHandler';
 import { Router } from "express";
 import { createArticleHandler } from "./CreateArticleHandler";
 import { findArticlesHandler } from "./FindArticlesHandler";

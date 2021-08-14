@@ -1,5 +1,5 @@
 import { FindArticles } from "@/article/query/FindArticles";
-import { controller } from "@/_lib/wrappers/controller";
+import { controller } from "@/_lib/http/controller";
 import { Request, Response } from "express";
 
 type Dependencies = {

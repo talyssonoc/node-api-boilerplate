@@ -1,4 +1,4 @@
-import { createCommentHandler } from "@/comment/presentation/commentController/CreateCommentHandler";
+import { createCommentHandler } from "@/comment/interface/http/commentController/CreateCommentHandler";
 import { Router } from "express";
 
 type Dependencies = {

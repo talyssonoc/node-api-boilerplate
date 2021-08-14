@@ -6,6 +6,7 @@ import { modules } from "@/_boot/modules";
 import EventEmitter from "events";
 import { asValue } from "awilix";
 import { database } from "@/_boot/database";
+import { repl } from "@/_boot/repl";
 
 const bootstrap = async () => {
   const app = new EventEmitter();
@@ -18,13 +19,13 @@ const bootstrap = async () => {
 
   const initialize = makeAppInitializer(container, config);
 
-  await initialize(database, server, ...modules);
+  await initialize(database, server, repl, ...modules);
 
   app.emit(Lifecycle.BOOTED);
 };
 
-type Container = {
+type BootstrapRegistry = {
   app: EventEmitter;
 };
 
-export { bootstrap, Container };
+export { bootstrap, BootstrapRegistry };

@@ -1,10 +1,10 @@
-import { CreateArticle, makeCreateArticle } from "@/article/application/CreateArticle";
-import { DeleteArticle, makeDeleteArticle } from "@/article/application/DeleteArticle";
-import { makePublishArticle, PublishArticle } from "@/article/application/PublishArticle";
+import { CreateArticle, makeCreateArticle } from "@/article/application/useCases/CreateArticle";
+import { DeleteArticle, makeDeleteArticle } from "@/article/application/useCases/DeleteArticle";
+import { makePublishArticle, PublishArticle } from "@/article/application/useCases/PublishArticle";
 import { ArticleRepository } from "@/article/domain/ArticleRepository";
 import { ArticleCollection, initArticleCollection } from "@/article/infrastructure/ArticleCollection";
 import { makeMongoArticleRepository } from "@/article/infrastructure/MongoArticleRepository";
-import { makeArticleController } from "@/article/presentation/articleController";
+import { makeArticleController } from "@/article/interface/http/articleController";
 import { FindArticles } from "@/article/query/FindArticles";
 import { initFunction } from "@/_lib/AppInitializer";
 import { withMongoProvider } from "@/_lib/MongoProvider";
@@ -31,7 +31,7 @@ const articleModule = initFunction(async ({ register, build }) => {
   build(makeArticleController);
 });
 
-type Container = {
+type ArticleRegistry = {
   articleCollection: ArticleCollection;
   articleRepository: ArticleRepository;
   createArticle: CreateArticle;
@@ -40,4 +40,4 @@ type Container = {
   findArticles: FindArticles;
 };
 
-export { articleModule, Container };
+export { articleModule, ArticleRegistry };

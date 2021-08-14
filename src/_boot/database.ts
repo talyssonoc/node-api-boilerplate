@@ -3,7 +3,7 @@ import { makeMongoProvider, MongoProvider } from "@/_lib/MongoProvider";
 import { asValue } from "awilix";
 import { Db, MongoClient } from "mongodb";
 
-type Configuration = {
+type DatabaseConfig = {
   mongodb: {
     database: string;
     host: string;
@@ -34,9 +34,9 @@ const database = initFunction(async ({ register }, { mongodb }) => {
   });
 });
 
-type Container = {
+type DatabaseRegistry = {
   mongo: Db;
   mongoProvider: MongoProvider;
 };
 
-export { database, Container, Configuration };
+export { database, DatabaseRegistry, DatabaseConfig };

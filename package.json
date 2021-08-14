@@ -5,6 +5,7 @@
   "license": "MIT",
   "dependencies": {
     "awilix": "^4.3.4",
+    "dotenv": "^10.0.0",
     "express": "^4.17.1",
     "joi": "^17.4.1",
     "mongodb": "^4.0.0",
@@ -37,6 +38,10 @@
     "typescript": "^4.3.5"
   },
   "scripts": {
-    "dev": "tsnd --transpile-only --files src/index.ts | pino-pretty -c -l"
+    "prebuild": "rimraf dist",
+    "build": "tsc",
+    "dev": "tsnd --transpile-only --inspect --files src/index.ts | pino-pretty -c -l",
+    "cli": "tsnd --transpile-only --files src/index.ts --cli",
+    "remote": "ts-node bin/replClient.ts"
   }
 }

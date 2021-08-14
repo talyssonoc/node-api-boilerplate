@@ -1,0 +1,19 @@
+{
+  "root": true,
+  "parser": "@typescript-eslint/parser",
+  "extends": ["eslint:recommended", "plugin:@typescript-eslint/recommended", "plugin:jest/recommended", "prettier"],
+  "plugins": ["node", "jest", "prettier", "@typescript-eslint"],
+  "parserOptions": {
+    "ecmaVersion": 11
+  },
+  "rules": {
+    "@typescript-eslint/no-namespace": 0,
+    "@typescript-eslint/no-explicit-any": 0,
+    "max-len": [
+      "error",
+      {
+        "code": 120
+      }
+    ]
+  }
+}

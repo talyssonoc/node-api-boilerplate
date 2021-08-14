@@ -1,8 +1,8 @@
-import { CreateComment, makeCreateComment } from "@/comment/application/CreateComment";
+import { CreateComment, makeCreateComment } from "@/comment/application/useCases/CreateComment";
 import { CommentRepository } from "@/comment/domain/CommentRepository";
 import { CommentCollection, initCommentCollection } from "@/comment/infrastructure/CommentCollection";
 import { makeMongoCommentRepository } from "@/comment/infrastructure/MongoCommentRepository";
-import { makeCommentController } from "@/comment/presentation/commentController";
+import { makeCommentController } from "@/comment/interface/http/commentController";
 import { initFunction } from "@/_lib/AppInitializer";
 import { withMongoProvider } from "@/_lib/MongoProvider";
 import { toContainerValues } from "@/_lib/wrappers/toContainerFunctions";
@@ -24,10 +24,10 @@ const commentModule = initFunction(async ({ register, build }) => {
   build(makeCommentController);
 });
 
-type Container = {
+type CommentRegistry = {
   commentCollection: CommentCollection;
   commentRepository: CommentRepository;
   createComment: CreateComment;
 };
 
-export { commentModule, Container };
+export { commentModule, CommentRegistry };

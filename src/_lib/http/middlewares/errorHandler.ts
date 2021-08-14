@@ -1,6 +1,6 @@
 import { HttpException } from "@/_lib/exceptions/HttpException";
 import { NextFunction, Request, Response } from "express";
-import { ValidationError } from "@/_lib/validation/ValidationError";
+import { ValidationError } from "@/_lib/http/validation/ValidationError";
 
 const errorHandler = () => (err: HttpException | Error, req: Request, res: Response, next: NextFunction) => {
   console.error(err.stack);

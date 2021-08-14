@@ -1,7 +1,7 @@
-import { CreateComment } from "@/comment/application/CreateComment";
-import { makeValidator } from '@/_lib/validation/Validator';
-import { controller } from "@/_lib/wrappers/controller";
-import Joi from 'types-joi';
+import { CreateComment } from "@/comment/application/useCases/CreateComment";
+import { makeValidator } from "@/_lib/http/validation/Validator";
+import { controller } from "@/_lib/http/controller";
+import Joi from "types-joi";
 
 type Dependencies = {
   createComment: CreateComment;
@@ -9,12 +9,12 @@ type Dependencies = {
 
 const { getBody, getParams } = makeValidator({
   params: Joi.object({
-    articleId: Joi.string().required()
+    articleId: Joi.string().required(),
   }).required(),
   body: Joi.object({
-    body: Joi.string().required()
-  }).required()
-})
+    body: Joi.string().required(),
+  }).required(),
+});
 
 const createCommentHandler = controller(({ createComment }: Dependencies) => async (req, res) => {
   const { body } = getBody(req);

@@ -5,22 +5,23 @@ import { Request, Response } from "express-serve-static-core";
 import { initFunction, Lifecycle } from "@/_lib/AppInitializer";
 import EventEmitter from "events";
 import { logger } from "@/_lib/logger";
-import { requestId } from "@/_lib/middlewares/requestId";
-import { requestContainer } from "@/_lib/middlewares/requestContainer";
-import { ValidationError } from "@/_lib/validation/ValidationError";
+import { requestId } from "@/_lib/http/middlewares/requestId";
+import { requestContainer } from "@/_lib/http/middlewares/requestContainer";
+import { ValidationError } from "@/_lib/http/validation/ValidationError";
+import { errorHandler } from "@/_lib/http/middlewares/errorHandler";
 
 type Dependencies = {
   app: EventEmitter;
 };
 
-type Configuration = {
+type ServerConfig = {
   http: {
     host: string;
     port: number;
   };
 };
 
-const server = initFunction(async (container, { http }) => {
+const server = initFunction(async (container, { cli, http }) => {
   const { register, build } = container;
   const server = express();
 
@@ -43,19 +44,13 @@ const server = initFunction(async (container, { http }) => {
         res.sendStatus(404);
       });
 
-      server.use((err: Error, req: Request, res: Response, next: NextFunction) => {
-        logger.error(err);
+      server.use(errorHandler());
 
-        if (ValidationError.is(err)) {
-          res.status(400).json({ target: err.target, message: err.message, error: err.error });
-        } else {
-          res.status(400).json({ error: err.message });
-        }
-      });
-
-      server.listen(http.port, http.host, () => {
-        logger.info(`Webserver listening at: http://${http.host}:${http.port}`);
-      });
+      if (!cli) {
+        server.listen(http.port, http.host, () => {
+          logger.info(`Webserver listening at: http://${http.host}:${http.port}`);
+        });
+      }
     });
   });
 
@@ -66,11 +61,11 @@ const server = initFunction(async (container, { http }) => {
   });
 });
 
-type Container = {
+type ServerRegistry = {
   requestId?: string;
   server: Application;
   rootRouter: Router;
   apiRouter: Router;
 };
 
-export { server, Container, Configuration };
+export { server, ServerRegistry, ServerConfig };

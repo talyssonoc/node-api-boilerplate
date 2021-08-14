@@ -1,4 +1,4 @@
-import { asValue, AwilixContainer } from "awilix";
+import { asValue } from "awilix";
 import { RequestHandler } from "express";
 import { Container } from "@/container";
 
