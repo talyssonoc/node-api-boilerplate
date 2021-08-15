@@ -18,4 +18,6 @@ type DataMapper<AR extends AggregateRoot<any>, DATA> = {
   toData(entity: AR): DATA;
 };
 
+type 
+
 export { AggregateId, AggregateRoot, Repository, ApplicationService, DataMapper };

@@ -1,31 +1,33 @@
-import { container } from "@/container";
-import { Lifecycle, makeAppInitializer } from "@/_lib/AppInitializer";
-import { config } from "@/config";
 import { server } from "@/_boot/server";
 import { modules } from "@/_boot/modules";
 import EventEmitter from "events";
 import { asValue } from "awilix";
 import { database } from "@/_boot/database";
 import { repl } from "@/_boot/repl";
+import { context, initializer } from '@/context';
+import { Lifecycle } from '@/_lib/Lifecycle';
+import { Configuration } from '@/config';
 
 const bootstrap = async () => {
-  const app = new EventEmitter();
-
+  const { app, container, config } = context;
+  
   container.register({
     app: asValue(app),
+    startedAt: asValue(new Date()),
+    config: asValue(config)
   });
 
   app.emit(Lifecycle.BOOTING);
 
-  const initialize = makeAppInitializer(container, config);
-
-  await initialize(database, server, repl, ...modules);
+  await initializer(database, server, repl, ...modules);
 
   app.emit(Lifecycle.BOOTED);
 };
 
 type BootstrapRegistry = {
   app: EventEmitter;
+  startedAt: Date;
+  config: Configuration;
 };
 
 export { bootstrap, BootstrapRegistry };

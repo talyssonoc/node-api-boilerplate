@@ -6,13 +6,15 @@ import { ArticleCollection, initArticleCollection } from "@/article/infrastructu
 import { makeMongoArticleRepository } from "@/article/infrastructure/MongoArticleRepository";
 import { makeArticleController } from "@/article/interface/http/articleController";
 import { FindArticles } from "@/article/query/FindArticles";
-import { initFunction } from "@/_lib/AppInitializer";
 import { withMongoProvider } from "@/_lib/MongoProvider";
 import { toContainerValues } from "@/_lib/wrappers/toContainerFunctions";
-import { asFunction } from "awilix";
+import { asClass, asFunction } from "awilix";
 import { makeMongoFindArticles } from "@/article/query/impl/MongoFindArticles";
+import { initFunction } from '@/context';
+import EventEmitter from 'events';
+import { makeArticleCreatedEmailListener } from '@/article/interface/email/ArticleCreatedEmailListener';
 
-const articleModule = initFunction(async ({ register, build }) => {
+const articleModule = initFunction(async ({ container: {register, build }}) => {
   const collections = await build(
     withMongoProvider({
       articleCollection: initArticleCollection,
@@ -26,9 +28,11 @@ const articleModule = initFunction(async ({ register, build }) => {
     publishArticle: asFunction(makePublishArticle),
     deleteArticle: asFunction(makeDeleteArticle),
     findArticles: asFunction(makeMongoFindArticles),
+    publisher: asClass(EventEmitter).singleton()
   });
 
   build(makeArticleController);
+  build(makeArticleCreatedEmailListener);
 });
 
 type ArticleRegistry = {
@@ -38,6 +42,7 @@ type ArticleRegistry = {
   publishArticle: PublishArticle;
   deleteArticle: DeleteArticle;
   findArticles: FindArticles;
+  publisher: EventEmitter;
 };
 
 export { articleModule, ArticleRegistry };

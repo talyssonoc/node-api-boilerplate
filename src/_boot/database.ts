@@ -1,4 +1,4 @@
-import { initFunction } from "@/_lib/AppInitializer";
+import { initFunction } from "@/context";
 import { makeMongoProvider, MongoProvider } from "@/_lib/MongoProvider";
 import { asValue } from "awilix";
 import { Db, MongoClient } from "mongodb";
@@ -12,7 +12,7 @@ type DatabaseConfig = {
   };
 };
 
-const database = initFunction(async ({ register }, { mongodb }) => {
+const database = initFunction(async ({ container: { register }, config: { mongodb } }) => {
   const client = new MongoClient(mongodb.host, {
     auth: { username: mongodb.username, password: mongodb.password },
   });
