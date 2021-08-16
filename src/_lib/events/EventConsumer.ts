@@ -1,4 +1,4 @@
-import { Event, EventResolver } from "@/_lib/events/Event";
+import { Event, EventRoute } from "@/_lib/events/Event";
 import EventEmitter from "events";
 
 type ConsumerOptions = {
@@ -13,7 +13,7 @@ const defaultOptions: ConsumerOptions = {
 
 const eventConsumer =
   <E extends Event<any>, D extends Record<string, any> | void = void>(
-    eventResolver: EventResolver<E["eventType"], E["topic"]>,
+    eventResolver: EventRoute<E["eventType"], E["topic"]>,
     fn: (deps: D) => (event: E) => Promise<void>,
     opts: Partial<ConsumerOptions> = {}
   ) =>

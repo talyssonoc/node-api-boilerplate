@@ -8,7 +8,7 @@ import { context, initializer } from '@/context';
 import { Lifecycle } from '@/_lib/Lifecycle';
 import { Configuration } from '@/config';
 
-const bootstrap = async () => {
+const bootstrap = async (): Promise<void> => {
   const { app, container, config } = context;
   
   container.register({
