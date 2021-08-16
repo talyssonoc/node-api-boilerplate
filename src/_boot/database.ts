@@ -1,4 +1,4 @@
-import { initFunction } from "@/context";
+import { bootFunction } from "@/context";
 import { makeMongoProvider, MongoProvider } from "@/_lib/MongoProvider";
 import { asValue } from "awilix";
 import { Db, MongoClient } from "mongodb";
@@ -12,7 +12,7 @@ type DatabaseConfig = {
   };
 };
 
-const database = initFunction(async ({ container: { register }, config: { mongodb } }) => {
+const database = bootFunction("database", async ({ container: { register }, config: { mongodb } }) => {
   const client = new MongoClient(mongodb.host, {
     auth: { username: mongodb.username, password: mongodb.password },
   });
@@ -21,17 +21,16 @@ const database = initFunction(async ({ container: { register }, config: { mongod
 
   const db = client.db(mongodb.database);
 
-  process.on("SIGTERM", async () => {
-    await client.close();
-    process.exit(0);
-  });
-
   const mongoProvider = makeMongoProvider({ db });
 
   register({
     mongo: asValue(db),
     mongoProvider: asValue(mongoProvider),
   });
+
+  return async () => {
+    await client.close();
+  };
 });
 
 type DatabaseRegistry = {

@@ -2,41 +2,45 @@ import { Server } from "http";
 import { logger } from "@/_lib/logger";
 import { RequestHandler } from "express";
 
-const gracefulShutdown = (server: Server, forceTimeout = 30000): RequestHandler => {
+type ShutdownMiddleware = {
+  shutdownHook: () => Promise<void>;
+  shutdownHandler: () => RequestHandler;
+};
+
+const gracefulShutdown = (server: Server, forceTimeout = 30000): ShutdownMiddleware => {
   let shuttingDown = false;
 
-  const gracefulExit = () => {
-    if (!process.env.NODE_ENV?.match(/^prod/i)) {
-      return process.exit(1);
-    }
+  const shutdownHook = () =>
+    new Promise<void>(resolve => {
+      if (!process.env.NODE_ENV?.match(/^prod/i) || !server.listening) {
+        return resolve();
+      }
 
-    if (shuttingDown) {
-      return;
-    }
+      shuttingDown = true;
 
-    shuttingDown = true;
-    logger.warn("Received kill signal (SIGTERM), shutting down");
+      logger.warn("Shutting down server");
 
-    setTimeout(() => {
-      logger.error("Could not close connections in time, forcefully shutting down");
-      process.exit(1);
-    }, forceTimeout).unref();
+      setTimeout(() => {
+        logger.error("Could not close connections in time, forcefully shutting down");
+        resolve();
+      }, forceTimeout).unref();
 
-    server.close(() => {
-      logger.info("Closed out remaining connections.");
-      process.exit();
+      server.close(() => {
+        logger.info("Closed out remaining connections.");
+        resolve();
+      });
     });
-  };
 
-  process.on("SIGTERM", gracefulExit);
+  return {
+    shutdownHandler: () => (req, res, next) => {
+      if (!shuttingDown) {
+        return next();
+      }
 
-  return (req, res, next) => {
-    if (!shuttingDown) {
-      return next();
-    }
-
-    res.set("Connection", "close");
-    res.status(503).send("Server is in the process of restarting.");
+      res.set("Connection", "close");
+      res.status(503).send("Server is in the process of restarting.");
+    },
+    shutdownHook,
   };
 };
 

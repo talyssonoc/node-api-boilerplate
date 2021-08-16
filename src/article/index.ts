@@ -10,11 +10,11 @@ import { withMongoProvider } from "@/_lib/MongoProvider";
 import { toContainerValues } from "@/_lib/wrappers/toContainerFunctions";
 import { asClass, asFunction } from "awilix";
 import { makeMongoFindArticles } from "@/article/query/impl/MongoFindArticles";
-import { initFunction } from '@/context';
-import EventEmitter from 'events';
-import { makeArticleCreatedEmailListener } from '@/article/interface/email/ArticleCreatedEmailListener';
+import { bootFunction } from "@/context";
+import EventEmitter from "events";
+import { makeArticleCreatedEmailListener } from "@/article/interface/email/ArticleCreatedEmailListener";
 
-const articleModule = initFunction(async ({ container: {register, build }}) => {
+const articleModule = bootFunction("article", async ({ container: { register, build } }) => {
   const collections = await build(
     withMongoProvider({
       articleCollection: initArticleCollection,
@@ -28,7 +28,7 @@ const articleModule = initFunction(async ({ container: {register, build }}) => {
     publishArticle: asFunction(makePublishArticle),
     deleteArticle: asFunction(makeDeleteArticle),
     findArticles: asFunction(makeMongoFindArticles),
-    publisher: asClass(EventEmitter).singleton()
+    publisher: asClass(EventEmitter).singleton(),
   });
 
   build(makeArticleController);

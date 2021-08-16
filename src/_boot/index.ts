@@ -4,30 +4,26 @@ import EventEmitter from "events";
 import { asValue } from "awilix";
 import { database } from "@/_boot/database";
 import { repl } from "@/_boot/repl";
-import { context, initializer } from '@/context';
-import { Lifecycle } from '@/_lib/Lifecycle';
-import { Configuration } from '@/config';
+import { withContext } from "@/context";
+import { Configuration } from "@/config";
+import { Logger } from "pino";
 
-const bootstrap = async (): Promise<void> => {
-  const { app, container, config } = context;
-  
+const main = withContext(async ({ app, container, config, bootstrap, logger }) => {
   container.register({
     app: asValue(app),
+    logger: asValue(logger),
     startedAt: asValue(new Date()),
-    config: asValue(config)
+    config: asValue(config),
   });
 
-  app.emit(Lifecycle.BOOTING);
+  await bootstrap(database, server, repl, ...modules);
+});
 
-  await initializer(database, server, repl, ...modules);
-
-  app.emit(Lifecycle.BOOTED);
-};
-
-type BootstrapRegistry = {
+type MainRegistry = {
   app: EventEmitter;
   startedAt: Date;
+  logger: Logger;
   config: Configuration;
 };
 
-export { bootstrap, BootstrapRegistry };
+export { main, MainRegistry };

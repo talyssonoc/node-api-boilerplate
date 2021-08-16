@@ -1,12 +1,13 @@
 import express, { Router, Application, json, urlencoded } from "express";
 import { asValue } from "awilix";
 import httpLogger from "pino-http";
-import { logger } from "@/_lib/logger";
 import { requestId } from "@/_lib/http/middlewares/requestId";
 import { requestContainer } from "@/_lib/http/middlewares/requestContainer";
 import { errorHandler } from "@/_lib/http/middlewares/errorHandler";
-import { initFunction } from "@/context";
-import { Lifecycle } from '@/_lib/Lifecycle';
+import { bootFunction } from "@/context";
+import { Lifecycle } from "@/_lib/Lifecycle";
+import { gracefulShutdown } from "@/_lib/http/middlewares/gracefulShutdown";
+import { createServer } from "http";
 
 type ServerConfig = {
   http: {
@@ -15,10 +16,15 @@ type ServerConfig = {
   };
 };
 
-const server = initFunction(async ({ app, container, config: { cli, http } }) => {
+const server = bootFunction("server", async ({ app, container, config: { cli, http }, logger }) => {
   const { register } = container;
   const server = express();
 
+  const httpServer = createServer(server);
+
+  const { shutdownHook, shutdownHandler } = gracefulShutdown(httpServer);
+
+  server.use(shutdownHandler());
   server.use(requestId());
   server.use(requestContainer(container));
   server.use(httpLogger());
@@ -40,8 +46,8 @@ const server = initFunction(async ({ app, container, config: { cli, http } }) =>
     server.use(errorHandler());
 
     if (!cli) {
-      server.listen(http.port, http.host, () => {
-        logger.info(`Webserver listening at: http://${http.host}:${http.port}`);
+      httpServer.listen(http.port, http.host, () => {
+        logger.info("Webserver listening at: http://%s:%d", http.host, http.port);
       });
     }
   });
@@ -51,6 +57,8 @@ const server = initFunction(async ({ app, container, config: { cli, http } }) =>
     rootRouter: asValue(rootRouter),
     apiRouter: asValue(apiRouter),
   });
+
+  return shutdownHook;
 });
 
 type ServerRegistry = {

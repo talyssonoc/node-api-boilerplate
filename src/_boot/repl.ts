@@ -1,9 +1,8 @@
 import REPL, { REPLEval, ReplOptions, REPLServer } from "repl";
 import vm from "vm";
 import { createServer } from "net";
-import { logger } from "@/_lib/logger";
-import { initFunction } from "@/context";
-import { Lifecycle } from '@/_lib/Lifecycle';
+import { bootFunction } from "@/context";
+import { Lifecycle } from "@/_lib/Lifecycle";
 
 type REPLConfig = {
   appName: string;
@@ -13,7 +12,7 @@ type REPLConfig = {
   };
 };
 
-const repl = initFunction(
+const repl = bootFunction("repl",
   async ({
     app,
     container,
@@ -23,6 +22,8 @@ const repl = initFunction(
       environment,
       repl: { port },
     },
+    terminate,
+    logger,
   }) => {
     const promisableEval: REPLEval = (cmd, context, filename, callback) => {
       const result = vm.runInContext(cmd, context);
@@ -57,9 +58,7 @@ const repl = initFunction(
       if (cli) {
         const repl = createREPL();
 
-        repl.on("close", () => {
-          process.exit(0);
-        });
+        repl.on("close", terminate);
       } else if (environment !== "production") {
         createServer(socket => {
           const repl = createREPL({
@@ -74,7 +73,7 @@ const repl = initFunction(
 
           socket.on("error", err => {
             logger.error("[REPL] Connection error");
-            logger.error(err.stack);
+            logger.error(err);
             socket.end();
           });
         }).listen(port);

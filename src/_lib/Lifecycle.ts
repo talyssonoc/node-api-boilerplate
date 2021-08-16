@@ -1,6 +1,8 @@
 enum Lifecycle {
-  BOOTING = "booting",
-  BOOTED = "booted",
+  IDLE = "IDLE",
+  BOOTING = "BOOTING",
+  BOOTED = "BOOTED",
+  SHUTTING_DOWN = "SHUTTING_DOWN",
 }
 
-export { Lifecycle }
+export { Lifecycle };

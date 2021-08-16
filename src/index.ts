@@ -5,11 +5,11 @@ require("tsconfig-paths").register({
 });
 
 require("@/_boot")
-  .bootstrap()
-  .catch((err) => {
+  .main()
+  .catch(err => {
     console.error(err);
 
-    if (process.env.NODE_ENV === 'production') {
-      process.exit(1);
+    if (process.env.NODE_ENV === "production") {
+      process.kill(process.pid, "SIGTERM");
     }
   });
