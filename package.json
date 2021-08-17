@@ -63,11 +63,12 @@
     "collectCoverageFrom": [
       "<rootDir>/src/**"
     ],
+    "testRegex": "(/__tests__/.*(test|spec))\\.[jt]sx?$",
     "moduleNameMapper": {
       "@/(.*)": "<rootDir>/src/$1"
     },
     "setupFiles": [
-      "./jest-setup.ts"
+      "./src/__tests__/setup.ts"
     ]
   }
 }

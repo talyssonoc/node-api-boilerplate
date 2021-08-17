@@ -60,7 +60,7 @@ const repl = makeModule(
         const repl = createREPL();
 
         repl.on("close", terminate);
-      } else if (environment !== "production") {
+      } else if (!["production", "test"].includes(environment)) {
         server = createServer((socket) => {
           const repl = createREPL({
             input: socket,

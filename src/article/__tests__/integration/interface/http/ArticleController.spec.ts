@@ -1,33 +1,32 @@
-import { container } from "@/container";
-import { withContext } from "@/context";
-import { main } from "@/_boot";
 import { randomBytes } from "crypto";
-import { Application } from "express";
-import supertest from "supertest";
+import { SuperTest, Test } from "supertest";
+import { cleanUp, setup } from "@/__tests__/utils";
+import { Container } from "@/container";
 
 describe("ArticleController", () => {
-  let app: Application;
+  let request: () => SuperTest<Test>;
+  let clearDatabase: () => Promise<void>;
+  let container: Container;
 
   beforeAll(async () => {
-    await main();
-
-    const { server } = container.cradle;
-
-    app = server;
+    const utils = await setup();
+    request = utils.request;
+    clearDatabase = utils.clearDatabase;
+    container = utils.container;
   });
 
-  afterAll(
-    withContext(async ({ teardown }) => {
-      await teardown();
-    })
-  );
+  beforeEach(async () => {
+    await clearDatabase();
+  });
+
+  afterAll(cleanUp());
 
   describe("POST /api/articles", () => {
     it("should create a new Article", async () => {
       const title = randomBytes(20).toString("hex");
       const content = "New Article content";
 
-      return supertest(app)
+      return request()
         .post("/api/articles")
         .send({
           title,
@@ -51,7 +50,7 @@ describe("ArticleController", () => {
     });
 
     it("should fail with 422 when no title is present", async () => {
-      return supertest(app)
+      return request()
         .post("/api/articles")
         .send({
           content: "New Article content",
@@ -62,7 +61,7 @@ describe("ArticleController", () => {
     });
 
     it("should fail with 422 when no content is present", async () => {
-      return supertest(app)
+      return request()
         .post("/api/articles")
         .send({
           title: randomBytes(20).toString("hex"),

@@ -12,6 +12,11 @@ type ArticleListItemDTO = Readonly<{
   }>;
 }>;
 
+type ArticleFilter = {
+  title: string;
+  publishedBetween: [Date, Date];
+}
+
 type FindArticles = QueryHandler<void, QueryResult<ArticleListItemDTO[]>>;
 
 export { FindArticles };
