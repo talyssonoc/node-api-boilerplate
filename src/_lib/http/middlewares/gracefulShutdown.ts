@@ -11,7 +11,7 @@ const gracefulShutdown = (server: Server, forceTimeout = 30000): ShutdownMiddlew
   let shuttingDown = false;
 
   const shutdownHook = () =>
-    new Promise<void>(resolve => {
+    new Promise<void>((resolve, reject) => {
       if (!process.env.NODE_ENV?.match(/^prod/i) || !server.listening) {
         return resolve();
       }
@@ -25,7 +25,9 @@ const gracefulShutdown = (server: Server, forceTimeout = 30000): ShutdownMiddlew
         resolve();
       }, forceTimeout).unref();
 
-      server.close(() => {
+      server.close((err) => {
+        if (err) return reject(err);
+
         logger.info("Closed out remaining connections.");
         resolve();
       });

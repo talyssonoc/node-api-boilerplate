@@ -10,6 +10,7 @@ type Dependencies = {
 const makeMongoFindArticles =
   ({ articleCollection }: Dependencies): FindArticles =>
   async () => {
+
     const articles = await articleCollection
       .aggregate([
         {
@@ -34,14 +35,14 @@ const makeMongoFindArticles =
           },
         },
       ])
-      .toArray<ArticleSchema & Record<"comments", CommentSchema[]>>();
+      .toArray<ArticleSchema & { comments: CommentSchema[]; publishedAt: Date }>();
 
     return {
       data: articles.map(article => ({
         id: MUUID.from(article._id).toString(),
         title: article.title,
         content: article.content,
-        publishedAt: article.publishedAt!,
+        publishedAt: article.publishedAt,
         comments: article.comments.map(comment => ({
           id: MUUID.from(comment._id).toString(),
           body: comment.body,

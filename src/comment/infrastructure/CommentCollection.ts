@@ -1,5 +1,5 @@
-import { Collection, Db } from 'mongodb';
-import { MUUID } from 'uuid-mongodb';
+import { Collection, Db } from "mongodb";
+import { MUUID } from "uuid-mongodb";
 
 type CommentSchema = {
   _id: MUUID;
@@ -10,7 +10,7 @@ type CommentSchema = {
   createdAt: Date;
   updatedAt: Date;
   version: number;
-}
+};
 
 type CommentCollection = Collection<CommentSchema>;
 
@@ -23,8 +23,5 @@ const initCommentCollection = async (db: Db): Promise<CommentCollection> => {
   return collection;
 };
 
-export {
-  initCommentCollection,
-  CommentSchema,
-  CommentCollection
-}
+export { initCommentCollection };
+export type { CommentSchema, CommentCollection };

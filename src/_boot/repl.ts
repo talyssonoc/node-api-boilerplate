@@ -1,7 +1,7 @@
 import REPL, { REPLEval, ReplOptions, REPLServer } from "repl";
 import vm from "vm";
-import { createServer } from "net";
-import { bootFunction } from "@/context";
+import { createServer, Server } from "net";
+import { makeModule } from "@/context";
 import { Lifecycle } from "@/_lib/Lifecycle";
 
 type REPLConfig = {
@@ -12,7 +12,8 @@ type REPLConfig = {
   };
 };
 
-const repl = bootFunction("repl",
+const repl = makeModule(
+  "repl",
   async ({
     app,
     container,
@@ -29,15 +30,13 @@ const repl = bootFunction("repl",
       const result = vm.runInContext(cmd, context);
 
       if (isPromise(result)) {
-        return result.then(v => callback(null, v)).catch(e => callback(e, null));
+        return result.then((v) => callback(null, v)).catch((e) => callback(e, null));
       }
 
       return callback(null, result);
     };
 
-    const isPromise = value => {
-      return value && typeof value.then === "function" && typeof value.catch === "function";
-    };
+    const isPromise = (value) => value && typeof value.then === "function" && typeof value.catch === "function";
 
     const createREPL = (
       config: Partial<ReplOptions> = { input: process.stdin, output: process.stdout }
@@ -54,13 +53,15 @@ const repl = bootFunction("repl",
       return repl;
     };
 
+    let server: Server;
+
     const startREPL = () => {
       if (cli) {
         const repl = createREPL();
 
         repl.on("close", terminate);
       } else if (environment !== "production") {
-        createServer(socket => {
+        server = createServer((socket) => {
           const repl = createREPL({
             input: socket,
             output: socket,
@@ -71,7 +72,7 @@ const repl = bootFunction("repl",
             socket.end();
           });
 
-          socket.on("error", err => {
+          socket.on("error", (err) => {
             logger.error("[REPL] Connection error");
             logger.error(err);
             socket.end();
@@ -81,7 +82,19 @@ const repl = bootFunction("repl",
     };
 
     app.once(Lifecycle.BOOTED, startREPL);
+
+    return async () => {
+      if (server && server.listening) {
+        await new Promise<void>((resolve, reject) =>
+          server.close((err) => {
+            if (err) return reject(err);
+            resolve();
+          })
+        );
+      }
+    };
   }
 );
 
-export { repl, REPLConfig };
+export { repl };
+export type { REPLConfig };

@@ -30,7 +30,8 @@ const makeCreateComment =
 
     await commentRepository.store(comment);
 
-    return id;
+    return id.value;
   };
 
-export { makeCreateComment, CreateComment };
+export { makeCreateComment };
+export type { CreateComment };

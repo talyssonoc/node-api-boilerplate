@@ -2,10 +2,11 @@ import { AggregateId } from "@/_lib/DDD";
 
 type IdProvider<T extends AggregateId<N>, N = T["value"]> = {
   create(id: N): T;
-  validate(id: T): id is T;
+  ensure(id: T): id is T;
+  validate(id: T): void;
 };
 
-const makeIdProvider = <T extends AggregateId<N>, N = T["value"]>(): IdProvider<T, N> => {
+const makeIdProvider = <T extends AggregateId<N>, N = T["value"]>(idName: string): IdProvider<T, N> => {
   const key = Symbol();
 
   return {
@@ -14,8 +15,14 @@ const makeIdProvider = <T extends AggregateId<N>, N = T["value"]>(): IdProvider<
         value: id,
         [key]: true,
       } as unknown as T),
-    validate: (id: T | any): id is T => Boolean(id[key]),
+    ensure: (id: T | any): id is T => Boolean(id[key]),
+    validate: (id: T) => {
+      if (!id[key]) {
+        throw new TypeError(`${id.value} is not a valid ${idName}`);
+      }
+    },
   };
 };
 
-export { IdProvider, makeIdProvider };
+export { makeIdProvider };
+export type { IdProvider };

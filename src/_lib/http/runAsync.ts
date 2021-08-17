@@ -5,4 +5,5 @@ type AsyncHandler = (req: Request, res: Response, next: NextFunction) => Promise
 const runAsync = (handler: AsyncHandler) => (req: Request, res: Response, next: NextFunction) =>
   handler(req, res, next).catch(next);
 
-export { AsyncHandler, runAsync };
+export { runAsync };
+export type { AsyncHandler };

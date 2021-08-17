@@ -3,12 +3,12 @@ import { CommentRepository } from "@/comment/domain/CommentRepository";
 import { CommentCollection, initCommentCollection } from "@/comment/infrastructure/CommentCollection";
 import { makeMongoCommentRepository } from "@/comment/infrastructure/MongoCommentRepository";
 import { makeCommentController } from "@/comment/interface/http/commentController";
-import { bootFunction } from "@/context";
+import { makeModule } from "@/context";
 import { withMongoProvider } from "@/_lib/MongoProvider";
 import { toContainerValues } from "@/_lib/wrappers/toContainerFunctions";
 import { asFunction } from "awilix";
 
-const commentModule = bootFunction("comment", async ({ container: { register, build }, logger }) => {
+const commentModule = makeModule("comment", async ({ container: { register, build } }) => {
   const collections = await build(
     withMongoProvider({
       commentCollection: initCommentCollection,
@@ -30,4 +30,5 @@ type CommentRegistry = {
   createComment: CreateComment;
 };
 
-export { commentModule, CommentRegistry };
+export { commentModule };
+export type { CommentRegistry };

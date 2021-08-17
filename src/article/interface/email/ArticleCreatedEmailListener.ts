@@ -11,7 +11,7 @@ const makeArticleCreatedEmailListener = eventConsumer<ArticleCreatedEvent.Type, 
   ArticleCreatedEvent,
   ({ articleCollection }) =>
     async event => {
-      const article = await articleCollection.findOne({ _id: from(event.payload.id) });
+      const article = await articleCollection.findOne({ _id: from(event.payload.id.value) });
 
       console.log(article);
     }

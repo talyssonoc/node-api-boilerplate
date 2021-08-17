@@ -6,8 +6,7 @@ import { DatabaseConfig } from "@/_boot/database";
 type Configuration = ServerConfig & DatabaseConfig & EnvironmentConfig & REPLConfig;
 
 const config: Configuration = {
-  // eslint-disable-next-line @typescript-eslint/no-var-requires
-  appName: require(`${process.cwd()}/package.json`).name,
+  appName: "node-arch",
   cli: process.argv.includes("--cli"),
   environment: environment(),
   repl: {
@@ -25,4 +24,5 @@ const config: Configuration = {
   },
 };
 
-export { config, Configuration };
+export { config };
+export type { Configuration };

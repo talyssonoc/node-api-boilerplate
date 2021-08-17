@@ -1,4 +1,4 @@
-import { bootFunction } from "@/context";
+import { makeModule } from "@/context";
 import { makeMongoProvider, MongoProvider } from "@/_lib/MongoProvider";
 import { asValue } from "awilix";
 import { Db, MongoClient } from "mongodb";
@@ -12,7 +12,7 @@ type DatabaseConfig = {
   };
 };
 
-const database = bootFunction("database", async ({ container: { register }, config: { mongodb } }) => {
+const database = makeModule("database", async ({ container: { register }, config: { mongodb } }) => {
   const client = new MongoClient(mongodb.host, {
     auth: { username: mongodb.username, password: mongodb.password },
   });
@@ -38,4 +38,5 @@ type DatabaseRegistry = {
   mongoProvider: MongoProvider;
 };
 
-export { database, DatabaseRegistry, DatabaseConfig };
+export { database };
+export type { DatabaseRegistry, DatabaseConfig };

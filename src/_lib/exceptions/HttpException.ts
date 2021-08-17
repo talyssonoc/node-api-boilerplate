@@ -22,4 +22,5 @@ class HttpException extends Error {
   }
 }
 
-export { ErrorBody, HttpException };
+export { HttpException };
+export type { ErrorBody };

@@ -1,8 +1,8 @@
-import { ArticleRepository } from "../../domain/ArticleRepository";
-import { Article } from "../../domain/Article";
+import { ArticleRepository } from "@/article/domain/ArticleRepository";
+import { Article } from "@/article/domain/Article";
 import { ApplicationService } from "@/_lib/DDD";
 import { eventProvider } from "@/_lib/events/EventProvider";
-import { ArticleCreatedEvent } from '@/article/application/events/ArticleCreatedEvent';
+import { ArticleCreatedEvent } from "@/article/application/events/ArticleCreatedEvent";
 
 type Dependencies = {
   articleRepository: ArticleRepository;
@@ -26,13 +26,13 @@ const makeCreateArticle = eventProvider<Dependencies, CreateArticle>(
         content: payload.content,
       });
 
-
       await articleRepository.store(article);
 
       enqueue(ArticleCreatedEvent.create(article));
 
-      return id;
+      return id.value;
     }
 );
 
-export { makeCreateArticle, CreateArticle };
+export { makeCreateArticle };
+export type { CreateArticle };

@@ -11,4 +11,5 @@ const container = createContainer<Registry>();
 
 type Container = typeof container;
 
-export { container, Container, Registry };
+export { container };
+export type { Container, Registry };

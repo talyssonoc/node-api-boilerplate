@@ -44,4 +44,5 @@ const envNumber = (variable: string, defaultValue?: number): number => {
   return value;
 };
 
-export { EnvironmentConfig, environment, envString, envNumber };
+export { environment, envString, envNumber };
+export type { EnvironmentConfig };

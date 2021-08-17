@@ -9,10 +9,11 @@ type BaseContext<T extends Record<string | symbol, any>> = {
   app: EventEmitter;
   bootstrap: <M extends Module<BootFn<T>>[]>(...modules: M) => Promise<void>;
   terminate: () => void;
+  teardown: () => Promise<void>;
 } & T;
 
 type Context<T extends Record<string | symbol, any>> = {
-  bootFunction: <F extends BootFn<T>, M extends Module<F>>(name: string, fn: F) => M;
+  makeModule: <F extends BootFn<T>, M extends Module<F>>(name: string, fn: F) => M;
   withContext: <F extends EntrypointFn<T>>(fn: F) => () => Promise<void>;
 };
 
@@ -36,11 +37,8 @@ const defaultOptions: ContextOptions = {
 const wait = (timeout: number) =>
   new Promise<{ timeout: boolean }>(resolve => setTimeout(() => resolve({ timeout: true }), timeout));
 
-const moduleChain = <M extends Module<any>[]>(
-  modules: M,
-  handler?: (module: M[number]) => M extends Module<any> ? BootFn<any> : CleanupFn
-) => {
-  return modules.reduce((chain, module) => chain.then(handler ? handler(module) : module.fn()), Promise.resolve());
+const moduleChain = <M extends Module<any>[]>(modules: M, handler: (module: M[number]) => () => Promise<void>) => {
+  return modules.reduce((chain, module) => chain.then(handler(module)), Promise.resolve());
 };
 
 const makeContext = <T extends Record<string | symbol, any>>(
@@ -48,6 +46,7 @@ const makeContext = <T extends Record<string | symbol, any>>(
   opts: Partial<ContextOptions> = {}
 ): Context<T> => {
   const { shutdownTimeout, logger } = { ...defaultOptions, ...opts };
+  const moduleKey = Symbol();
 
   let cleanUpFns: Module<CleanupFn>[] = [];
   let appState: Lifecycle = Lifecycle.IDLE;
@@ -66,20 +65,26 @@ const makeContext = <T extends Record<string | symbol, any>>(
     appState = Lifecycle.SHUTTING_DOWN;
   });
 
-  const shutdown = async () => {
+  const teardown = async () => {
     app.emit(Lifecycle.SHUTTING_DOWN);
 
+    await moduleChain(cleanUpFns, ({ name, fn }) => () => {
+      logger.info(`Disposing of ${name} module.`);
+
+      return fn().catch(err => {
+        logger.error(`Error while disposing of ${name} module. Trying to resume teardown`);
+        logger.error(err);
+      });
+    });
+
+    app.removeAllListeners();
+  }
+
+  const shutdown = async () => {
     logger.info("Terminating application");
 
     const { timeout } = await Promise.race([
-      moduleChain(cleanUpFns, ({ name, fn }) => () => {
-        logger.info(`Disposing of ${name} module.`);
-
-        return fn().catch(err => {
-          logger.error(`Error while disposing of ${name} module. Trying to resume shutdown`);
-          logger.error(err);
-        });
-      }).then(() => ({ timeout: false })),
+      teardown().then(() => ({ timeout: false })),
       wait(shutdownTimeout),
     ]);
 
@@ -97,16 +102,21 @@ const makeContext = <T extends Record<string | symbol, any>>(
   const bootstrap = async <M extends Module<BootFn<T>>[]>(...modules: M): Promise<void> => {
     if (appState !== Lifecycle.IDLE) throw new Error("The application has already started the bootstrap process.");
 
+    if (!modules.every(module => module[moduleKey])) {
+      const foreignModules = modules.filter(module => !module[moduleKey]).map(module => module.name);
+      throw new Error(`Foreign module(s) provided for bootstrap function: ${foreignModules.join(", ")}`);
+    }
+
     app.emit(Lifecycle.BOOTING);
 
-    await moduleChain(modules, ({ name, fn }) => () => {
+    await moduleChain(modules, ({ name, fn }) => async () => {
       logger.info(`Bootstraping ${name} module.`);
 
-      return fn(context).then(result => {
-        if (typeof result === "function") {
-          cleanUpFns = [{ name, fn: result }, ...cleanUpFns];
-        }
-      });
+      const result = await fn(context);
+
+      if (typeof result === "function") {
+        cleanUpFns = [{ name, fn: result }, ...cleanUpFns];
+      }
     });
 
     app.emit(Lifecycle.BOOTED);
@@ -119,13 +129,16 @@ const makeContext = <T extends Record<string | symbol, any>>(
     app,
     bootstrap,
     terminate,
+    teardown
   });
 
   return {
-    bootFunction: <F extends BootFn<T>, M extends Module<F>>(name: string, fn: F): M => ({
-      name,
-      fn,
-    }) as M,
+    makeModule: <F extends BootFn<T>, M extends Module<F>>(name: string, fn: F): M =>
+      ({
+        [moduleKey]: true,
+        name,
+        fn,
+      } as unknown as M),
     withContext:
       <F extends EntrypointFn<T>>(fn: F): (() => Promise<void>) =>
       () =>

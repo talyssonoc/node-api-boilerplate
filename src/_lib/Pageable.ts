@@ -55,4 +55,5 @@ const makePageable =
     return pagination;
   };
 
-export { PagingOptions, PageConfig, makePageable };
+export { makePageable };
+export type { PagingOptions, PageConfig };

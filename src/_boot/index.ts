@@ -26,4 +26,5 @@ type MainRegistry = {
   config: Configuration;
 };
 
-export { main, MainRegistry };
+export { main };
+export type { MainRegistry };

@@ -8,13 +8,15 @@ import { makeArticleController } from "@/article/interface/http/articleControlle
 import { FindArticles } from "@/article/query/FindArticles";
 import { withMongoProvider } from "@/_lib/MongoProvider";
 import { toContainerValues } from "@/_lib/wrappers/toContainerFunctions";
-import { asClass, asFunction } from "awilix";
+import { aliasTo, asFunction } from "awilix";
 import { makeMongoFindArticles } from "@/article/query/impl/MongoFindArticles";
-import { bootFunction } from "@/context";
-import EventEmitter from "events";
+import { makeModule } from "@/context";
 import { makeArticleCreatedEmailListener } from "@/article/interface/email/ArticleCreatedEmailListener";
+import { makeEventEmitterPubSub } from "@/_lib/events/impl/EventEmitterPubSub";
+import { Publisher } from "@/_lib/events/Publisher";
+import { Subscriber } from "@/_lib/events/Subscriber";
 
-const articleModule = bootFunction("article", async ({ container: { register, build } }) => {
+const articleModule = makeModule("article", async ({ container: { register, build } }) => {
   const collections = await build(
     withMongoProvider({
       articleCollection: initArticleCollection,
@@ -28,7 +30,9 @@ const articleModule = bootFunction("article", async ({ container: { register, bu
     publishArticle: asFunction(makePublishArticle),
     deleteArticle: asFunction(makeDeleteArticle),
     findArticles: asFunction(makeMongoFindArticles),
-    publisher: asClass(EventEmitter).singleton(),
+    eventEmitterPubSub: asFunction(makeEventEmitterPubSub).singleton(),
+    publisher: aliasTo("eventEmitterPubSub"),
+    subscriber: aliasTo("eventEmitterPubSub"),
   });
 
   build(makeArticleController);
@@ -42,7 +46,10 @@ type ArticleRegistry = {
   publishArticle: PublishArticle;
   deleteArticle: DeleteArticle;
   findArticles: FindArticles;
-  publisher: EventEmitter;
+  eventEmitterPubSub: Publisher & Subscriber;
+  publisher: Publisher;
+  subscriber: Subscriber;
 };
 
-export { articleModule, ArticleRegistry };
+export { articleModule };
+export type { ArticleRegistry };

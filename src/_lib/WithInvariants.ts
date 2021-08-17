@@ -15,4 +15,5 @@ const makeWithInvariants =
     return self;
   };
 
-export { AssertionFn, makeWithInvariants };
+export { makeWithInvariants };
+export type { AssertionFn };

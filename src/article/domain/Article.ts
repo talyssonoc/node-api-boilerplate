@@ -1,9 +1,9 @@
-import { Comment } from "@/comment/domain/Comment";
+import { AggregateRoot } from '@/_lib/DDD';
 import { makeWithInvariants } from "@/_lib/WithInvariants";
+import { ArticleId } from '@/_sharedKernel/domain/ArticleId';
 
 namespace Article {
-  type Article = Readonly<{
-    id: string;
+  type Article = AggregateRoot<ArticleId> & Readonly<{
     title: string;
     content: string;
     state: "DRAFT" | "PUBLISHED" | "DELETED";
@@ -19,7 +19,7 @@ namespace Article {
   });
 
   type ArticleProps = Readonly<{
-    id: string;
+    id: ArticleId;
     title: string;
     content: string;
   }>;

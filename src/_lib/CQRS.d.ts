@@ -17,37 +17,39 @@ type ResultPage = Readonly<{
   last: boolean;
 }>;
 
-type Filter = {};
+type Filter = Record<string, any>;
 
-export type Query<F = void> = F extends Filter
+type Query<F = void> = F extends Filter
   ? Readonly<{
       filter: F;
     }>
-  : {};
+  : never;
 
-export type PaginatedQuery<F = void> = Query<F> &
+type PaginatedQuery<F = void> = Query<F> &
   Readonly<{
     pagination: Pagination;
   }>;
 
-export type SortedQuery<F = void> = Query<F> &
+type SortedQuery<F = void> = Query<F> &
   Readonly<{
     sort: Sort[];
   }>;
 
-export type SortedPaginatedQuery<F = void> = Query<F> &
+type SortedPaginatedQuery<F = void> = Query<F> &
   Readonly<{
     sort: Sort[];
     pagination: Pagination;
   }>;
 
-export type QueryResult<T> = Readonly<{
+type QueryResult<T> = Readonly<{
   data: T;
 }>;
 
-export type PaginatedQueryResult<T> = QueryResult<T> &
+type PaginatedQueryResult<T> = QueryResult<T> &
   Readonly<{
     page: ResultPage;
   }>;
 
-export type QueryHandler<P extends Query<any> | void, R extends QueryResult<any>> = (payload: P) => Promise<R>;
+type QueryHandler<P extends Query<any> | void, R extends QueryResult<any>> = (payload: P) => Promise<R>;
+
+export { Query, PaginatedQuery, SortedQuery, SortedPaginatedQuery, QueryResult, PaginatedQueryResult, QueryHandler };

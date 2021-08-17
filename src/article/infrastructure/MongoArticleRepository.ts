@@ -1,50 +1,41 @@
 import { Article } from "@/article/domain/Article";
 import { ArticleRepository } from "@/article/domain/ArticleRepository";
 import { ArticleCollection } from "@/article/infrastructure/ArticleCollection";
-import MUUID from "uuid-mongodb";
+import { ArticleMapper } from "@/article/infrastructure/ArticleMapper";
+import { ArticleId } from "@/_sharedKernel/domain/ArticleId";
+import { ArticleIdProvider } from "@/_sharedKernel/infrastructure/ArticleIdProvider";
+import { from, v4 } from "uuid-mongodb";
 
 type Dependencies = {
   articleCollection: ArticleCollection;
 };
 
 const makeMongoArticleRepository = ({ articleCollection }: Dependencies): ArticleRepository => ({
-  async getNextId(): Promise<string> {
-    return Promise.resolve(MUUID.v4().toString());
+  async getNextId(): Promise<ArticleId> {
+    return Promise.resolve(ArticleIdProvider.create(v4().toString()));
   },
   async findById(id: string): Promise<Article.Type> {
-    const article = await articleCollection.findOne({ _id: MUUID.from(id), deleted: false });
+    const article = await articleCollection.findOne({ _id: from(id), deleted: false });
 
     if (!article) {
       throw new Error("Article not found");
     }
 
-    return {
-      id: MUUID.from(article._id).toString(),
-      title: article.title,
-      content: article.content,
-      state: article.status,
-      publishedAt: article.publishedAt,
-      createdAt: article.createdAt,
-      updatedAt: article.createdAt,
-      version: article.version,
-    };
+    return ArticleMapper.toEntity(article);
   },
   async store(entity: Article.Type): Promise<void> {
-    const count = await articleCollection.countDocuments({ _id: MUUID.from(entity.id), deleted: false });
+    const { _id, version, ...data } = ArticleMapper.toData(entity);
+
+    const count = await articleCollection.countDocuments({ _id });
 
     if (count) {
       await articleCollection.updateOne(
-        { _id: MUUID.from(entity.id), version: entity.version },
+        { _id, version, deleted: false },
         {
           $set: {
-            title: entity.title,
-            content: entity.content,
-            status: entity.state,
-            publishedAt: entity.publishedAt,
-            createdAt: entity.createdAt,
-            deleted: entity.state === "DELETED",
+            ...data,
             updatedAt: new Date(),
-            version: entity.version + 1,
+            version: version + 1,
           },
         }
       );
@@ -53,15 +44,9 @@ const makeMongoArticleRepository = ({ articleCollection }: Dependencies): Articl
     }
 
     await articleCollection.insertOne({
-      _id: MUUID.from(entity.id),
-      title: entity.title,
-      content: entity.content,
-      status: entity.state,
-      publishedAt: entity.publishedAt,
-      createdAt: entity.createdAt,
-      deleted: entity.state === "DELETED",
-      updatedAt: entity.createdAt,
-      version: entity.version,
+      _id,
+      ...data,
+      version,
     });
   },
 });

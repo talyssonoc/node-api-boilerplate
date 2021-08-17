@@ -1,9 +1,8 @@
-import { Article } from '@/article/domain/Article'
+import { Article } from "@/article/domain/Article";
+import { Repository } from "@/_lib/DDD";
 
-type ArticleRepository = {
-  getNextId(): Promise<string>;
+type ArticleRepository = Repository<Article.Type> & {
   findById(id: string): Promise<Article.Type>;
-  store(entity: Article.Type): Promise<void>;
-}
+};
 
-export { ArticleRepository }
+export { ArticleRepository };

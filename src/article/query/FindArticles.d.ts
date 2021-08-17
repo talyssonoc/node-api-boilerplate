@@ -1,4 +1,4 @@
-import { QueryHandler, QueryResult } from "@/_lib/CQRS";
+import { PaginatedQuery, QueryHandler, QueryResult, SortedPaginatedQuery } from "@/_lib/CQRS";
 
 type ArticleListItemDTO = Readonly<{
   id: string;

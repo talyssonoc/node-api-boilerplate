@@ -13,4 +13,5 @@ const makeMemoryDB = (): MemoryDB => {
   };
 };
 
-export { makeMemoryDB, MemoryDB };
+export { makeMemoryDB };
+export type { MemoryDB };

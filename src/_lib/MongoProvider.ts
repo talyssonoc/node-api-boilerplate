@@ -15,20 +15,23 @@ type MongoProvider = <Type extends CollectionInitializer>(
   collectionInitializer: Type
 ) => Promise<{ [key in keyof Type]: ThenArg<ReturnType<Type[key]>> }>;
 
-type InitializedCollections<Type extends CollectionInitializer> = Promise<{ [key in keyof Type]: ThenArg<ReturnType<Type[key]>> }>;
+type InitializedCollections<Type extends CollectionInitializer> = Promise<
+  { [key in keyof Type]: ThenArg<ReturnType<Type[key]>> }
+>;
 
 const makeMongoProvider =
   ({ db }: Dependencies): MongoProvider =>
-  (collections) =>
+  collections =>
     Object.entries(collections).reduce(
       (chain: Promise<any>, [key, promise]) =>
-        chain.then((acc) => promise(db).then((collection) => ({ ...acc, [key]: collection }))),
+        chain.then(acc => promise(db).then(collection => ({ ...acc, [key]: collection }))),
       Promise.resolve()
     );
 
 const withMongoProvider =
-<Type extends CollectionInitializer>(collections: Type) =>
+  <Type extends CollectionInitializer>(collections: Type) =>
   ({ mongoProvider }: { mongoProvider: MongoProvider }): InitializedCollections<Type> =>
     mongoProvider(collections);
 
-export { MongoProvider, makeMongoProvider, withMongoProvider };
+export { makeMongoProvider, withMongoProvider };
+export type { MongoProvider };

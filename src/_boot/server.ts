@@ -4,7 +4,7 @@ import httpLogger from "pino-http";
 import { requestId } from "@/_lib/http/middlewares/requestId";
 import { requestContainer } from "@/_lib/http/middlewares/requestContainer";
 import { errorHandler } from "@/_lib/http/middlewares/errorHandler";
-import { bootFunction } from "@/context";
+import { makeModule } from "@/context";
 import { Lifecycle } from "@/_lib/Lifecycle";
 import { gracefulShutdown } from "@/_lib/http/middlewares/gracefulShutdown";
 import { createServer } from "http";
@@ -16,7 +16,7 @@ type ServerConfig = {
   };
 };
 
-const server = bootFunction("server", async ({ app, container, config: { cli, http }, logger }) => {
+const server = makeModule("server", async ({ app, container, config: { cli, http, environment }, logger }) => {
   const { register } = container;
   const server = express();
 
@@ -45,7 +45,7 @@ const server = bootFunction("server", async ({ app, container, config: { cli, ht
 
     server.use(errorHandler());
 
-    if (!cli) {
+    if (!cli && environment !== "test") {
       httpServer.listen(http.port, http.host, () => {
         logger.info("Webserver listening at: http://%s:%d", http.host, http.port);
       });
@@ -58,7 +58,9 @@ const server = bootFunction("server", async ({ app, container, config: { cli, ht
     apiRouter: asValue(apiRouter),
   });
 
-  return shutdownHook;
+  return async () => {
+    await shutdownHook();
+  };
 });
 
 type ServerRegistry = {
@@ -68,4 +70,5 @@ type ServerRegistry = {
   apiRouter: Router;
 };
 
-export { server, ServerRegistry, ServerConfig };
+export { server };
+export type { ServerRegistry, ServerConfig };

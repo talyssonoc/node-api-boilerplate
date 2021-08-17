@@ -1,11 +1,11 @@
-type EventResolver<ET extends string, T extends string> = Readonly<{
+type EventAddress<ET extends string = string, T extends string = string> = Readonly<{
   eventType: ET;
   topic: T;
 }>;
 
-type Event<P, ET extends string = string, T extends string = string> = EventResolver<ET, T> & Readonly<{
+type Event<P, ET extends string = string, T extends string = string> = EventAddress<ET, T> & Readonly<{
   eventId: string;
   payload: P;
 }>;
 
-export { Event, EventResolver };
+export { Event, EventAddress };

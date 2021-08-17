@@ -3,6 +3,7 @@ import { makeValidator } from "@/_lib/http/validation/Validator";
 import { controller } from "@/_lib/http/controller";
 import { Request, Response } from "express";
 import Joi from "types-joi";
+import { HttpStatus } from '@/_lib/http/HttpStatus';
 
 type Dependencies = {
   createArticle: CreateArticle;
@@ -20,7 +21,7 @@ const createArticleHandler = controller(({ createArticle }: Dependencies) => asy
 
   const articleId = await createArticle({ title, content });
 
-  res.json({ id: articleId });
+  res.status(HttpStatus.CREATED).json({ id: articleId });
 });
 
 export { createArticleHandler };

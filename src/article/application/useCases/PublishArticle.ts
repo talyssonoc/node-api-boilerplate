@@ -1,12 +1,15 @@
-import { ArticleRepository } from "../../domain/ArticleRepository";
-import { Article } from "../../domain/Article";
+import { ArticleRepository } from "@/article/domain/ArticleRepository";
+import { Article } from "@/article/domain/Article";
+import { ApplicationService } from "@/_lib/DDD";
 
 type Dependencies = {
   articleRepository: ArticleRepository;
 };
 
+type PublishArticle = ApplicationService<string, void>;
+
 const makePublishArticle =
-  ({ articleRepository }: Dependencies) =>
+  ({ articleRepository }: Dependencies): PublishArticle =>
   async (payload: string) => {
     let article = await articleRepository.findById(payload);
 
@@ -15,6 +18,5 @@ const makePublishArticle =
     await articleRepository.store(article);
   };
 
-export type PublishArticle = ReturnType<typeof makePublishArticle>;
-
 export { makePublishArticle };
+export type { PublishArticle };

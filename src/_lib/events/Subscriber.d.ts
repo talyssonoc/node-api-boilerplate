@@ -1,11 +1,16 @@
-import { Event, EventRoute } from "@/_lib/events/Event";
+import { Event, EventAddress } from "@/_lib/events/Event";
 
-type Subscriber<OPTS = any> = {
-  subscribe: <R extends EventRoute, E extends Event<any>>(
-    route: R,
+type SubscriberOptions = {
+  single: boolean;
+  nackOn: (error?: Error) => boolean;
+};
+
+type Subscriber<OPTS = SubscriberOptions> = {
+  subscribe: <E extends Event<any>>(
+    address: EventAddress<E["eventType"], E["topic"]>,
     handler: (event: E) => Promise<void>,
-    opts?: OPTS
+    opts?: Partial<OPTS>
   ) => Promise<void>;
 };
 
-export { Publisher };
+export { Subscriber, SubscriberOptions };
