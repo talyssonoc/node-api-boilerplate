@@ -1,6 +1,6 @@
 import { ArticleCreatedEvent } from "@/article/application/events/ArticleCreatedEvent";
 import { ArticleCollection } from "@/article/infrastructure/ArticleCollection";
-import { eventConsumer } from "@/_lib/events/EventConsumer";
+import { eventConsumer } from '@/_lib/events/impl/EventEmitterConsumer';
 import { from } from "uuid-mongodb";
 
 type Dependencies = {

@@ -31,8 +31,6 @@ const articleModule = makeModule("article", async ({ container: { register, buil
     deleteArticle: asFunction(makeDeleteArticle),
     findArticles: asFunction(makeMongoFindArticles),
     eventEmitterPubSub: asFunction(makeEventEmitterPubSub).singleton(),
-    publisher: aliasTo("eventEmitterPubSub"),
-    subscriber: aliasTo("eventEmitterPubSub"),
   });
 
   build(makeArticleController);

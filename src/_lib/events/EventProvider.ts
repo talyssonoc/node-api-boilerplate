@@ -9,10 +9,11 @@ type EventStore = {
   getEvents: () => ReadonlyArray<Event<any>>;
 };
 
-const eventProvider =
+const makeEventProvider =
+  <S extends string = "publisher">(publisherKey: S = "publisher" as S) =>
   <D extends Record<string, any>, AS extends ApplicationService<any, any>>(fn: (deps: D, enqueue: Enqueue) => AS) =>
-  (deps: D & { publisher: Publisher }): AS => {
-    const { publisher } = deps;
+  (deps: D & { [key in S]: Publisher }): AS => {
+    const { [publisherKey]: publisher } = deps;
     const { getEvents, enqueue } = makeEventStore();
 
     const service = fn(deps, enqueue);
@@ -39,4 +40,6 @@ const makeEventStore = (): EventStore => {
   };
 };
 
-export { eventProvider };
+const eventProvider = makeEventProvider();
+
+export { eventProvider, makeEventProvider };
