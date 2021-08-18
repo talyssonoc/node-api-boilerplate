@@ -1,28 +1,32 @@
 import { randomBytes } from "crypto";
-import { SuperTest, Test } from "supertest";
-import { cleanUp, setup } from "@/__tests__/utils";
-import { Container } from "@/container";
+import { makeTestControls, TestControls } from "@/__tests__/TestControls";
 
 describe("ArticleController", () => {
-  let request: () => SuperTest<Test>;
-  let clearDatabase: () => Promise<void>;
-  let container: Container;
+  let controls: TestControls;
 
   beforeAll(async () => {
-    const utils = await setup();
-    request = utils.request;
-    clearDatabase = utils.clearDatabase;
-    container = utils.container;
+    controls = await makeTestControls();
   });
 
   beforeEach(async () => {
+    const { clearDatabase } = controls;
+
     await clearDatabase();
   });
 
-  afterAll(cleanUp());
+  afterAll(async () => {
+    const { cleanUp } = controls;
+
+    await cleanUp();
+  });
 
   describe("POST /api/articles", () => {
     it("should create a new Article", async () => {
+      const {
+        request,
+        registry: { articleRepository },
+      } = controls;
+
       const title = randomBytes(20).toString("hex");
       const content = "New Article content";
 
@@ -36,8 +40,6 @@ describe("ArticleController", () => {
           expect(res.status).toBe(201);
           expect(res.body).toHaveProperty("id");
 
-          const { articleRepository } = container.cradle;
-
           const article = await articleRepository.findById(res.body.id);
 
           expect(article).toEqual(
@@ -50,6 +52,8 @@ describe("ArticleController", () => {
     });
 
     it("should fail with 422 when no title is present", async () => {
+      const { request } = controls;
+
       return request()
         .post("/api/articles")
         .send({
@@ -61,6 +65,8 @@ describe("ArticleController", () => {
     });
 
     it("should fail with 422 when no content is present", async () => {
+      const { request } = controls;
+
       return request()
         .post("/api/articles")
         .send({
