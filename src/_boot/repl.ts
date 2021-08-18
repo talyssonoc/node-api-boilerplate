@@ -55,7 +55,7 @@ const repl = makeModule(
 
     let server: Server;
 
-    const startREPL = () => {
+    const startREPL = async () => {
       if (cli) {
         const repl = createREPL();
 

@@ -38,7 +38,7 @@ const server = makeModule("server", async ({ app, container, config: { cli, http
 
   server.use(rootRouter);
 
-  app.once(Lifecycle.BOOTED, () => {
+  app.once(Lifecycle.BOOTED, async () => {
     server.use((req, res) => {
       res.sendStatus(404);
     });

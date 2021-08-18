@@ -1,6 +1,5 @@
 import { server } from "@/_boot/server";
 import { modules } from "@/_boot/modules";
-import EventEmitter from "events";
 import { asValue } from "awilix";
 import { database } from "@/_boot/database";
 import { repl } from "@/_boot/repl";
@@ -16,11 +15,11 @@ const main = withContext(async ({ app, container, config, bootstrap, logger }) =
     config: asValue(config),
   });
 
-  await bootstrap(database, server, repl, ...modules);
+  await bootstrap(database, repl, server, ...modules);
 });
 
 type MainRegistry = {
-  app: EventEmitter;
+  app: any;
   startedAt: Date;
   logger: Logger;
   config: Configuration;
