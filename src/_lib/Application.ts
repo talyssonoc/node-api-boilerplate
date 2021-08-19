@@ -1,5 +1,4 @@
 import { Lifecycle } from "@/_lib/Lifecycle";
-import { EventEmitter } from 'stream';
 
 type HookFn = () => Promise<void>;
 
@@ -34,10 +33,8 @@ const makeApp = ({ logger, shutdownTimeout }: ApplicationOptions): Application =
     () => promiseChain(hooks.get(lifecycle)),
   ];
 
-  const start = async () => {
+  const start = () => {
     if (appState !== Lifecycle.IDLE) throw new Error("The application has already started.");
-
-    console.log(hooks.get(Lifecycle.BOOTED));
 
     return promiseChain([
       ...transition(Lifecycle.BOOTING),
@@ -46,34 +43,35 @@ const makeApp = ({ logger, shutdownTimeout }: ApplicationOptions): Application =
     ]);
   };
 
-  const stop = async () => {
+  const stop = () => {
     if (appState !== Lifecycle.STARTED) throw new Error("The application is not running.");
 
     return promiseChain([...transition(Lifecycle.SHUTTING_DOWN), ...transition(Lifecycle.TERMINATED)]);
   };
 
-  const shutdown = async () => {
+  const shutdown = (code: number) => async () => {
+    setTimeout(() => {
+      logger.error("Ok, my patience is over! #ragequit");
+      process.exit(code);
+    }, shutdownTimeout).unref();
+
     try {
       logger.info("Terminating application");
-      const { timeout } = await Promise.race([stop().then(() => ({ timeout: false })), wait(shutdownTimeout)]);
 
-      if (timeout) {
-        logger.error("Ok, my patience is over! #ragequit");
-        process.exit(1);
-      }
-
-      process.exit(0);
+      await stop();
     } catch (err) {
       logger.error(err);
-
-      process.exit(1);
     }
+
+    process.exit(code);
   };
 
   const terminate = () => process.kill(process.pid, "SIGTERM");
 
-  process.on("SIGTERM", shutdown);
-  process.on("SIGINT", shutdown);
+  process.on("SIGTERM", shutdown(0));
+  process.on("SIGINT", shutdown(0));
+  process.on("uncaughtException", shutdown(1));
+  process.on("unhandledRejection", shutdown(1));
 
   return {
     start,
@@ -84,9 +82,6 @@ const makeApp = ({ logger, shutdownTimeout }: ApplicationOptions): Application =
       Array.isArray(fn) ? hooks[order](lifecycle, ...fn) : hooks[order](lifecycle, fn),
   };
 };
-
-const wait = (timeout: number) =>
-  new Promise<{ timeout: boolean }>((resolve) => setTimeout(() => resolve({ timeout: true }), timeout));
 
 const promiseChain = <M extends HookFn[]>(hooksFns: M) => {
   return hooksFns.reduce((chain, fn) => chain.then(fn), Promise.resolve());

@@ -1,21 +1,21 @@
 import { Lifecycle } from "@/_lib/Lifecycle";
 import { Application, HookFn, makeApp } from "@/_lib/Application";
 
-type EntrypointFn<T extends Record<string | symbol, any>> = (arg: BaseContext<T>) => Promise<void>;
+type EntrypointFn<T extends Record<string | symbol, any>> = (arg: Context<T>) => Promise<void>;
 
-type BootFn<T extends Record<string | symbol, any>> = (arg: BaseContext<T>) => Promise<void | HookFn>;
+type BootFn<T extends Record<string | symbol, any>> = (arg: Context<T>) => Promise<void | HookFn>;
 
-type Module<F extends BootFn<any>> = {
+type Module<T extends Record<string | symbol, any>, F extends BootFn<T> = BootFn<any>> = {
   name: string;
   fn: F;
 };
 
-type BaseContext<T extends Record<string | symbol, any>> = {
+type Context<T extends Record<string | symbol, any>> = {
   app: Omit<Application, "start">;
-  bootstrap: <M extends Module<BootFn<T>>[]>(...modules: M) => Promise<void>;
+  bootstrap: <M extends Module<T>[]>(...modules: M) => Promise<void>;
 } & T;
 
-type Context<T extends Record<string | symbol, any>> = {
+type ContextProvider<T extends Record<string | symbol, any>> = {
   makeModule: <F extends BootFn<T>, M extends Module<F>>(name: string, fn: F) => M;
   withContext: <F extends EntrypointFn<T>>(fn: F) => () => Promise<void>;
 };
@@ -33,13 +33,13 @@ const defaultOptions: ContextOptions = {
 const makeContext = <T extends Record<string | symbol, any>>(
   localContext: T,
   opts: Partial<ContextOptions> = {}
-): Context<T> => {
+): ContextProvider<T> => {
   const { shutdownTimeout, logger } = { ...defaultOptions, ...opts };
   const moduleKey = Symbol();
 
   const app = makeApp({ shutdownTimeout, logger });
 
-  const bootstrap = async <M extends Module<BootFn<T>>[]>(...modules: M): Promise<void> => {
+  const bootstrap = async <M extends Module<T>[]>(...modules: M): Promise<void> => {
     if (!modules.every((module) => module[moduleKey])) {
       const foreignModules = modules.filter((module) => !module[moduleKey]).map((module) => module.name);
       throw new Error(`Foreign module(s) provided for bootstrap function: ${foreignModules.join(", ")}`);
@@ -53,15 +53,19 @@ const makeContext = <T extends Record<string | symbol, any>>(
           ...context,
           app: {
             ...app,
-            once: (lifecycle: Lifecycle, fn: HookFn, order = "append") => {
-              app.once(lifecycle, async () => {
-                logger.info(`Running ${lifecycle.toLowerCase()} hook for module ${name}.`);
+            once: (lifecycle: Lifecycle, fn: HookFn, order: "append" | "prepend" = "append") => {
+              app.once(
+                lifecycle,
+                async () => {
+                  logger.info(`Running ${lifecycle.toLowerCase()} hook from ${name} module.`);
 
-                return fn().catch((err) => {
-                  logger.error(`Error while performing ${lifecycle.toLowerCase()} hook for ${name} module.`);
-                  logger.error(err);
-                });
-              }, order);
+                  return fn().catch((err) => {
+                    logger.error(`Error while performing ${lifecycle.toLowerCase()} hook from ${name} module.`);
+                    logger.error(err);
+                  });
+                },
+                order
+              );
             },
           },
         })
@@ -71,7 +75,7 @@ const makeContext = <T extends Record<string | symbol, any>>(
         app.once(
           Lifecycle.SHUTTING_DOWN,
           async () => {
-            logger.info(`Disposing of ${name} module.`);
+            logger.info(`Disposing ${name} module.`);
 
             return result().catch((err) => {
               logger.error(`Error while disposing of ${name} module. Trying to resume teardown`);
@@ -88,11 +92,10 @@ const makeContext = <T extends Record<string | symbol, any>>(
     return app.start();
   };
 
-
-  const context: BaseContext<T> = {
+  const context: Context<T> = {
     ...localContext,
     app,
-    bootstrap
+    bootstrap,
   };
 
   return {
