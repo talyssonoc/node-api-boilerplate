@@ -1,12 +1,12 @@
 import { PublishArticle } from "@/article/application/useCases/PublishArticle";
-import { controller } from "@/_lib/http/controller";
+import { handler } from "@/_lib/http/handler";
 import { Request, Response } from "express";
 
 type Dependencies = {
   publishArticle: PublishArticle;
 };
 
-const publishArticleHandler = controller(({ publishArticle }: Dependencies) => async (req: Request, res: Response) => {
+const publishArticleHandler = handler(({ publishArticle }: Dependencies) => async (req: Request, res: Response) => {
   const { articleId } = req.params;
 
   await publishArticle(articleId);

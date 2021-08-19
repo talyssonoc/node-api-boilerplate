@@ -6,6 +6,7 @@ import { repl } from "@/_boot/repl";
 import { withContext } from "@/context";
 import { Configuration } from "@/config";
 import { Logger } from "pino";
+import { pubSub } from "@/_boot/pubSub";
 
 const main = withContext(async ({ app, container, config, bootstrap, logger }) => {
   container.register({
@@ -15,7 +16,7 @@ const main = withContext(async ({ app, container, config, bootstrap, logger }) =
     config: asValue(config),
   });
 
-  await bootstrap(database, repl, server, ...modules);
+  await bootstrap(database, server, pubSub, repl, ...modules);
 });
 
 type MainRegistry = {

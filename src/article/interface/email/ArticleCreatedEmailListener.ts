@@ -1,7 +1,7 @@
 import { ArticleCreatedEvent } from "@/article/application/events/ArticleCreatedEvent";
 import { ArticleCollection } from "@/article/infrastructure/ArticleCollection";
-import { eventConsumer } from '@/_lib/events/impl/EventEmitterConsumer';
 import { from } from "uuid-mongodb";
+import { eventConsumer } from "@/_lib/pubSub/EventEmitterConsumer";
 
 type Dependencies = {
   articleCollection: ArticleCollection;
@@ -10,7 +10,7 @@ type Dependencies = {
 const makeArticleCreatedEmailListener = eventConsumer<ArticleCreatedEvent.Type, Dependencies>(
   ArticleCreatedEvent,
   ({ articleCollection }) =>
-    async event => {
+    async (event) => {
       const article = await articleCollection.findOne({ _id: from(event.payload.id.value) });
 
       console.log(article);

@@ -6,11 +6,15 @@ type SubscriberOptions = {
 };
 
 type Subscriber<OPTS = SubscriberOptions> = {
-  subscribe: <E extends Event<any>>(
+  add: <E extends Event<any>>(
     address: EventAddress<E["eventType"], E["topic"]>,
     handler: (event: E) => Promise<void>,
     opts?: Partial<OPTS>
   ) => Promise<void>;
+
+  start: () => Promise<void>;
+
+  dispose: () => Promise<void>;
 };
 
 export { Subscriber, SubscriberOptions };

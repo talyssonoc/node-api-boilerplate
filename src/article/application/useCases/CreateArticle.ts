@@ -2,7 +2,7 @@ import { ArticleRepository } from "@/article/domain/ArticleRepository";
 import { Article } from "@/article/domain/Article";
 import { ApplicationService } from "@/_lib/DDD";
 import { ArticleCreatedEvent } from "@/article/application/events/ArticleCreatedEvent";
-import { eventProvider } from '@/_lib/events/impl/EventEmitterProvider';
+import { eventProvider } from "@/_lib/pubSub/EventEmitterProvider";
 
 type Dependencies = {
   articleRepository: ArticleRepository;

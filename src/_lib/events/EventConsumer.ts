@@ -11,7 +11,7 @@ const makeEventConsumer =
   (deps: D & { [key in S]: Subscriber<OPTS> }): void => {
     const { [subscriberKey]: subscriber } = deps;
 
-    subscriber.subscribe(address, fn(deps), opts);
+    subscriber.add(address, fn(deps), opts);
   };
 
 const eventConsumer = makeEventConsumer();

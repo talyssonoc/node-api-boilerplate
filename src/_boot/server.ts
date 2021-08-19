@@ -1,13 +1,13 @@
 import express, { Router, Application, json, urlencoded } from "express";
 import { asValue } from "awilix";
 import httpLogger from "pino-http";
+import { createServer } from "http";
 import { requestId } from "@/_lib/http/middlewares/requestId";
 import { requestContainer } from "@/_lib/http/middlewares/requestContainer";
 import { errorHandler } from "@/_lib/http/middlewares/errorHandler";
 import { makeModule } from "@/context";
 import { Lifecycle } from "@/_lib/Lifecycle";
 import { gracefulShutdown } from "@/_lib/http/middlewares/gracefulShutdown";
-import { createServer } from "http";
 
 type ServerConfig = {
   http: {
@@ -51,7 +51,7 @@ const server = makeModule(
     if (!cli && environment !== "test") {
       once(Lifecycle.STARTED, async () => {
         httpServer.listen(http.port, http.host, () => {
-          logger.info("Webserver listening at: http://%s:%d", http.host, http.port);
+          logger.info(`Webserver listening at: http://${http.host}:${http.port}`);
         });
       });
     }

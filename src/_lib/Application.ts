@@ -56,6 +56,7 @@ const makeApp = ({ logger, shutdownTimeout }: ApplicationOptions): Application =
     }, shutdownTimeout).unref();
 
     try {
+      process.stdout.write("\n");
       logger.info("Terminating application");
 
       await stop();

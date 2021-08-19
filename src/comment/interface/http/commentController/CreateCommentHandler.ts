@@ -1,6 +1,6 @@
 import { CreateComment } from "@/comment/application/useCases/CreateComment";
 import { makeValidator } from "@/_lib/http/validation/Validator";
-import { controller } from "@/_lib/http/controller";
+import { handler } from "@/_lib/http/handler";
 import Joi from "types-joi";
 
 type Dependencies = {
@@ -16,7 +16,7 @@ const { getBody, getParams } = makeValidator({
   }).required(),
 });
 
-const createCommentHandler = controller(({ createComment }: Dependencies) => async (req, res) => {
+const createCommentHandler = handler(({ createComment }: Dependencies) => async (req, res) => {
   const { body } = getBody(req);
   const { articleId } = getParams(req);
 

@@ -1,9 +1,9 @@
 import { CreateArticle } from "@/article/application/useCases/CreateArticle";
 import { makeValidator } from "@/_lib/http/validation/Validator";
-import { controller } from "@/_lib/http/controller";
+import { handler } from "@/_lib/http/handler";
 import { Request, Response } from "express";
 import Joi from "types-joi";
-import { HttpStatus } from '@/_lib/http/HttpStatus';
+import { HttpStatus } from "@/_lib/http/HttpStatus";
 
 type Dependencies = {
   createArticle: CreateArticle;
@@ -16,7 +16,7 @@ const { getBody } = makeValidator({
   }).required(),
 });
 
-const createArticleHandler = controller(({ createArticle }: Dependencies) => async (req: Request, res: Response) => {
+const createArticleHandler = handler(({ createArticle }: Dependencies) => async (req: Request, res: Response) => {
   const { title, content } = await getBody(req);
 
   const articleId = await createArticle({ title, content });

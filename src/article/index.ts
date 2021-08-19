@@ -12,9 +12,6 @@ import { toContainerValues } from "@/_lib/wrappers/toContainerFunctions";
 import { makeMongoFindArticles } from "@/article/query/impl/MongoFindArticles";
 import { makeModule } from "@/context";
 import { makeArticleCreatedEmailListener } from "@/article/interface/email/ArticleCreatedEmailListener";
-import { makeEventEmitterPubSub } from "@/_lib/events/impl/EventEmitterPubSub";
-import { Publisher } from "@/_lib/events/Publisher";
-import { Subscriber } from "@/_lib/events/Subscriber";
 
 const articleModule = makeModule("article", async ({ container: { register, build } }) => {
   const collections = await build(
@@ -30,7 +27,6 @@ const articleModule = makeModule("article", async ({ container: { register, buil
     publishArticle: asFunction(makePublishArticle),
     deleteArticle: asFunction(makeDeleteArticle),
     findArticles: asFunction(makeMongoFindArticles),
-    eventEmitterPubSub: asFunction(makeEventEmitterPubSub).singleton(),
   });
 
   build(makeArticleController);
@@ -44,9 +40,6 @@ type ArticleRegistry = {
   publishArticle: PublishArticle;
   deleteArticle: DeleteArticle;
   findArticles: FindArticles;
-  eventEmitterPubSub: Publisher & Subscriber;
-  publisher: Publisher;
-  subscriber: Subscriber;
 };
 
 export { articleModule };
