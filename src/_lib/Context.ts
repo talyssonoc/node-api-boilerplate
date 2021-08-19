@@ -53,16 +53,28 @@ const makeContext = <T extends Record<string | symbol, any>>(
           ...context,
           app: {
             ...app,
-            once: (lifecycle: Lifecycle, fn: HookFn, order: "append" | "prepend" = "append") => {
+            once: (lifecycle: Lifecycle, fn: HookFn | HookFn[], order: "append" | "prepend" = "append") => {
               app.once(
                 lifecycle,
                 async () => {
-                  logger.info(`Running ${lifecycle.toLowerCase()} hook from ${name} module.`);
+                  const isArray = Array.isArray(fn);
 
-                  return fn().catch((err) => {
-                    logger.error(`Error while performing ${lifecycle.toLowerCase()} hook from ${name} module.`);
-                    logger.error(err);
-                  });
+                  logger.info(`Running ${lifecycle.toLowerCase()} hook${isArray ? "s" : ""} from ${name} module.`);
+
+                  return (Array.isArray(fn) ? fn : [fn]).reduce(
+                    (chain, hook) =>
+                      chain.then(() =>
+                        hook().catch((err) => {
+                          logger.error(
+                            `Error while performing ${lifecycle.toLowerCase()} hook${
+                              isArray ? "s" : ""
+                            } from ${name} module.`
+                          );
+                          logger.error(err);
+                        })
+                      ),
+                    Promise.resolve()
+                  );
                 },
                 order
               );
