@@ -23,7 +23,6 @@ const repl = makeModule(
       environment,
       repl: { port },
     },
-    terminate,
     logger,
   }) => {
     const promisableEval: REPLEval = (cmd, context, filename, callback) => {
@@ -59,7 +58,7 @@ const repl = makeModule(
       if (cli) {
         const repl = createREPL();
 
-        repl.on("close", terminate);
+        repl.on("close", app.terminate);
       } else if (!["production", "test"].includes(environment)) {
         server = createServer((socket) => {
           const repl = createREPL({
@@ -81,7 +80,7 @@ const repl = makeModule(
       }
     };
 
-    app.once(Lifecycle.BOOTED, startREPL);
+    app.once(Lifecycle.STARTED, startREPL);
 
     return async () => {
       if (server && server.listening) {

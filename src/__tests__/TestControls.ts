@@ -31,9 +31,9 @@ const makeTestControls = async (): Promise<TestControls> => {
 
   const clearDatabase = container.build(makeClearDatabase);
 
-  const cleanUp = withContext(async ({ teardown }) => {
+  const cleanUp = withContext(async ({ app }) => {
     await clearDatabase();
-    await teardown();
+    await app.stop();
   });
 
   return {

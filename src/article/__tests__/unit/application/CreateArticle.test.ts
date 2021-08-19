@@ -22,7 +22,7 @@ describe("CreateArticle", () => {
 
   beforeEach(async () => {
     jest.clearAllMocks();
-    createArticle = makeCreateArticle({ articleRepository, publisher });
+    createArticle = makeCreateArticle({ articleRepository, eventEmitterPubSub: publisher });
   });
 
   it("should return the created id", async () => {

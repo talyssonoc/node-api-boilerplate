@@ -16,52 +16,57 @@ type ServerConfig = {
   };
 };
 
-const server = makeModule("server", async ({ app, container, config: { cli, http, environment }, logger }) => {
-  const { register } = container;
-  const server = express();
+const server = makeModule(
+  "server",
+  async ({ app: { once }, container, config: { cli, http, environment }, logger }) => {
+    const { register } = container;
+    const server = express();
 
-  const httpServer = createServer(server);
+    const httpServer = createServer(server);
 
-  const { shutdownHook, shutdownHandler } = gracefulShutdown(httpServer);
+    const { shutdownHook, shutdownHandler } = gracefulShutdown(httpServer);
 
-  server.use(shutdownHandler());
-  server.use(requestId());
-  server.use(requestContainer(container));
-  server.use(httpLogger());
-  server.use(json());
-  server.use(urlencoded({ extended: false }));
+    server.use(shutdownHandler());
+    server.use(requestId());
+    server.use(requestContainer(container));
+    server.use(httpLogger());
+    server.use(json());
+    server.use(urlencoded({ extended: false }));
 
-  const rootRouter = Router();
-  const apiRouter = Router();
+    const rootRouter = Router();
+    const apiRouter = Router();
 
-  rootRouter.use("/api", apiRouter);
+    rootRouter.use("/api", apiRouter);
 
-  server.use(rootRouter);
+    server.use(rootRouter);
 
-  app.once(Lifecycle.BOOTED, async () => {
-    server.use((req, res) => {
-      res.sendStatus(404);
+    once(Lifecycle.BOOTED, async () => {
+      server.use((req, res) => {
+        res.sendStatus(404);
+      });
+
+      server.use(errorHandler());
     });
 
-    server.use(errorHandler());
-
     if (!cli && environment !== "test") {
-      httpServer.listen(http.port, http.host, () => {
-        logger.info("Webserver listening at: http://%s:%d", http.host, http.port);
+      once(Lifecycle.STARTED, async () => {
+        httpServer.listen(http.port, http.host, () => {
+          logger.info("Webserver listening at: http://%s:%d", http.host, http.port);
+        });
       });
     }
-  });
 
-  register({
-    server: asValue(server),
-    rootRouter: asValue(rootRouter),
-    apiRouter: asValue(apiRouter),
-  });
+    register({
+      server: asValue(server),
+      rootRouter: asValue(rootRouter),
+      apiRouter: asValue(apiRouter),
+    });
 
-  return async () => {
-    await shutdownHook();
-  };
-});
+    return async () => {
+      await shutdownHook();
+    };
+  }
+);
 
 type ServerRegistry = {
   requestId?: string;

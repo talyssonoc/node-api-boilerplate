@@ -1,3 +1,4 @@
+import { asFunction } from "awilix";
 import { CreateArticle, makeCreateArticle } from "@/article/application/useCases/CreateArticle";
 import { DeleteArticle, makeDeleteArticle } from "@/article/application/useCases/DeleteArticle";
 import { makePublishArticle, PublishArticle } from "@/article/application/useCases/PublishArticle";
@@ -8,7 +9,6 @@ import { makeArticleController } from "@/article/interface/http/articleControlle
 import { FindArticles } from "@/article/query/FindArticles";
 import { withMongoProvider } from "@/_lib/MongoProvider";
 import { toContainerValues } from "@/_lib/wrappers/toContainerFunctions";
-import { aliasTo, asFunction } from "awilix";
 import { makeMongoFindArticles } from "@/article/query/impl/MongoFindArticles";
 import { makeModule } from "@/context";
 import { makeArticleCreatedEmailListener } from "@/article/interface/email/ArticleCreatedEmailListener";

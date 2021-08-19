@@ -30,8 +30,14 @@ const database = makeModule("database", async ({ container: { register }, config
 
   return async () => {
     await client.close();
+    await wait(10000);
   };
 });
+
+
+const wait = (timeout: number) =>
+  new Promise<{ timeout: boolean }>((resolve) => setTimeout(() => resolve({ timeout: true }), timeout));
+
 
 type DatabaseRegistry = {
   mongo: Db;
