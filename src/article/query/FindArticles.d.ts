@@ -13,8 +13,8 @@ type ArticleListItemDTO = Readonly<{
 }>;
 
 type ArticleFilter = {
-  title: string;
-  publishedBetween: [Date, Date];
+  title?: string;
+  publishedBetween?: Date[];
 };
 
 type FindArticles = QueryHandler<PaginatedQuery<ArticleFilter>, PaginatedQueryResult<ArticleListItemDTO[]>>;

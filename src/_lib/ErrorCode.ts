@@ -1,0 +1,3 @@
+enum ErrorCode {}
+
+export { ErrorCode };

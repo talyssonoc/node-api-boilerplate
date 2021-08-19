@@ -8,7 +8,7 @@ Content-Type: application/json
 }
 
 ###
-GET http://localhost:3000/api/articles
+GET http://localhost:3000/api/articles?filter[publishedBetween]=2021-08-16T21:19:55.000Z&filter[publishedBetween]=2021-08-17T21:19:56.000Z&page=1
 
 ###
 @articleId = {{article.response.body.$.id}}
