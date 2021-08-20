@@ -1,5 +1,5 @@
+import { BaseError, Exception } from "@/_lib/errors/BaseError";
 import { makePredicate } from "@/_lib/Predicate";
-import { BaseError, Exception } from "@/_lib/exceptions/BaseError";
 
 namespace NotFoundError {
   const type = Symbol();

@@ -8,7 +8,7 @@ import { errorHandler } from "@/_lib/http/middlewares/errorHandler";
 import { makeModule } from "@/context";
 import { Lifecycle } from "@/_lib/Lifecycle";
 import { gracefulShutdown } from "@/_lib/http/middlewares/gracefulShutdown";
-import { errorConverters } from "@/_lib/http/ErrorConverters";
+import { errorConverters } from "@/_sharedKernel/interface/http/ErrorConverters";
 
 type ServerConfig = {
   http: {

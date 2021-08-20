@@ -1,4 +1,4 @@
-import { BaseError, Exception } from "@/_lib/exceptions/BaseError";
+import { BaseError, Exception } from "@/_lib/errors/BaseError";
 import { makePredicate } from "@/_lib/Predicate";
 
 namespace ForbiddenError {

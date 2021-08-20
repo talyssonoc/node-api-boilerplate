@@ -1,7 +1,7 @@
 import { Request } from "express";
 import Joi, { InterfaceFrom } from "types-joi";
-import { ValidationError } from "@/_lib/exceptions/ValidationError";
-import { BadRequestError } from "@/_lib/exceptions/BadRequestError";
+import { ValidationError } from "@/_lib/errors/ValidationError";
+import { BadRequestError } from "@/_lib/errors/BadRequestError";
 
 type FieldConfig = {
   name: string;

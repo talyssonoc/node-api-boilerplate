@@ -9,7 +9,8 @@ type Exception<M = any> = Readonly<{
 
 type MessageFormatter<T> = (message: string, params?: T) => string;
 
-const defaultFormatter = <T>(message: string, params?: T) => format(message, params);
+const defaultFormatter = <T>(message: string, params?: T) =>
+  format(message, ...(Array.isArray(params) ? params : [params]));
 
 class BaseError<M = any, T = (string | number)[]> extends Error implements Exception<M> {
   public readonly type: symbol;

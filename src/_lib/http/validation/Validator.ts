@@ -1,7 +1,7 @@
 import * as Joi from "types-joi";
 import { Request } from "express";
 import { InterfaceFrom } from "types-joi";
-import { ValidationError } from "@/_lib/exceptions/ValidationError";
+import { ValidationError } from "@/_lib/errors/ValidationError";
 
 type ValidationSchemas = {
   body?: Joi.BaseSchema<any>;

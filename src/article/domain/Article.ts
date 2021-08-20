@@ -1,17 +1,20 @@
-import { AggregateRoot } from '@/_lib/DDD';
+import { AggregateRoot } from "@/_lib/DDD";
 import { makeWithInvariants } from "@/_lib/WithInvariants";
-import { ArticleId } from '@/_sharedKernel/domain/ArticleId';
+import { ArticleId } from "@/_sharedKernel/domain/ArticleId";
 
 namespace Article {
-  type Article = AggregateRoot<ArticleId> & Readonly<{
-    title: string;
-    content: string;
-    state: "DRAFT" | "PUBLISHED" | "DELETED";
-    publishedAt: Date | null;
-    createdAt: Date;
-    updatedAt: Date;
-    version: number;
-  }>;
+  type Article = AggregateRoot<ArticleId> &
+    Readonly<{
+      title: string;
+      content: string;
+      state: "DRAFT" | "PUBLISHED" | "DELETED";
+      publishedAt: Date | null;
+      createdAt: Date;
+      updatedAt: Date;
+      version: number;
+    }>;
+
+  type PublishedArticle = Omit<Article, "publishedAt" | "state"> & Readonly<{ state: "PUBLISHED"; publishedAt: Date }>;
 
   const withInvariants = makeWithInvariants<Article>((self, assert) => {
     assert(self.title?.length > 0);
@@ -38,7 +41,7 @@ namespace Article {
   );
 
   export const publish = withInvariants(
-    (self: Article): Article => ({
+    (self: Article): PublishedArticle => ({
       ...self,
       state: "PUBLISHED",
       publishedAt: new Date(),
@@ -58,6 +61,8 @@ namespace Article {
       title,
     })
   );
+
+  export const isPublished = (self: Article): self is PublishedArticle => self.state === "PUBLISHED";
 
   export type Type = Article;
 }

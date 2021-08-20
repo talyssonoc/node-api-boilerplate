@@ -8,11 +8,11 @@ type InvariantCheckFn<A> = (self: A, assert: AssertionFn) => void;
 const makeWithInvariants =
   <A extends AggregateRoot<any>>(invariantCheckFn: InvariantCheckFn<A>) =>
   <F extends (...args: any[]) => A>(fn: F) =>
-  (...args: Parameters<F>): A => {
+  (...args: Parameters<F>): ReturnType<F> => {
     const self = fn(...args);
     invariantCheckFn(self, assertFn);
 
-    return self;
+    return self as ReturnType<F>;
   };
 
 export { makeWithInvariants };
