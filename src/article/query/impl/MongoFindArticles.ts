@@ -10,7 +10,7 @@ type Dependencies = {
 
 const makeMongoFindArticles =
   ({ articleCollection }: Dependencies): FindArticles =>
-  async ({ pagination, filter }) => {
+  async ({ pagination, filter, sort }) => {
     let match: Filter<ArticleSchema> = {
       status: "PUBLISHED",
       deleted: false,
@@ -44,6 +44,9 @@ const makeMongoFindArticles =
         {
           $limit: pagination.pageSize,
         },
+        ...(sort?.length
+          ? [{ $sort: sort.reduce((acc, { field, direction }) => ({ [field]: direction === "asc" ? 1 : -1 }), {}) }]
+          : []),
         {
           $lookup: {
             from: "comment",

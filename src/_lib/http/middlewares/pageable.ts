@@ -1,7 +1,7 @@
-import { makePageable, PagingOptions } from "@/_lib/http/Pageable";
+import { makePaginator, PagingOptions } from "@/_lib/http/validation/Paginator";
 
 const pageable = (opts?: Partial<PagingOptions>) => {
-  const getPagination = makePageable(opts);
+  const getPagination = makePaginator(opts);
 
   return (req, res, next) => {
     req.pagination = getPagination(req);

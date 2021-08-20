@@ -17,6 +17,6 @@ type ArticleFilter = {
   publishedBetween?: Date[];
 };
 
-type FindArticles = QueryHandler<PaginatedQuery<ArticleFilter>, PaginatedQueryResult<ArticleListItemDTO[]>>;
+type FindArticles = QueryHandler<SortedPaginatedQuery<ArticleFilter>, PaginatedQueryResult<ArticleListItemDTO[]>>;
 
 export { FindArticles };

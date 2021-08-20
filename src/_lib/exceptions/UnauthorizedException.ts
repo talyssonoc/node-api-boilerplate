@@ -1,8 +1,14 @@
-import { HttpException } from "./HttpException";
-import { HttpStatus } from "../http/HttpStatus";
+import { BaseException, Exception } from "@/_lib/exceptions/BaseException";
+import { makePredicate } from "@/_lib/Predicate";
 
-export class UnauthorizedException extends HttpException {
-  constructor(message?: string | Record<string, any>, error = "Unauthorized") {
-    super({ message, error }, HttpStatus.UNAUTHORIZED);
-  }
+namespace UnauthorizedException {
+  const type = Symbol();
+  const code = "UnauthorizedException";
+  const message = "Unauthorized";
+
+  export const create = (customMsg?: string) => new BaseException({ type, code, message: customMsg || message });
+
+  export const is = makePredicate<Exception>(type);
 }
+
+export { UnauthorizedException };

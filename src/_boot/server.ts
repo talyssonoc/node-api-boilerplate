@@ -8,6 +8,7 @@ import { errorHandler } from "@/_lib/http/middlewares/errorHandler";
 import { makeModule } from "@/context";
 import { Lifecycle } from "@/_lib/Lifecycle";
 import { gracefulShutdown } from "@/_lib/http/middlewares/gracefulShutdown";
+import { errorConverters } from "@/_lib/http/ErrorConverters";
 
 type ServerConfig = {
   http: {
@@ -45,7 +46,7 @@ const server = makeModule(
         res.sendStatus(404);
       });
 
-      server.use(errorHandler());
+      server.use(errorHandler(errorConverters, { logger }));
     });
 
     if (!cli && environment !== "test") {
