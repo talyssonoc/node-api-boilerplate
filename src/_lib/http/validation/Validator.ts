@@ -1,7 +1,7 @@
 import * as Joi from "types-joi";
 import { Request } from "express";
 import { InterfaceFrom } from "types-joi";
-import { ValidationException } from "@/_lib/exceptions/ValidationException";
+import { ValidationError } from "@/_lib/exceptions/ValidationError";
 
 type ValidationSchemas = {
   body?: Joi.BaseSchema<any>;
@@ -30,7 +30,7 @@ const makeValidator = <T extends ValidationSchemas>(schemas: T): ValidationHelpe
     const { value, error } = (schemas[key] as Joi.BaseSchema<any>).validate(req[key]);
 
     if (error) {
-      throw ValidationException.create({ target: key, error });
+      throw ValidationError.create({ target: key, error });
     }
 
     return value;

@@ -1,7 +1,7 @@
 import { DeleteArticle, makeDeleteArticle } from "@/article/application/useCases/DeleteArticle";
 import { Article } from "@/article/domain/Article";
 import { ArticleRepository } from "@/article/domain/ArticleRepository";
-import { NotFoundException } from "@/_lib/exceptions/NotFoundException";
+import { NotFoundError } from "@/_lib/exceptions/NotFoundError";
 
 describe("DeleteArticle", () => {
   const id = "mock-article-id";
@@ -11,7 +11,7 @@ describe("DeleteArticle", () => {
   const articleRepository: ArticleRepository = {
     findById: jest.fn().mockImplementation(async (articleId) => {
       if (articleId !== id) {
-        throw new NotFoundException();
+        throw new NotFoundError();
       }
 
       return Article.create({
@@ -43,6 +43,6 @@ describe("DeleteArticle", () => {
   });
 
   it("should throw error if not found", async () => {
-    await expect(deleteArticle("some-wrong-id")).rejects.toThrowError(NotFoundException);
+    await expect(deleteArticle("some-wrong-id")).rejects.toThrowError(NotFoundError);
   });
 });

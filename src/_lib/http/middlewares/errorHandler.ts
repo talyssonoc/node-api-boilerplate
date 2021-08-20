@@ -1,5 +1,5 @@
 import { ErrorRequestHandler } from "express";
-import { Exception } from "@/_lib/exceptions/BaseException";
+import { Exception } from "@/_lib/exceptions/BaseError";
 
 type ErrorConverter<E extends Exception> = {
   test: (err: E | any) => err is E;

@@ -1,15 +1,15 @@
-import { ValidationException } from "@/_lib/exceptions/ValidationException";
+import { ValidationError } from "@/_lib/exceptions/ValidationError";
 import { errorConverter } from "@/_lib/http/middlewares/errorHandler";
-import { BaseException } from "@/_lib/exceptions/BaseException";
-import { NotFoundException } from "@/_lib/exceptions/NotFoundException";
+import { BaseError } from "@/_lib/exceptions/BaseError";
+import { NotFoundError } from "@/_lib/exceptions/NotFoundError";
 import { HttpStatus } from "@/_lib/http/HttpStatus";
-import { UnauthorizedException } from "@/_lib/exceptions/UnauthorizedException";
-import { ForbiddenException } from "@/_lib/exceptions/ForbiddenException";
-import { BusinessException } from "@/_lib/exceptions/BusinessException";
-import { BadRequestException } from "@/_lib/exceptions/BadRequestException";
+import { UnauthorizedError } from "@/_lib/exceptions/UnauthorizedError";
+import { ForbiddenError } from "@/_lib/exceptions/ForbiddenError";
+import { BusinessError } from "@/_lib/exceptions/BusinessError";
+import { BadRequestError } from "@/_lib/exceptions/BadRequestError";
 
 const errorConverters = [
-  errorConverter(ValidationException.is, (err) => {
+  errorConverter(ValidationError.is, (err) => {
     const status = err.meta?.target === "body" ? HttpStatus.UNPROCESSABLE_ENTITY : HttpStatus.BAD_REQUEST;
 
     return {
@@ -25,7 +25,7 @@ const errorConverters = [
       },
     };
   }),
-  errorConverter(BadRequestException.is, (err) => ({
+  errorConverter(BadRequestError.is, (err) => ({
     status: HttpStatus.BAD_REQUEST,
     body: {
       error: err.code,
@@ -33,7 +33,7 @@ const errorConverters = [
       message: err.message,
     },
   })),
-  errorConverter(NotFoundException.is, (err) => ({
+  errorConverter(NotFoundError.is, (err) => ({
     status: HttpStatus.NOT_FOUND,
     body: {
       error: err.code,
@@ -41,7 +41,7 @@ const errorConverters = [
       message: err.message,
     },
   })),
-  errorConverter(UnauthorizedException.is, (err) => ({
+  errorConverter(UnauthorizedError.is, (err) => ({
     status: HttpStatus.UNAUTHORIZED,
     body: {
       error: err.code,
@@ -49,7 +49,7 @@ const errorConverters = [
       message: err.message,
     },
   })),
-  errorConverter(ForbiddenException.is, (err) => ({
+  errorConverter(ForbiddenError.is, (err) => ({
     status: HttpStatus.FORBIDDEN,
     body: {
       error: err.code,
@@ -57,7 +57,7 @@ const errorConverters = [
       message: err.message,
     },
   })),
-  errorConverter(BusinessException.is, (err) => ({
+  errorConverter(BusinessError.is, (err) => ({
     status: HttpStatus.CONFLICT,
     body: {
       error: err.code,
@@ -66,7 +66,7 @@ const errorConverters = [
     },
   })),
   errorConverter(
-    (err: any | BaseException): err is BaseException => err instanceof BaseException,
+    (err: any | BaseError): err is BaseError => err instanceof BaseError,
     (err) => ({
       status: HttpStatus.BAD_REQUEST,
       body: err.message,

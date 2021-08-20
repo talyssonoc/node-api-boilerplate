@@ -1,7 +1,7 @@
 import { Request } from "express";
 import Joi, { InterfaceFrom } from "types-joi";
-import { ValidationException } from "@/_lib/exceptions/ValidationException";
-import { BadRequestException } from "@/_lib/exceptions/BadRequestException";
+import { ValidationError } from "@/_lib/exceptions/ValidationError";
+import { BadRequestError } from "@/_lib/exceptions/BadRequestError";
 
 type FieldConfig = {
   name: string;
@@ -53,7 +53,7 @@ const defaultOptions = {
   filter: null,
 };
 
-const makePaginator = <T extends PaginatorOptions<any>>(opts: T): Paginator<typeof opts> => {
+const makePaginator = <T extends PaginatorOptions<any>>(opts: Partial<T> = {}): Paginator<typeof opts> => {
   const { useDefaults, defaults, fields, filter } = {
     ...defaultOptions,
     ...opts,
@@ -80,7 +80,7 @@ const makePaginator = <T extends PaginatorOptions<any>>(opts: T): Paginator<type
     const pageSizeValue = Number(fromRequest(req, pageSizeField));
 
     if (!useDefaults && (isNaN(pageValue) || isNaN(pageSizeValue))) {
-      throw BadRequestException.create(
+      throw BadRequestError.create(
         `Missing '${pageField.from}.${pageField.name}' or '${pageSizeField.from}.${pageSizeField.name}' values`
       );
     }
@@ -96,7 +96,7 @@ const makePaginator = <T extends PaginatorOptions<any>>(opts: T): Paginator<type
     const sortValues = fromRequest(req, sortField);
 
     if (!useDefaults && sortValues === undefined) {
-      throw BadRequestException.create(`Missing '${sortField.from}.${sortField.name}' value`);
+      throw BadRequestError.create(`Missing '${sortField.from}.${sortField.name}' value`);
     }
 
     const sortList: string[] = Array.isArray(sortValues) ? sortValues : sortValues ? [sortValues] : [];
@@ -117,7 +117,7 @@ const makePaginator = <T extends PaginatorOptions<any>>(opts: T): Paginator<type
 
     if (!filter) {
       if (!useDefaults && filterValue === undefined) {
-        throw BadRequestException.create(`Missing '${filterField.from}.${filterField.name}' value`);
+        throw BadRequestError.create(`Missing '${filterField.from}.${filterField.name}' value`);
       }
 
       return filterValue ?? defaults.filter;
@@ -128,7 +128,7 @@ const makePaginator = <T extends PaginatorOptions<any>>(opts: T): Paginator<type
       .validate(req[filterField.from]);
 
     if (error) {
-      throw ValidationException.create({ target: filterField.name, error });
+      throw ValidationError.create({ target: filterField.name, error });
     }
 
     return filterValue ?? defaults.filter;
