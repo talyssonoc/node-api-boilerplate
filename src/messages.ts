@@ -5,7 +5,7 @@ type Messages = ArticleMessages;
 
 const messageBundle = makeMessegeBundle<Messages>();
 
-const { useBundle } = messageBundle;
+const { getMessage, updateBundle, useBundle } = messageBundle;
 
-export { messageBundle, useBundle };
+export { messageBundle, getMessage, updateBundle, useBundle };
 export type { Messages };

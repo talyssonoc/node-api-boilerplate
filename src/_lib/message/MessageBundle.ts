@@ -1,3 +1,4 @@
+import { ArticleMessages } from "@/article/messages";
 import _ from "lodash";
 
 _.templateSettings.interpolate = /{{([\s\S]+?)}}/g;
@@ -56,12 +57,32 @@ type UnionToIntersection<U> = (U extends any ? (k: U) => void : never) extends (
 
 type FlattenParameters<T extends MessageParameters> = UnionToIntersection<JoinParameters<FlattenRecord<T>, ".">>;
 
+type TuplefyKeys<T> = T extends string
+  ? []
+  : {
+      [K in Extract<keyof T, string>]: [K, ...TuplefyKeys<T[K]>];
+    }[Extract<keyof T, string>];
+
+type DotNotation<T extends string[], D extends string> = T extends []
+  ? never
+  : T extends [infer F]
+  ? F
+  : T extends [infer F, ...infer R]
+  ? F extends string
+    ? `${F}${D}${DotNotation<Extract<R, string[]>, D>}`
+    : never
+  : string;
+
+type FlattenMessageSource<T extends MessageSource<any>> = Record<DotNotation<TuplefyKeys<T>, ".">, string>;
+
 type MessageBundle<T extends MessageParameters> = {
-  get: <K extends keyof FlattenParameters<T>>(
+  getMessage: <K extends keyof FlattenParameters<T>>(
     key: K,
     ...parameters: FlattenParameters<T>[K] extends void ? [undefined?] : [FlattenParameters<T>[K]]
   ) => string | null;
-  update: (newMessageSrc: DeepPartial<MessageSource<T>>) => void;
+  updateBundle: (
+    newMessageSrc: DeepPartial<MessageSource<T>> | Partial<FlattenMessageSource<MessageSource<T>>>
+  ) => void;
   useBundle: <K extends keyof FlattenParameters<T>>(
     key: K,
     ...parameters: FlattenParameters<T>[K] extends void ? [undefined?] : [FlattenParameters<T>[K]]
@@ -88,13 +109,17 @@ const compile = (object: Record<string, string>): Record<string | number | symbo
     {}
   );
 
+const messageSource = <T extends MessageParameters>(
+  src: MessageSource<T> | FlattenMessageSource<MessageSource<T>>
+): typeof src => src;
+
 const makeMessegeBundle = <T extends MessageParameters>(
-  messageSrc: DeepPartial<MessageSource<T>> = {}
+  messageSrc: DeepPartial<MessageSource<T>> | Partial<FlattenMessageSource<MessageSource<T>>> = {}
 ): MessageBundle<T> => {
   let templateBundle = flatten(messageSrc);
   let compiledBundle = compile(templateBundle);
 
-  const get = <K extends keyof FlattenParameters<T>>(
+  const getMessage = <K extends keyof FlattenParameters<T>>(
     key: K,
     ...parameters: FlattenParameters<T>[K] extends void ? [undefined?] : [FlattenParameters<T>[K]]
   ) => {
@@ -106,7 +131,9 @@ const makeMessegeBundle = <T extends MessageParameters>(
 
     return message(...parameters);
   };
-  const update = (newMessageSrc: DeepPartial<MessageSource<T>>) => {
+  const updateBundle = (
+    newMessageSrc: DeepPartial<MessageSource<T>> | Partial<FlattenMessageSource<MessageSource<T>>>
+  ) => {
     const flattenedBundle = flatten(newMessageSrc);
     templateBundle = { ...templateBundle, ...flattenedBundle };
     compiledBundle = { ...compiledBundle, ...compile(flattenedBundle) };
@@ -117,7 +144,7 @@ const makeMessegeBundle = <T extends MessageParameters>(
     ...parameters: FlattenParameters<T>[K] extends void ? [undefined?] : [FlattenParameters<T>[K]]
   ) => {
     return {
-      message: get(key, ...parameters),
+      message: getMessage(key, ...parameters),
       key,
       template: templateBundle[key],
       parameters: parameters[0],
@@ -125,11 +152,11 @@ const makeMessegeBundle = <T extends MessageParameters>(
   };
 
   return {
-    get,
-    update,
+    getMessage,
+    updateBundle,
     useBundle,
   };
 };
 
-export { makeMessegeBundle };
-export type { MessageParameters, MessageSource, FlattenParameters, None };
+export { makeMessegeBundle, messageSource };
+export type { MessageParameters, FlattenParameters, None };

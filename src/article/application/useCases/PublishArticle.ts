@@ -17,7 +17,7 @@ const makePublishArticle =
 
     if (Article.isPublished(article)) {
       throw BusinessError.create(
-        useBundle("article.alreadyPublished", { id: payload, publishedAt: article.publishedAt })
+        useBundle("article.error.alreadyPublished", { id: payload, publishedAt: article.publishedAt })
       );
     }
 

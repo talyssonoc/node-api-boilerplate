@@ -40,11 +40,15 @@ const makeApp = ({ logger, shutdownTimeout }: ApplicationOptions): Application =
       ...transition(Lifecycle.BOOTING),
       ...transition(Lifecycle.BOOTED),
       ...transition(Lifecycle.STARTED),
-    ]);
+    ]).catch((err) => {
+      logger.error(err);
+
+      stop();
+    });
   };
 
   const stop = () => {
-    if (appState !== Lifecycle.STARTED) throw new Error("The application is not running.");
+    if (appState === Lifecycle.IDLE) throw new Error("The application is not running.");
 
     return promiseChain([...transition(Lifecycle.SHUTTING_DOWN), ...transition(Lifecycle.TERMINATED)]);
   };

@@ -12,29 +12,32 @@ import { toContainerValues } from "@/_lib/wrappers/toContainerFunctions";
 import { makeMongoFindArticles } from "@/article/query/impl/MongoFindArticles";
 import { makeModule } from "@/context";
 import { makeArticleCreatedEmailListener } from "@/article/interface/email/ArticleCreatedEmailListener";
-import { articleMessages } from '@/article/messages';
+import { articleMessages } from "@/article/messages";
 
-const articleModule = makeModule("article", async ({ container: { register, build }, messageBundle }) => {
-  const collections = await build(
-    withMongoProvider({
-      articleCollection: initArticleCollection,
-    })
-  );
+const articleModule = makeModule(
+  "article",
+  async ({ container: { register, build }, messageBundle: { updateBundle } }) => {
+    const collections = await build(
+      withMongoProvider({
+        articleCollection: initArticleCollection,
+      })
+    );
 
-  messageBundle.update(articleMessages);
+    updateBundle(articleMessages);
 
-  register({
-    ...toContainerValues(collections),
-    articleRepository: asFunction(makeMongoArticleRepository),
-    createArticle: asFunction(makeCreateArticle),
-    publishArticle: asFunction(makePublishArticle),
-    deleteArticle: asFunction(makeDeleteArticle),
-    findArticles: asFunction(makeMongoFindArticles),
-  });
+    register({
+      ...toContainerValues(collections),
+      articleRepository: asFunction(makeMongoArticleRepository),
+      createArticle: asFunction(makeCreateArticle),
+      publishArticle: asFunction(makePublishArticle),
+      deleteArticle: asFunction(makeDeleteArticle),
+      findArticles: asFunction(makeMongoFindArticles),
+    });
 
-  build(makeArticleController);
-  build(makeArticleCreatedEmailListener);
-});
+    build(makeArticleController);
+    build(makeArticleCreatedEmailListener);
+  }
+);
 
 type ArticleRegistry = {
   articleCollection: ArticleCollection;

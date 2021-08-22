@@ -8,7 +8,7 @@ import { Configuration } from "@/config";
 import { Logger } from "pino";
 import { pubSub } from "@/_boot/pubSub";
 
-const main = withContext(async ({ app, container, config, bootstrap, logger }) => {
+const main = withContext(async ({ app, container, config, bootstrap, logger, messageBundle }) => {
   container.register({
     app: asValue(app),
     logger: asValue(logger),

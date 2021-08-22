@@ -1,18 +1,24 @@
-import { MessageSource } from "@/_lib/message/MessageBundle";
+import { messageSource } from "@/_lib/message/MessageBundle";
 
 type ArticleMessages = {
   article: {
-    notFound: { id: string };
-    alreadyPublished: { id: string; publishedAt: Date };
+    error: {
+      notFound: { id: string };
+      alreadyPublished: { id: string; publishedAt: Date };
+    };
+    created: { id: string };
   };
 };
 
-const articleMessages: MessageSource<ArticleMessages> = {
+const articleMessages = messageSource<ArticleMessages>({
   article: {
-    alreadyPublished: "Can't republish the article #({{ id }}) because it was already published on {{ publishedAt }}",
-    notFound: "Can't find article #({{ id }})",
+    error: {
+      alreadyPublished: "Can't republish the article #({{ id }}) because it was already published on {{ publishedAt }}",
+      notFound: "Can't find article #({{ id }})",
+    },
+    created: "Article created with id #({{ id }})",
   },
-};
+});
 
 export { articleMessages };
 export type { ArticleMessages };
