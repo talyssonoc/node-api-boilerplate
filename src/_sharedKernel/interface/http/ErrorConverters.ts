@@ -62,6 +62,7 @@ const errorConverters = [
     body: {
       error: err.code,
       status: HttpStatus.CONFLICT,
+      kind: err.meta?.key,
       message: err.message,
     },
   })),
