@@ -2,6 +2,7 @@ import { ArticleRepository } from "@/article/domain/ArticleRepository";
 import { Article } from "@/article/domain/Article";
 import { ApplicationService } from "@/_lib/DDD";
 import { BusinessError } from "@/_sharedKernel/domain/error/BusinessError";
+import { useBundle } from "@/messages";
 
 type Dependencies = {
   articleRepository: ArticleRepository;
@@ -15,10 +16,9 @@ const makePublishArticle =
     const article = await articleRepository.findById(payload);
 
     if (Article.isPublished(article)) {
-      throw BusinessError.create("article.already.published").withParameters({
-        id: article.id.value,
-        publishedAt: article.publishedAt,
-      });
+      throw BusinessError.create(
+        useBundle("article.alreadyPublished", { id: payload, publishedAt: article.publishedAt })
+      );
     }
 
     const publishedArticle = Article.publish(article);

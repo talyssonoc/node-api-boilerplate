@@ -1,5 +1,3 @@
-import { format } from "util";
-
 type Exception<M = any> = Readonly<{
   type: symbol;
   message: string;
@@ -7,40 +5,20 @@ type Exception<M = any> = Readonly<{
   meta?: M;
 }>;
 
-type MessageFormatter<T> = (message: string, params?: T) => string;
-
-const defaultFormatter = <T>(message: string, params?: T) =>
-  format(message, ...(Array.isArray(params) ? params : [params]));
-
-class BaseError<M = any, T = (string | number)[]> extends Error implements Exception<M> {
+class BaseError<M = any> extends Error implements Exception<M> {
   public readonly type: symbol;
   public readonly code: string;
   public readonly meta?: M;
 
-  private readonly _message: string;
-  private parameters?: T;
-
-  private formatter: MessageFormatter<T>;
-
-  constructor(props: Exception<M>, formatter: MessageFormatter<T> = defaultFormatter) {
+  constructor(props: Exception<M>) {
     super();
     this.name = props.code;
     this.type = props.type;
     this.code = props.code;
     this.meta = props.meta;
-    this._message = props.message;
-    this.formatter = formatter;
+    this.message = props.message;
 
     Error.captureStackTrace(this, BaseError);
-  }
-
-  get message(): string {
-    return this.formatter(this._message, this.parameters);
-  }
-
-  public withParameters(parameters: T): BaseError<M, T> {
-    this.parameters = parameters;
-    return this;
   }
 }
 

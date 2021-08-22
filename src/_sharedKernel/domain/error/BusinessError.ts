@@ -1,15 +1,20 @@
 import { BaseError, Exception } from "@/_lib/errors/BaseError";
 import { makePredicate } from "@/_lib/Predicate";
-import { MessageParameters } from "@/messageSource";
 
 namespace BusinessError {
   const type = Symbol();
   const code = "BusinessError";
 
-  export const create = (message: keyof MessageParameters) =>
-    new BaseError<Exception, MessageParameters[typeof message]>({ type, code, message });
+  type Props = {
+    key: string;
+    template: string | null;
+    parameters?: any;
+  };
 
-  export const is = makePredicate<Exception>(type);
+  export const create = ({ key, message = "", template, parameters }: Props & { message: string }): BaseError<Props> =>
+    new BaseError<Props>({ type, code, message, meta: { key, template, parameters } });
+
+  export const is = makePredicate<Exception<Props>>(type);
 }
 
 export { BusinessError };
