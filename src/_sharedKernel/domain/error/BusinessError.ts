@@ -16,8 +16,8 @@ namespace BusinessError {
     message,
     template,
     parameters,
-  }: Props & { message: string | null }): Exception<Props> =>
-    new BaseError<Props>({ type, code, message: message || "", meta: { key, template, parameters } });
+  }: Props & { message: string }): Exception<Props> =>
+    new BaseError<Props>({ type, code, message, meta: { key, template, parameters } });
 
   export const is = makePredicate<Exception<Props>>(type);
 }

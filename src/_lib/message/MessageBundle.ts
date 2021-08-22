@@ -1,4 +1,3 @@
-import { ArticleMessages } from "@/article/messages";
 import _ from "lodash";
 
 _.templateSettings.interpolate = /{{([\s\S]+?)}}/g;
@@ -79,14 +78,14 @@ type MessageBundle<T extends MessageParameters> = {
   getMessage: <K extends keyof FlattenParameters<T>>(
     key: K,
     ...parameters: FlattenParameters<T>[K] extends void ? [undefined?] : [FlattenParameters<T>[K]]
-  ) => string | null;
+  ) => string;
   updateBundle: (
     newMessageSrc: DeepPartial<MessageSource<T>> | Partial<FlattenMessageSource<MessageSource<T>>>
   ) => void;
   useBundle: <K extends keyof FlattenParameters<T>>(
     key: K,
     ...parameters: FlattenParameters<T>[K] extends void ? [undefined?] : [FlattenParameters<T>[K]]
-  ) => { message: string | null; template: string | null; key: K; parameters?: FlattenParameters<T>[K] };
+  ) => { message: string; template: string | null; key: K; parameters?: FlattenParameters<T>[K] };
 };
 
 const flatten = (object: Record<string, any>, prevKey = ""): Record<string | number | symbol, string> =>
@@ -126,7 +125,7 @@ const makeMessegeBundle = <T extends MessageParameters>(
     const message = compiledBundle[key];
 
     if (!message) {
-      return null;
+      return "";
     }
 
     return message(...parameters);

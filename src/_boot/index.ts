@@ -7,10 +7,12 @@ import { withContext } from "@/context";
 import { Configuration } from "@/config";
 import { Logger } from "pino";
 import { pubSub } from "@/_boot/pubSub";
+import { MessageBundle } from "@/messages";
 
 const main = withContext(async ({ app, container, config, bootstrap, logger, messageBundle }) => {
   container.register({
     app: asValue(app),
+    messageBundle: asValue(messageBundle),
     logger: asValue(logger),
     startedAt: asValue(new Date()),
     config: asValue(config),
@@ -21,6 +23,7 @@ const main = withContext(async ({ app, container, config, bootstrap, logger, mes
 
 type MainRegistry = {
   app: any;
+  messageBundle: MessageBundle;
   startedAt: Date;
   logger: Logger;
   config: Configuration;
