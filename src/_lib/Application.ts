@@ -29,6 +29,8 @@ const makeApp = ({ logger, shutdownTimeout }: ApplicationOptions): Application =
 
   const running: HookFn = () =>
     new Promise<void>((resolve) => {
+      logger.info('Application started');
+      
       release = resolve;
     });
 
