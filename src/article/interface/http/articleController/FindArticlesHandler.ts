@@ -2,7 +2,6 @@ import { FindArticles } from "@/article/query/FindArticles";
 import { handler } from "@/_lib/http/handler";
 import Joi from "types-joi";
 import { makePaginator } from "@/_lib/http/validation/Paginator";
-import { NotFoundError } from "@/_lib/errors/NotFoundError";
 
 type Dependencies = {
   findArticles: FindArticles;
@@ -19,8 +18,6 @@ const findArticlesHandler = handler(({ findArticles }: Dependencies) => async (r
   const filter = getFilter(req);
   const pagination = getPagination(req);
   const sort = getSorter(req);
-
-  throw NotFoundError.create().withParameters(["test", "tnth"]);
 
   const articles = await findArticles({
     filter,

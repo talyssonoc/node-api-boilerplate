@@ -61,6 +61,9 @@ const makeApp = ({ logger, shutdownTimeout }: ApplicationOptions): Application =
       release();
     }
 
+    process.stdout.write("\n");
+    logger.info("Stopping application");
+
     return promiseChain([...transition(Lifecycle.SHUTTING_DOWN), ...transition(Lifecycle.TERMINATED)]);
   };
 
@@ -71,9 +74,6 @@ const makeApp = ({ logger, shutdownTimeout }: ApplicationOptions): Application =
     }, shutdownTimeout).unref();
 
     try {
-      process.stdout.write("\n");
-      logger.info("Terminating application");
-
       await stop();
     } catch (err) {
       logger.error(err);
