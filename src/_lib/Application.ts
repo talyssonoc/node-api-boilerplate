@@ -23,8 +23,14 @@ type ApplicationOptions = {
 
 const makeApp = ({ logger, shutdownTimeout }: ApplicationOptions): Application => {
   let appState: Lifecycle = Lifecycle.IDLE;
+  let release: () => void;
 
   const hooks = makeHookStore();
+
+  const running: HookFn = () =>
+    new Promise<void>((resolve) => {
+      release = resolve;
+    });
 
   const transition = (lifecycle: Lifecycle) => [
     async () => {
@@ -40,6 +46,7 @@ const makeApp = ({ logger, shutdownTimeout }: ApplicationOptions): Application =
       ...transition(Lifecycle.BOOTING),
       ...transition(Lifecycle.BOOTED),
       ...transition(Lifecycle.STARTED),
+      running,
     ]).catch((err) => {
       logger.error(err);
 
@@ -49,6 +56,10 @@ const makeApp = ({ logger, shutdownTimeout }: ApplicationOptions): Application =
 
   const stop = () => {
     if (appState === Lifecycle.IDLE) throw new Error("The application is not running.");
+
+    if (release) {
+      release();
+    }
 
     return promiseChain([...transition(Lifecycle.SHUTTING_DOWN), ...transition(Lifecycle.TERMINATED)]);
   };
