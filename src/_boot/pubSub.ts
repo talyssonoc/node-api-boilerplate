@@ -12,7 +12,7 @@ const pubSub = makeModule("pubSub", async ({ container: { build, register }, app
     eventEmitterPubSub: asValue(eventEmitterPubSub),
   });
 
-  once(Lifecycle.STARTED, async () => {
+  once(Lifecycle.READY, async () => {
     await eventEmitterPubSub.start();
   });
 

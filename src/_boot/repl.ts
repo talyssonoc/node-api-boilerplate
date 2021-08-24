@@ -80,7 +80,7 @@ const repl = makeModule(
       }
     };
 
-    app.once(Lifecycle.STARTED, startREPL);
+    app.once(Lifecycle.READY, startREPL);
 
     return async () => {
       if (server && server.listening) {

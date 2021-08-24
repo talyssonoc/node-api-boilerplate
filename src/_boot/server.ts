@@ -50,7 +50,7 @@ const server = makeModule(
     });
 
     if (!cli && environment !== "test") {
-      once(Lifecycle.STARTED, async () => new Promise<void>(resolve => {
+      once(Lifecycle.READY, async () => new Promise<void>(resolve => {
         httpServer.listen(http.port, http.host, () => {
           logger.info(`Webserver listening at: http://${http.host}:${http.port}`);
           resolve();
