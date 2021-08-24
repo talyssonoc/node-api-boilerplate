@@ -22,7 +22,7 @@ type ContextProvider<T extends Record<string | symbol, any>> = {
 
 type ContextOptions = {
   shutdownTimeout: number;
-  logger: Pick<Console, "info" | "error">;
+  logger: Pick<Console, "info" | "error" | "warn">;
 };
 
 const defaultOptions: ContextOptions = {

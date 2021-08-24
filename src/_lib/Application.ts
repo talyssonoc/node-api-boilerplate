@@ -9,7 +9,7 @@ type HookStore = {
 };
 
 type Application = {
-  getState: () => Lifecycle;
+  getState: () => AppState;
   start: () => Promise<void>;
   stop: () => Promise<void>;
   terminate: () => void;
@@ -18,40 +18,78 @@ type Application = {
 
 type ApplicationOptions = {
   shutdownTimeout: number;
-  logger: Pick<Console, "info" | "error">;
+  logger: Pick<Console, "info" | "error" | "warn">;
 };
 
+const appLifecycle = [
+  Lifecycle.BOOTING,
+  Lifecycle.BOOTED,
+  Lifecycle.READY,
+  Lifecycle.RUNNING,
+  Lifecycle.SHUTTING_DOWN,
+  Lifecycle.TERMINATED,
+];
+
+const makeAppLifecycleManager = (stateMap: Lifecycle[]) => {
+  let current: Lifecycle;
+
+  const canTransition = (lifecycle: Lifecycle): boolean => appLifecycle.indexOf(current) < stateMap.indexOf(lifecycle);
+
+  return {
+    makeTransition:
+      <R, D>(callback: (lifecycle: Lifecycle) => R, or: D): ((lifecycle: Lifecycle) => R | D) =>
+      (lifecycle: Lifecycle) => {
+        if (canTransition(lifecycle)) {
+          current = lifecycle;
+          return callback(lifecycle);
+        }
+        return or;
+      },
+  };
+};
+
+enum AppState {
+  IDLE = "IDLE",
+  STARTING = "STARTING",
+  STARTED = "STARTED",
+  STOPPING = "STOPPING",
+  STOPPED = "STOPED",
+}
+
 const makeApp = ({ logger, shutdownTimeout }: ApplicationOptions): Application => {
-  let appState: Lifecycle = Lifecycle.IDLE;
-  let release: () => void;
+  let appState: AppState = AppState.IDLE;
+  const { makeTransition } = makeAppLifecycleManager(appLifecycle);
+  let release: null | (() => void);
 
   const hooks = makeHookStore();
 
-  const running: HookFn = () =>
+  const started: HookFn = () =>
     new Promise<void>((resolve) => {
-      logger.info("Application running");
+      logger.info("Application started");
+
+      appState = AppState.STARTED;
 
       release = resolve;
     });
 
-  const transition = (lifecycle: Lifecycle) => [
-    async () => {
-      appState = lifecycle;
-    },
-    () => promiseChain(hooks.get(lifecycle)),
-  ];
+  const status = (newStatus: AppState) => async () => {
+    appState = newStatus;
+  };
+
+  const transition = makeTransition((lifecycle: Lifecycle) => [() => promiseChain(hooks.get(lifecycle))], []);
 
   const start = () => {
-    if (appState !== Lifecycle.IDLE) throw new Error("The application has already started.");
+    if (appState !== AppState.IDLE) throw new Error("The application has already started.");
 
     logger.info("Starting application");
 
     return promiseChain([
+      status(AppState.STARTING),
       ...transition(Lifecycle.BOOTING),
       ...transition(Lifecycle.BOOTED),
-      ...transition(Lifecycle.STARTED),
+      ...transition(Lifecycle.READY),
       ...transition(Lifecycle.RUNNING),
-      running,
+      started,
     ]).catch((err) => {
       logger.error(err);
 
@@ -60,18 +98,19 @@ const makeApp = ({ logger, shutdownTimeout }: ApplicationOptions): Application =
   };
 
   const stop = async () => {
-    if (appState === Lifecycle.IDLE) throw new Error("The application is not running.");
+    if (appState === AppState.IDLE) throw new Error("The application is not running.");
 
     if (release) {
       release();
+      release = null;
     }
 
     logger.info("Stopping application");
 
-    await promiseChain([...transition(Lifecycle.SHUTTING_DOWN), ...transition(Lifecycle.TERMINATED)]);
+    await promiseChain([status(AppState.STOPPING), ...transition(Lifecycle.SHUTTING_DOWN), ...transition(Lifecycle.TERMINATED), status(AppState.STOPPED)]);
 
     setTimeout(() => {
-      logger.info(
+      logger.warn(
         "The stop process has finished but something is keeping the application active. Check your cleanup process!"
       );
     }, 5000).unref();
@@ -85,10 +124,16 @@ const makeApp = ({ logger, shutdownTimeout }: ApplicationOptions): Application =
       process.exit(code);
     }, shutdownTimeout).unref();
 
-    try {
-      await stop();
-    } catch (err) {
-      logger.error(err);
+    if (appState === AppState.STOPPING) {
+      logger.warn("The application is yet to finishing the shutdown process. Repeat the command to force exit");
+    }
+
+    if (appState !== AppState.STOPPED) {
+      try {
+        await stop();
+      } catch (err) {
+        logger.error(err);
+      }
     }
 
     process.exit(code);
