@@ -1,6 +1,7 @@
 import { Container, container } from "@/container";
 import { withContext } from "@/context";
 import { main } from "@/_boot";
+import { Lifecycle } from "@/_lib/Lifecycle";
 import { Db } from "mongodb";
 import supertest, { SuperTest, Test } from "supertest";
 
@@ -16,6 +17,17 @@ type TestControls = Readonly<{
   registry: Container["cradle"];
 }>;
 
+const applitacionRunning = withContext(
+  ({ app }) =>
+    new Promise<void>((resolve) => {
+      app.once(Lifecycle.RUNNING, async () => {
+        resolve();
+      });
+
+      main();
+    })
+);
+
 const makeClearDatabase =
   ({ mongo }: Dependencies) =>
   async (): Promise<void> => {
@@ -25,7 +37,7 @@ const makeClearDatabase =
   };
 
 const makeTestControls = async (): Promise<TestControls> => {
-  await main();
+  await applitacionRunning();
 
   const { server } = container.cradle;
 

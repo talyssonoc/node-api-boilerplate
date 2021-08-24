@@ -29,8 +29,8 @@ const makeApp = ({ logger, shutdownTimeout }: ApplicationOptions): Application =
 
   const running: HookFn = () =>
     new Promise<void>((resolve) => {
-      logger.info('Application started');
-      
+      logger.info("Application running");
+
       release = resolve;
     });
 
@@ -44,10 +44,13 @@ const makeApp = ({ logger, shutdownTimeout }: ApplicationOptions): Application =
   const start = () => {
     if (appState !== Lifecycle.IDLE) throw new Error("The application has already started.");
 
+    logger.info("Starting application");
+
     return promiseChain([
       ...transition(Lifecycle.BOOTING),
       ...transition(Lifecycle.BOOTED),
       ...transition(Lifecycle.STARTED),
+      ...transition(Lifecycle.RUNNING),
       running,
     ]).catch((err) => {
       logger.error(err);
@@ -56,20 +59,27 @@ const makeApp = ({ logger, shutdownTimeout }: ApplicationOptions): Application =
     });
   };
 
-  const stop = () => {
+  const stop = async () => {
     if (appState === Lifecycle.IDLE) throw new Error("The application is not running.");
 
     if (release) {
       release();
     }
 
-    process.stdout.write("\n");
     logger.info("Stopping application");
 
-    return promiseChain([...transition(Lifecycle.SHUTTING_DOWN), ...transition(Lifecycle.TERMINATED)]);
+    await promiseChain([...transition(Lifecycle.SHUTTING_DOWN), ...transition(Lifecycle.TERMINATED)]);
+
+    setTimeout(() => {
+      logger.info(
+        "The stop process has finished but something is keeping the application active. Check your cleanup process!"
+      );
+    }, 5000).unref();
   };
 
   const shutdown = (code: number) => async () => {
+    process.stdout.write("\n");
+
     setTimeout(() => {
       logger.error("Ok, my patience is over! #ragequit");
       process.exit(code);

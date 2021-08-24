@@ -1,7 +1,9 @@
 import { makePublishArticle, PublishArticle } from "@/article/application/useCases/PublishArticle";
 import { Article } from "@/article/domain/Article";
 import { ArticleRepository } from "@/article/domain/ArticleRepository";
-import { NotFoundError } from "@/_lib/exceptions/NotFoundError";
+import { BaseError } from '@/_lib/errors/BaseError';
+import { NotFoundError } from "@/_lib/errors/NotFoundError";
+import pino from "pino";
 
 describe("DeleteArticle", () => {
   const id = "mock-article-id";
@@ -11,7 +13,7 @@ describe("DeleteArticle", () => {
   const articleRepository: ArticleRepository = {
     findById: jest.fn().mockImplementation(async (articleId) => {
       if (articleId !== id) {
-        throw new NotFoundError();
+        throw NotFoundError.create(articleId);
       }
 
       return Article.create({
@@ -28,7 +30,11 @@ describe("DeleteArticle", () => {
 
   beforeEach(async () => {
     jest.clearAllMocks();
-    publishArticle = makePublishArticle({ articleRepository });
+    publishArticle = makePublishArticle({
+      articleRepository,
+      logger: pino(),
+      messageBundle: { getMessage: jest.fn(), useBundle: jest.fn(), updateBundle: jest.fn() },
+    });
   });
 
   it("should save the article as published", async () => {
@@ -43,6 +49,6 @@ describe("DeleteArticle", () => {
   });
 
   it("should throw error if not found", async () => {
-    await expect(publishArticle("some-wrong-id")).rejects.toThrowError(NotFoundError);
+    await expect(publishArticle("some-wrong-id")).rejects.toThrowError(BaseError);
   });
 });
