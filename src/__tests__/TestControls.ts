@@ -17,7 +17,7 @@ type TestControls = Readonly<{
   registry: Container["cradle"];
 }>;
 
-const applitacionRunning = withContext(
+const appRunning = withContext(
   ({ app }) =>
     new Promise<void>((resolve) => {
       app.once(Lifecycle.RUNNING, async () => {
@@ -37,7 +37,7 @@ const makeClearDatabase =
   };
 
 const makeTestControls = async (): Promise<TestControls> => {
-  await applitacionRunning();
+  await appRunning();
 
   const { server } = container.cradle;
 

@@ -16,6 +16,18 @@ type Application = {
   once: (lifecycle: Lifecycle, fn: HookFn | HookFn[], order?: "append" | "prepend") => void;
 };
 
+const memo = <F extends (...args: any[]) => any>(fn: F) => {
+  let value: ReturnType<F>;
+
+  return (...args: Parameters<F>): ReturnType<F> => {
+    if (!value) {
+      value = fn(args);
+    }
+
+    return value;
+  };
+};
+
 type ApplicationOptions = {
   shutdownTimeout: number;
   logger: Pick<Console, "info" | "error" | "warn">;
@@ -78,26 +90,28 @@ const makeApp = ({ logger, shutdownTimeout }: ApplicationOptions): Application =
 
   const transition = makeTransition((lifecycle: Lifecycle) => [() => promiseChain(hooks.get(lifecycle))], []);
 
-  const start = () => {
+  const start = memo(async () => {
     if (appState !== AppState.IDLE) throw new Error("The application has already started.");
 
     logger.info("Starting application");
 
-    return promiseChain([
-      status(AppState.STARTING),
-      ...transition(Lifecycle.BOOTING),
-      ...transition(Lifecycle.BOOTED),
-      ...transition(Lifecycle.READY),
-      ...transition(Lifecycle.RUNNING),
-      started,
-    ]).catch((err) => {
+    try {
+      await promiseChain([
+        status(AppState.STARTING),
+        ...transition(Lifecycle.BOOTING),
+        ...transition(Lifecycle.BOOTED),
+        ...transition(Lifecycle.READY),
+        ...transition(Lifecycle.RUNNING),
+        started,
+      ]);
+    } catch (err) {
       logger.error(err);
 
-      stop();
-    });
-  };
+      await stop();
+    }
+  });
 
-  const stop = async () => {
+  const stop = memo(async () => {
     if (appState === AppState.IDLE) throw new Error("The application is not running.");
 
     if (release) {
@@ -107,14 +121,21 @@ const makeApp = ({ logger, shutdownTimeout }: ApplicationOptions): Application =
 
     logger.info("Stopping application");
 
-    await promiseChain([status(AppState.STOPPING), ...transition(Lifecycle.SHUTTING_DOWN), ...transition(Lifecycle.TERMINATED), status(AppState.STOPPED)]);
+    await promiseChain([
+      status(AppState.STOPPING),
+      ...transition(Lifecycle.SHUTTING_DOWN),
+      ...transition(Lifecycle.TERMINATED),
+      status(AppState.STOPPED),
+    ]);
 
     setTimeout(() => {
       logger.warn(
-        "The stop process has finished but something is keeping the application active. Check your cleanup process!"
+        "The stop process has finished but something is keeping the application from exiting. Check your cleanup process!"
       );
     }, 5000).unref();
-  };
+  });
+
+  let forceShutdown = false;
 
   const shutdown = (code: number) => async () => {
     process.stdout.write("\n");
@@ -124,8 +145,14 @@ const makeApp = ({ logger, shutdownTimeout }: ApplicationOptions): Application =
       process.exit(code);
     }, shutdownTimeout).unref();
 
-    if (appState === AppState.STOPPING) {
+    if (appState === AppState.STOPPING && code === 0) {
+      if (forceShutdown) {
+        process.exit(code);
+      }
+
       logger.warn("The application is yet to finishing the shutdown process. Repeat the command to force exit");
+      forceShutdown = true;
+      return;
     }
 
     if (appState !== AppState.STOPPED) {
