@@ -16,61 +16,14 @@ type Application = {
   once: (lifecycle: Lifecycle, fn: HookFn | HookFn[], order?: "append" | "prepend") => void;
 };
 
-const memo = <F extends (...args: any[]) => any>(fn: F) => {
-  let value: ReturnType<F>;
-
-  return (...args: Parameters<F>): ReturnType<F> => {
-    if (!value) {
-      value = fn(args);
-    }
-
-    return value;
-  };
-};
 
 type ApplicationOptions = {
   shutdownTimeout: number;
   logger: Pick<Console, "info" | "error" | "warn">;
 };
 
-const appLifecycle = [
-  Lifecycle.BOOTING,
-  Lifecycle.BOOTED,
-  Lifecycle.READY,
-  Lifecycle.RUNNING,
-  Lifecycle.SHUTTING_DOWN,
-  Lifecycle.TERMINATED,
-];
-
-const makeAppLifecycleManager = (stateMap: Lifecycle[]) => {
-  let current: Lifecycle;
-
-  const canTransition = (lifecycle: Lifecycle): boolean => appLifecycle.indexOf(current) < stateMap.indexOf(lifecycle);
-
-  return {
-    makeTransition:
-      <R, D>(callback: (lifecycle: Lifecycle) => R, or: D): ((lifecycle: Lifecycle) => R | D) =>
-      (lifecycle: Lifecycle) => {
-        if (canTransition(lifecycle)) {
-          current = lifecycle;
-          return callback(lifecycle);
-        }
-        return or;
-      },
-  };
-};
-
-enum AppState {
-  IDLE = "IDLE",
-  STARTING = "STARTING",
-  STARTED = "STARTED",
-  STOPPING = "STOPPING",
-  STOPPED = "STOPED",
-}
-
 const makeApp = ({ logger, shutdownTimeout }: ApplicationOptions): Application => {
   let appState: AppState = AppState.IDLE;
-  const { makeTransition } = makeAppLifecycleManager(appLifecycle);
   let release: null | (() => void);
 
   const hooks = makeHookStore();
@@ -88,7 +41,7 @@ const makeApp = ({ logger, shutdownTimeout }: ApplicationOptions): Application =
     appState = newStatus;
   };
 
-  const transition = makeTransition((lifecycle: Lifecycle) => [() => promiseChain(hooks.get(lifecycle))], []);
+  const transition = (lifecycle: Lifecycle) => () => promiseChain(hooks.get(lifecycle));
 
   const start = memo(async () => {
     if (appState !== AppState.IDLE) throw new Error("The application has already started.");
@@ -98,10 +51,10 @@ const makeApp = ({ logger, shutdownTimeout }: ApplicationOptions): Application =
     try {
       await promiseChain([
         status(AppState.STARTING),
-        ...transition(Lifecycle.BOOTING),
-        ...transition(Lifecycle.BOOTED),
-        ...transition(Lifecycle.READY),
-        ...transition(Lifecycle.RUNNING),
+        transition(Lifecycle.BOOTING),
+        transition(Lifecycle.BOOTED),
+        transition(Lifecycle.READY),
+        transition(Lifecycle.RUNNING),
         started,
       ]);
     } catch (err) {
@@ -123,8 +76,8 @@ const makeApp = ({ logger, shutdownTimeout }: ApplicationOptions): Application =
 
     await promiseChain([
       status(AppState.STOPPING),
-      ...transition(Lifecycle.SHUTTING_DOWN),
-      ...transition(Lifecycle.TERMINATED),
+      transition(Lifecycle.SHUTTING_DOWN),
+      transition(Lifecycle.TERMINATED),
       status(AppState.STOPPED),
     ]);
 
@@ -145,9 +98,9 @@ const makeApp = ({ logger, shutdownTimeout }: ApplicationOptions): Application =
       process.exit(code);
     }, shutdownTimeout).unref();
 
-    if (appState === AppState.STOPPING && code === 0) {
+    if ((appState === AppState.STOPPING || appState === AppState.STOPPED) && code === 0) {
       if (forceShutdown) {
-        process.exit(code);
+        process.kill(process.pid, "SIGKILL");
       }
 
       logger.warn("The application is yet to finishing the shutdown process. Repeat the command to force exit");
@@ -155,12 +108,10 @@ const makeApp = ({ logger, shutdownTimeout }: ApplicationOptions): Application =
       return;
     }
 
-    if (appState !== AppState.STOPPED) {
-      try {
-        await stop();
-      } catch (err) {
-        logger.error(err);
-      }
+    try {
+      await stop();
+    } catch (err) {
+      logger.error(err);
     }
 
     process.exit(code);
@@ -180,6 +131,26 @@ const makeApp = ({ logger, shutdownTimeout }: ApplicationOptions): Application =
     getState: () => appState,
     once: (lifecycle, fn, order = "append") =>
       Array.isArray(fn) ? hooks[order](lifecycle, ...fn) : hooks[order](lifecycle, fn),
+  };
+};
+
+enum AppState {
+  IDLE = "IDLE",
+  STARTING = "STARTING",
+  STARTED = "STARTED",
+  STOPPING = "STOPPING",
+  STOPPED = "STOPED",
+}
+
+const memo = <F extends (...args: any[]) => any>(fn: F) => {
+  let value: ReturnType<F>;
+
+  return (...args: Parameters<F>): ReturnType<F> => {
+    if (!value) {
+      value = fn(args);
+    }
+
+    return value;
   };
 };
 
