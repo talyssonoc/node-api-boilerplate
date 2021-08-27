@@ -2,8 +2,9 @@ import { REPLConfig } from "@/_boot/repl";
 import { environment, EnvironmentConfig, envNumber, envString } from "@/_lib/Environment";
 import { ServerConfig } from "@/_boot/server";
 import { DatabaseConfig } from "@/_boot/database";
+import { SwaggerConfig } from "@/_boot/swagger";
 
-type Configuration = ServerConfig & DatabaseConfig & EnvironmentConfig & REPLConfig;
+type Configuration = ServerConfig & DatabaseConfig & EnvironmentConfig & REPLConfig & SwaggerConfig;
 
 const config: Configuration = {
   appName: "node-arch",
@@ -15,6 +16,12 @@ const config: Configuration = {
   http: {
     host: envString("HOST", "localhost"),
     port: envNumber("PORT", 3000),
+  },
+  swagger: {
+    title: "Blog API",
+    version: "1.0.0",
+    basePath: "/api",
+    docEndpoint: "/api-docs",
   },
   mongodb: {
     database: envString("DB_NAME", "blog"),

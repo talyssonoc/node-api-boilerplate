@@ -8,6 +8,7 @@ import { Configuration } from "@/config";
 import { Logger } from "pino";
 import { pubSub } from "@/_boot/pubSub";
 import { MessageBundle } from "@/messages";
+import { swagger } from '@/_boot/swagger';
 
 const main = withContext(async ({ app, container, config, bootstrap, logger, messageBundle }) => {
   container.register({
@@ -18,7 +19,7 @@ const main = withContext(async ({ app, container, config, bootstrap, logger, mes
     config: asValue(config),
   });
 
-  await bootstrap(database, server, pubSub, repl, ...modules);
+  await bootstrap(database, server, swagger, pubSub, repl, ...modules);
 });
 
 type MainRegistry = {
