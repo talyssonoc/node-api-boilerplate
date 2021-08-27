@@ -3,8 +3,8 @@ enum Lifecycle {
   BOOTED = "BOOTED",
   READY = "READY",
   RUNNING = "RUNNING",
-  SHUTTING_DOWN = "SHUTDOWN",
-  TERMINATED = "TERMINATED",
+  DISPOSING = "DISPOSING",
+  DISPOSED = "DISPOSED",
 }
 
 export { Lifecycle };

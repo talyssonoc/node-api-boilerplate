@@ -8,14 +8,20 @@ type HookStore = {
   prepend: (lifecycle: Lifecycle, ...fn: HookFn[]) => void;
 };
 
+type LifecycleHooks = {
+  [key in `on${Capitalize<Lowercase<keyof typeof Lifecycle>>}`]: (
+    fn: HookFn | HookFn[],
+    order?: "append" | "prepend"
+  ) => void;
+};
+
 type Application = {
   getState: () => AppState;
   start: () => Promise<void>;
   stop: () => Promise<void>;
   terminate: () => void;
   once: (lifecycle: Lifecycle, fn: HookFn | HookFn[], order?: "append" | "prepend") => void;
-};
-
+} & LifecycleHooks;
 
 type ApplicationOptions = {
   shutdownTimeout: number;
@@ -83,7 +89,8 @@ const makeApp = ({ logger, shutdownTimeout }: ApplicationOptions): Application =
 
     setTimeout(() => {
       logger.warn(
-        "The stop process has finished but something is keeping the application from exiting. Check your cleanup process!"
+        "The stop process has finished but something is keeping the application from exiting. " +
+          "Check your cleanup process!"
       );
     }, 5000).unref();
   });
@@ -153,6 +160,8 @@ const memo = <F extends (...args: any[]) => any>(fn: F) => {
     return value;
   };
 };
+
+// const makeLifecycleHooks = (hooks: )
 
 const promiseChain = <M extends HookFn[]>(hooksFns: M) => {
   return hooksFns.reduce((chain, fn) => chain.then(fn), Promise.resolve());

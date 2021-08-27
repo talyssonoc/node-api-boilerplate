@@ -1,0 +1,3 @@
+{
+  "article.error.alreadyPublished": "O artigo #({{ id }}) já foi publicado em {{ publishedAt.toISOString() }}."
+}
