@@ -1,4 +1,3 @@
-import { Lifecycle } from "@/_lib/Lifecycle";
 import { Application, HookFn, makeApp } from "@/_lib/Application";
 
 type EntrypointFn<T extends Record<string | symbol, any>> = (arg: Context<T>) => Promise<void>;
@@ -51,55 +50,40 @@ const makeContext = <T extends Record<string | symbol, any>>(
       const result = await fn(
         Object.freeze({
           ...context,
-          app: {
-            ...app,
-            once: (lifecycle: Lifecycle, fn: HookFn | HookFn[], order: "append" | "prepend" = "append") => {
-              app.once(
-                lifecycle,
-                async () => {
-                  const isArray = Array.isArray(fn);
+          app: app.decorateHooks((lifecycle, fn) => async () => {
+            const isArray = Array.isArray(fn);
 
-                  logger.info(`Running ${lifecycle.toLowerCase()} hook${isArray ? "s" : ""} from ${name} module.`);
+            logger.info(`Running ${lifecycle.toLowerCase()} hook${isArray ? "s" : ""} from ${name} module.`);
 
-                  return (Array.isArray(fn) ? fn : [fn]).reduce(
-                    (chain, hook) =>
-                      chain.then(() =>
-                        hook().catch((err) => {
-                          logger.error(
-                            `Error while performing ${lifecycle.toLowerCase()} hook${
-                              isArray ? "s" : ""
-                            } from ${name} module.`
-                          );
-                          logger.error(err);
-                        })
-                      ),
-                    Promise.resolve()
-                  );
-                },
-                order
-              );
-            },
-          },
+            return (Array.isArray(fn) ? fn : [fn]).reduce(
+              (chain, hook) =>
+                chain.then(() =>
+                  hook().catch((err) => {
+                    logger.error(
+                      `Error while performing ${lifecycle.toLowerCase()} hook${isArray ? "s" : ""} from ${name} module.`
+                    );
+                    logger.error(err);
+                  })
+                ),
+              Promise.resolve()
+            );
+          }),
         })
       );
 
       if (typeof result === "function") {
-        app.once(
-          Lifecycle.SHUTTING_DOWN,
-          async () => {
-            logger.info(`Disposing ${name} module.`);
+        app.onDisposing(async () => {
+          logger.info(`Disposing ${name} module.`);
 
-            return result().catch((err) => {
-              logger.error(`Error while disposing of ${name} module. Trying to resume teardown`);
-              logger.error(err);
-            });
-          },
-          "prepend"
-        );
+          return result().catch((err) => {
+            logger.error(`Error while disposing of ${name} module. Trying to resume teardown`);
+            logger.error(err);
+          });
+        }, "prepend");
       }
     });
 
-    app.once(Lifecycle.BOOTING, bootOrder);
+    app.onBooting(bootOrder);
 
     return app.start();
   };

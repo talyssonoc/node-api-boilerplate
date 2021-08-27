@@ -2,7 +2,6 @@ import REPL, { REPLEval, ReplOptions, REPLServer } from "repl";
 import vm from "vm";
 import { createServer, Server } from "net";
 import { makeModule } from "@/context";
-import { Lifecycle } from "@/_lib/Lifecycle";
 
 type REPLConfig = {
   appName: string;
@@ -15,7 +14,7 @@ type REPLConfig = {
 const repl = makeModule(
   "repl",
   async ({
-    app,
+    app: { onReady, terminate},
     container,
     config: {
       appName,
@@ -58,7 +57,7 @@ const repl = makeModule(
       if (cli) {
         const repl = createREPL();
 
-        repl.on("close", app.terminate);
+        repl.on("close", terminate);
       } else if (!["production", "test"].includes(environment)) {
         server = createServer((socket) => {
           const repl = createREPL({
@@ -80,7 +79,7 @@ const repl = makeModule(
       }
     };
 
-    app.once(Lifecycle.READY, startREPL);
+    onReady(startREPL);
 
     return async () => {
       if (server && server.listening) {

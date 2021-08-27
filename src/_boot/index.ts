@@ -1,5 +1,5 @@
 import { server } from "@/_boot/server";
-import { modules } from "@/_boot/modules";
+import { appModules } from "@/_boot/appModules";
 import { asValue } from "awilix";
 import { database } from "@/_boot/database";
 import { repl } from "@/_boot/repl";
@@ -19,7 +19,7 @@ const main = withContext(async ({ app, container, config, bootstrap, logger, mes
     config: asValue(config),
   });
 
-  await bootstrap(database, server, swagger, pubSub, repl, ...modules);
+  await bootstrap(database, server, swagger, pubSub, repl, ...appModules);
 });
 
 type MainRegistry = {

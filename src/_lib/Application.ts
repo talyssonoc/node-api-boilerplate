@@ -1,5 +1,3 @@
-import { Lifecycle } from "@/_lib/Lifecycle";
-
 type HookFn = () => Promise<void>;
 
 type HookStore = {
@@ -7,6 +5,15 @@ type HookStore = {
   append: (lifecycle: Lifecycle, ...fn: HookFn[]) => void;
   prepend: (lifecycle: Lifecycle, ...fn: HookFn[]) => void;
 };
+
+enum Lifecycle {
+  BOOTING = "BOOTING",
+  BOOTED = "BOOTED",
+  READY = "READY",
+  RUNNING = "RUNNING",
+  DISPOSING = "DISPOSING",
+  DISPOSED = "DISPOSED",
+}
 
 type LifecycleHooks = {
   [key in `on${Capitalize<Lowercase<keyof typeof Lifecycle>>}`]: (
@@ -20,7 +27,7 @@ type Application = {
   start: () => Promise<void>;
   stop: () => Promise<void>;
   terminate: () => void;
-  once: (lifecycle: Lifecycle, fn: HookFn | HookFn[], order?: "append" | "prepend") => void;
+  decorateHooks: (decorator?: (lifecycle: Lifecycle, fn: HookFn | HookFn[]) => HookFn | HookFn[]) => Application;
 } & LifecycleHooks;
 
 type ApplicationOptions = {
@@ -82,8 +89,8 @@ const makeApp = ({ logger, shutdownTimeout }: ApplicationOptions): Application =
 
     await promiseChain([
       status(AppState.STOPPING),
-      transition(Lifecycle.SHUTTING_DOWN),
-      transition(Lifecycle.TERMINATED),
+      transition(Lifecycle.DISPOSING),
+      transition(Lifecycle.DISPOSED),
       status(AppState.STOPPED),
     ]);
 
@@ -131,14 +138,36 @@ const makeApp = ({ logger, shutdownTimeout }: ApplicationOptions): Application =
   process.on("uncaughtException", shutdown(1));
   process.on("unhandledRejection", shutdown(1));
 
-  return {
+  const lifecycleHooks = (
+    decorator: (lifecycle: Lifecycle, fn: HookFn | HookFn[]) => HookFn | HookFn[] = (lifecycle, fn) => fn
+  ) => {
+    const once = (lifecycle, fn, order = "append") => {
+      const decoratedFn = decorator(lifecycle, fn);
+      Array.isArray(decoratedFn) ? hooks[order](lifecycle, ...decoratedFn) : hooks[order](lifecycle, decoratedFn);
+    };
+    return Object.keys(Lifecycle).reduce(
+      (acc, hook) => ({
+        ...acc,
+        [`on${capitalize(hook)}`]: (fn: HookFn | HookFn[], order?: "append" | "prepend") =>
+          once(Lifecycle[hook], fn, order),
+      }),
+      {}
+    ) as unknown as LifecycleHooks;
+  };
+
+  const application: Application = {
     start,
     stop,
     terminate,
     getState: () => appState,
-    once: (lifecycle, fn, order = "append") =>
-      Array.isArray(fn) ? hooks[order](lifecycle, ...fn) : hooks[order](lifecycle, fn),
+    decorateHooks: (decorator?): Application => ({
+      ...application,
+      ...lifecycleHooks(decorator),
+    }),
+    ...lifecycleHooks(),
   };
+
+  return application;
 };
 
 enum AppState {
@@ -148,6 +177,8 @@ enum AppState {
   STOPPING = "STOPPING",
   STOPPED = "STOPED",
 }
+
+const capitalize = (str: string) => str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
 
 const memo = <F extends (...args: any[]) => any>(fn: F) => {
   let value: ReturnType<F>;
@@ -160,8 +191,6 @@ const memo = <F extends (...args: any[]) => any>(fn: F) => {
     return value;
   };
 };
-
-// const makeLifecycleHooks = (hooks: )
 
 const promiseChain = <M extends HookFn[]>(hooksFns: M) => {
   return hooksFns.reduce((chain, fn) => chain.then(fn), Promise.resolve());

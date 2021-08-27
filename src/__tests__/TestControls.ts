@@ -1,7 +1,6 @@
 import { Container, container } from "@/container";
 import { withContext } from "@/context";
 import { main } from "@/_boot";
-import { Lifecycle } from "@/_lib/Lifecycle";
 import { Db } from "mongodb";
 import supertest, { SuperTest, Test } from "supertest";
 
@@ -18,9 +17,9 @@ type TestControls = Readonly<{
 }>;
 
 const appRunning = withContext(
-  ({ app }) =>
+  ({ app: { onRunning } }) =>
     new Promise<void>((resolve) => {
-      app.once(Lifecycle.RUNNING, async () => {
+      onRunning(async () => {
         resolve();
       });
 

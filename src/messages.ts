@@ -1,7 +1,7 @@
-import { ArticleMessages } from "@/article/messages";
+import { AppModulesMessages } from '@/_boot/appModules';
 import { makeMessegeBundle } from "@/_lib/message/MessageBundle";
 
-type Messages = ArticleMessages;
+type Messages = AppModulesMessages;
 
 const messageBundle = makeMessegeBundle<Messages>();
 

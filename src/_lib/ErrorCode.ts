@@ -1,3 +1,0 @@
-enum ErrorCode {}
-
-export { ErrorCode };
