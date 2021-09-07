@@ -10,7 +10,7 @@ type Module<T extends Record<string | symbol, any>, F extends BootFn<T> = BootFn
 };
 
 type Context<T extends Record<string | symbol, any>> = {
-  app: Omit<Application, "start">;
+  app: Omit<Application, "start" | "onBooting">;
   bootstrap: <M extends Module<T>[]>(...modules: M) => Promise<void>;
 } & T;
 
