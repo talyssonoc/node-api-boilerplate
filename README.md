@@ -73,7 +73,7 @@ We use [Pino](https://www.npmjs.com/package/pino) for effective and high perform
 This boilerplate follows ideas from multiple good software development practices sources like [layered architecture](http://wiki.c2.com/?FourLayerArchitecture), [Clean Architecture](https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html), [Domain-Driven Design](https://www.domainlanguage.com/ddd/), among others. As such, even though it's not required, there are some patterns that are recommended and suggested that work well with the principles that make the boilerplate scalable and extensible. To mention some:
 
 - We recommend the usage of entities, aggregates and value objects, and other patterns that are used to isolate domain-specific code from the rest of the application code, as mentioned in Domain-Driven Design. To create a standard and practical way to define invariants for entities and aggregates there is a function that can be imported from the [lib](#lib-and-shared-kernel) called `withInvariants`. Click here to read a brief [reference about Domain-Driven Design](https://www.domainlanguage.com/wp-content/uploads/2016/05/DDD_Reference_2015-03.pdf).
-- To abstract the persistence layer of your application we recommend the usage of the [repository pattern](https://martinfowler.com/eaaCatalog/repository.html).
+- To abstract the persistence layer of your application we recommend the usage of the [repository pattern](https://martinfowler.com/eaaCatalog/repository.html). An important fact to take note is that even though the example app in the boilerplate used Mongo, you're not required to use it in your application, you just need to create a module to connect to the database of your preference and implement repositories that communicate with this database
 - To favor a more predictable and explicit definition of domain rules we favor immutable objects and pure functions to define business rules rather than classes. You'll see that most of the code does not expose classes to be used.
 - To export and import domain-specific code we use [TypeScript namespaces](https://www.typescriptlang.org/docs/handbook/namespaces.html). We believe it helps in making the code that is imported from the domain easier to read since it will always be prefixed by the name of the context it concerns about, loosely inspired by [Elixir modules](https://elixir-lang.org/getting-started/modules-and-functions.html). We follow the pattern of adding a named export called Type to expose the entity/aggregate/value object from that given file.
 
@@ -114,31 +114,42 @@ Both the boot and stopping processes are defined as a sequence of lifecycle even
 Boot:
 
 1. Booting:
-  - The booting event is dispatched once the function bootstrap is called in `src/_boot/index.ts`
-  - The modules are invoked during this lifecycle step, so by the time each module is invoked this lifecycle event was already dispatched
-  - It's not possible for a module to hook into this event because it's run by the context to declare that the boot process is started
-  - Mostly for internal usage to prepare the rest of the boot process
+
+- The booting event is dispatched once the function bootstrap is called in `src/_boot/index.ts`
+- The modules are invoked during this lifecycle step, so by the time each module is invoked this lifecycle event was already dispatched
+- It's not possible for a module to hook into this event because it's run by the context to declare that the boot process is started
+- Mostly for internal usage to prepare the rest of the boot process
+
 2. Booted:
-  - When this event is dispatched it's a message to let the modules know that all the modules were already invoked and had already hooked into the other lifecycle events
-  - This is a good place to register error handlers because every module has already registered its routes when they were invoked
-  - Use this event to do anything you might need after all the module constructors are done running
+
+- When this event is dispatched it's a message to let the modules know that all the modules were already invoked and had already hooked into the other lifecycle events
+- This is a good place to register error handlers because every module has already registered its routes when they were invoked
+- Use this event to do anything you might need after all the module constructors are done running
+
 3. Ready:
-  - This lifecycle event happens after all the listeners for the booted event were run
-  - This is the proper place to actually start things, like starting the server, make queue consumers start listening to messages, or waiting for commands in case the app is running in REPL mode
+
+- This lifecycle event happens after all the listeners for the booted event were run
+- This is the proper place to actually start things, like starting the server, make queue consumers start listening to messages, or waiting for commands in case the app is running in REPL mode
+
 4. Running:
-  - After everything from the ready event is done, the app is now actually running
-  - A good usage for this lifecycle event is to know if the app is already prepared to be accessed during the setup of an automated test or offer info about the process in the console
+
+- After everything from the ready event is done, the app is now actually running
+- A good usage for this lifecycle event is to know if the app is already prepared to be accessed during the setup of an automated test or offer info about the process in the console
 
 Stopping
 
 1. Disposing
-  - It's during this lifecycle event that the cleanup functions returned by the modules will be run
-  - To make the cleanup process consistent, the cleanup functions are run in the inverse order their modules were passed to the bootstrap function. So if your app uses `bootstrap(database, server)`, during the disposing process the cleanup function of the server module will be called first and then the database one.
-  - As an example, this is where the server is stopped and the database connections are closed
-  - It's intended to be used to revert everything initialized during Booting lifecycle event
+
+- It's during this lifecycle event that the cleanup functions returned by the modules will be run
+- To make the cleanup process consistent, the cleanup functions are run in the inverse order their modules were passed to the bootstrap function. So if your app uses `bootstrap(database, server)`, during the disposing process the cleanup function of the server module will be called first and then the database one.
+- As an example, this is where the server is stopped and the database connections are closed
+- It's intended to be used to revert everything initialized during Booting lifecycle event
+
 2. Disposed
-  - By the time Disposed event is dispatched, we expect that everything that keeps the process open is already finished, leaving it in a safe state to be terminated
-  - You could use this event to clean temporary files, for instance
+
+- By the time Disposed event is dispatched, we expect that everything that keeps the process open is already finished, leaving it in a safe state to be terminated
+- You could use this event to clean temporary files, for instance
+
 3. The application should now be completely stopped and the process is terminated
 
 To be able to hook into lifecycle events, access the property `app` in the object passed to the constructor of the modules. The `app` object contains a function for each lifecycle, prefixing it with the word `on`. So, for example, to hook into the Booted event, call `app.onBooted(callback)`.
