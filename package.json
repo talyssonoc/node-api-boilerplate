@@ -1,8 +1,17 @@
 {
-  "name": "node-arch",
-  "version": "1.0.0",
+  "name": "node-api-boilerplate",
+  "version": "3.0.0-beta",
+  "description": "A boilerplate for web APIs using Node",
   "main": "dist/index.js",
+  "private": true,
   "license": "MIT",
+  "contributors": [
+    "Talysson <talyssonoc@gmail.com>",
+    "Bruno <brunohcastro@gmail.com>"
+  ],
+  "engines": {
+    "node": ">=12.0.0"
+  },
   "dependencies": {
     "awilix": "^4.3.4",
     "dotenv": "^10.0.0",
@@ -21,7 +30,6 @@
   },
   "devDependencies": {
     "@types/express": "^4.17.13",
-    "@types/express-jwt": "^6.0.2",
     "@types/jest": "^26.0.24",
     "@types/lodash.template": "^4.5.0",
     "@types/mongodb": "^3.6.20",
@@ -51,9 +59,11 @@
   "scripts": {
     "prebuild": "rimraf dist",
     "build": "tsc",
-    "dev": "tsnd --transpile-only --inspect --files src/index.ts | pino-pretty -c -l",
+    "dev": "tsnd --transpile-only --files src/index.ts | pino-pretty -c -l",
+    "debug": "tsnd --transpile-only --inspect --files src/index.ts | pino-pretty -c -l",
     "cli": "tsnd --transpile-only --files src/index.ts --cli",
-    "remote": "ts-node bin/replClient.ts"
+    "remote": "ts-node bin/replClient.ts",
+    "test": "jest"
   },
   "jest": {
     "moduleFileExtensions": [
