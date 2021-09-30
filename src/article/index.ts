@@ -8,7 +8,7 @@ import { makeMongoArticleRepository } from "@/article/infrastructure/MongoArticl
 import { makeArticleController } from "@/article/interface/http/articleController";
 import { FindArticles } from "@/article/query/FindArticles";
 import { withMongoProvider } from "@/_lib/MongoProvider";
-import { toContainerValues } from "@/_lib/wrappers/toContainerFunctions";
+import { toContainerValues } from "@/_lib/di/toContainerFunctions";
 import { makeMongoFindArticles } from "@/article/query/impl/MongoFindArticles";
 import { makeModule } from "@/context";
 import { makeArticleCreatedEmailListener } from "@/article/interface/email/ArticleCreatedEmailListener";
