@@ -5,7 +5,7 @@ import { makeMongoCommentRepository } from "@/comment/infrastructure/MongoCommen
 import { makeCommentController } from "@/comment/interface/http/commentController";
 import { makeModule } from "@/context";
 import { withMongoProvider } from "@/_lib/MongoProvider";
-import { toContainerValues } from "@/_lib/di/toContainerFunctions";
+import { toContainerValues } from "@/_lib/di/containerAdapters";
 import { asFunction } from "awilix";
 
 const commentModule = makeModule("comment", async ({ container: { register, build } }) => {
