@@ -12,7 +12,7 @@ const main = () => {
   } else if (argv.length === 3) {
     port = argv[2];
   } else {
-    throw new Error();
+    throw new Error("The command is supposed to be used as: yarn remote [server address] [REPL port]");
   }
 
   const sock = connect(port, host);
