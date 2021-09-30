@@ -8,7 +8,7 @@ import { Configuration } from "@/config";
 import { Logger } from "pino";
 import { pubSub } from "@/_boot/pubSub";
 import { MessageBundle } from "@/messages";
-import { swagger } from '@/_boot/swagger';
+import { swagger } from "@/_boot/swagger";
 
 const main = withContext(async ({ app, container, config, bootstrap, logger, messageBundle }) => {
   container.register({

@@ -1,7 +1,7 @@
 import { DeleteArticle, makeDeleteArticle } from "@/article/application/useCases/DeleteArticle";
 import { Article } from "@/article/domain/Article";
 import { ArticleRepository } from "@/article/domain/ArticleRepository";
-import { BaseError } from '@/_lib/errors/BaseError';
+import { BaseError } from "@/_lib/errors/BaseError";
 import { NotFoundError } from "@/_lib/errors/NotFoundError";
 
 describe("DeleteArticle", () => {

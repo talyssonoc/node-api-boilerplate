@@ -1,7 +1,7 @@
 import { makePublishArticle, PublishArticle } from "@/article/application/useCases/PublishArticle";
 import { Article } from "@/article/domain/Article";
 import { ArticleRepository } from "@/article/domain/ArticleRepository";
-import { BaseError } from '@/_lib/errors/BaseError';
+import { BaseError } from "@/_lib/errors/BaseError";
 import { NotFoundError } from "@/_lib/errors/NotFoundError";
 import pino from "pino";
 

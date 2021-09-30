@@ -21,10 +21,10 @@ type InitializedCollections<Type extends CollectionInitializer> = Promise<
 
 const makeMongoProvider =
   ({ db }: Dependencies): MongoProvider =>
-  collections =>
+  (collections) =>
     Object.entries(collections).reduce(
       (chain: Promise<any>, [key, promise]) =>
-        chain.then(acc => promise(db).then(collection => ({ ...acc, [key]: collection }))),
+        chain.then((acc) => promise(db).then((collection) => ({ ...acc, [key]: collection }))),
       Promise.resolve()
     );
 

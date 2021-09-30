@@ -49,12 +49,15 @@ const server = makeModule(
     });
 
     if (!cli && environment !== "test") {
-      onReady(async () => new Promise<void>(resolve => {
-        httpServer.listen(http.port, http.host, () => {
-          logger.info(`Webserver listening at: http://${http.host}:${http.port}`);
-          resolve();
-        });
-      }));
+      onReady(
+        async () =>
+          new Promise<void>((resolve) => {
+            httpServer.listen(http.port, http.host, () => {
+              logger.info(`Webserver listening at: http://${http.host}:${http.port}`);
+              resolve();
+            });
+          })
+      );
     }
 
     register({

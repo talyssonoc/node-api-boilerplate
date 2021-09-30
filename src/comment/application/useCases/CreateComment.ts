@@ -17,7 +17,7 @@ type CreateComment = ApplicationService<CreateCommentDTO, string>;
 
 const makeCreateComment =
   ({ commentRepository, articleRepository }: Dependencies): CreateComment =>
-  async payload => {
+  async (payload) => {
     const article = await articleRepository.findById(payload.articleId);
 
     const id = await commentRepository.getNextId();

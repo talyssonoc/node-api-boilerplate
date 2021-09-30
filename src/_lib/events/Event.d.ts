@@ -3,9 +3,10 @@ type EventAddress<ET extends string = string, T extends string = string> = Reado
   topic: T;
 }>;
 
-type Event<P, ET extends string = string, T extends string = string> = EventAddress<ET, T> & Readonly<{
-  eventId: string;
-  payload: P;
-}>;
+type Event<P, ET extends string = string, T extends string = string> = EventAddress<ET, T> &
+  Readonly<{
+    eventId: string;
+    payload: P;
+  }>;
 
 export { Event, EventAddress };

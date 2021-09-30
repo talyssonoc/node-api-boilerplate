@@ -1,4 +1,4 @@
-import { AppModulesMessages } from '@/_boot/appModules';
+import { AppModulesMessages } from "@/_boot/appModules";
 import { makeMessegeBundle } from "@/_lib/message/MessageBundle";
 
 type Messages = AppModulesMessages;

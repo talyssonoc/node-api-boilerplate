@@ -14,7 +14,7 @@ type REPLConfig = {
 const repl = makeModule(
   "repl",
   async ({
-    app: { onReady, terminate},
+    app: { onReady, terminate },
     container,
     config: {
       appName,

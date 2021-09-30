@@ -8,7 +8,7 @@ import("tsconfig-paths")
   })
   .then(() => import("@/_boot"))
   .then(({ main }) => main())
-  .catch(err => {
+  .catch((err) => {
     console.error(err);
 
     if (process.env.NODE_ENV === "production") {

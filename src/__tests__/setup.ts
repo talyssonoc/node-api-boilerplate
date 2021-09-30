@@ -7,10 +7,8 @@ const catchAll = new Proxy(
       return jest.fn().mockReturnValue(catchAll);
     },
   }
-)
+);
 
-jest.mock(
-  "pino",
-  () => () => catchAll);
+jest.mock("pino", () => () => catchAll);
 
 console = catchAll;

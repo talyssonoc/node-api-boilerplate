@@ -1,6 +1,6 @@
 import { ApplicationService } from "@/_lib/DDD";
 import { Event } from "@/_lib/events/Event";
-import { Publisher } from '@/_lib/events/Publisher';
+import { Publisher } from "@/_lib/events/Publisher";
 
 type Enqueue = <E extends Event<any>>(event: E) => void;
 
@@ -18,10 +18,10 @@ const makeEventProvider =
 
     const service = fn(deps, enqueue);
 
-    const wrapper = async arg => {
+    const wrapper = async (arg) => {
       const result = await service(arg);
 
-      getEvents().forEach(event => publisher.publish(event));
+      getEvents().forEach((event) => publisher.publish(event));
 
       return result;
     };

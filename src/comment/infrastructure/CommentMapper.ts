@@ -6,7 +6,7 @@ import { ArticleIdProvider } from "@/_sharedKernel/infrastructure/ArticleIdProvi
 import { from } from "uuid-mongodb";
 
 const CommentMapper: DataMapper<Comment.Type, CommentSchema> = {
-  toData: entity => ({
+  toData: (entity) => ({
     _id: from(entity.id.value),
     body: entity.body,
     articleId: from(entity.articleId.value),
@@ -16,7 +16,7 @@ const CommentMapper: DataMapper<Comment.Type, CommentSchema> = {
     updatedAt: entity.updatedAt,
     version: entity.version,
   }),
-  toEntity: data => ({
+  toEntity: (data) => ({
     id: CommentIdProvider.create(from(data._id).toString()),
     body: data.body,
     articleId: ArticleIdProvider.create(from(data.articleId).toString()),
