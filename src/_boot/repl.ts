@@ -1,7 +1,7 @@
-import REPL, { REPLEval, ReplOptions, REPLServer } from "repl";
-import vm from "vm";
-import { createServer, Server } from "net";
-import { makeModule } from "@/context";
+import REPL, { REPLEval, ReplOptions, REPLServer } from 'repl';
+import vm from 'vm';
+import { createServer, Server } from 'net';
+import { makeModule } from '@/context';
 
 type REPLConfig = {
   appName: string;
@@ -12,7 +12,7 @@ type REPLConfig = {
 };
 
 const repl = makeModule(
-  "repl",
+  'repl',
   async ({
     app: { onReady, terminate },
     container,
@@ -34,7 +34,7 @@ const repl = makeModule(
       return callback(null, result);
     };
 
-    const isPromise = (value) => value && typeof value.then === "function" && typeof value.catch === "function";
+    const isPromise = (value) => value && typeof value.then === 'function' && typeof value.catch === 'function';
 
     const createREPL = (
       config: Partial<ReplOptions> = { input: process.stdin, output: process.stdout }
@@ -57,8 +57,8 @@ const repl = makeModule(
       if (cli) {
         const repl = createREPL();
 
-        repl.on("close", terminate);
-      } else if (!["production", "test"].includes(environment)) {
+        repl.on('close', terminate);
+      } else if (!['production', 'test'].includes(environment)) {
         server = createServer((socket) => {
           const repl = createREPL({
             input: socket,
@@ -66,12 +66,12 @@ const repl = makeModule(
             terminal: true,
           });
 
-          repl.on("close", () => {
+          repl.on('close', () => {
             socket.end();
           });
 
-          socket.on("error", (err) => {
-            logger.error("[REPL] Connection error");
+          socket.on('error', (err) => {
+            logger.error('[REPL] Connection error');
             logger.error(err);
             socket.end();
           });

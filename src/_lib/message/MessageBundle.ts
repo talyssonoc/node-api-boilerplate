@@ -1,4 +1,4 @@
-import _ from "lodash";
+import _ from 'lodash';
 
 _.templateSettings.interpolate = /{{([\s\S]+?)}}/g;
 
@@ -16,7 +16,7 @@ type MessageSource<T extends MessageParameters> = {
     : string;
 };
 
-type None = ["no", "arguements"];
+type None = ['no', 'arguements'];
 
 type JoinParameters<T extends string[] | any[], D extends string> = T extends []
   ? never
@@ -54,7 +54,7 @@ type DeepPartial<T> = {
 
 type UnionToIntersection<U> = (U extends any ? (k: U) => void : never) extends (k: infer I) => void ? I : never;
 
-type FlattenParameters<T extends MessageParameters> = UnionToIntersection<JoinParameters<FlattenRecord<T>, ".">>;
+type FlattenParameters<T extends MessageParameters> = UnionToIntersection<JoinParameters<FlattenRecord<T>, '.'>>;
 
 type TuplefyKeys<T> = T extends string
   ? []
@@ -72,7 +72,7 @@ type DotNotation<T extends string[], D extends string> = T extends []
     : never
   : string;
 
-type FlattenMessageSource<T extends MessageSource<any>> = Record<DotNotation<TuplefyKeys<T>, ".">, string>;
+type FlattenMessageSource<T extends MessageSource<any>> = Record<DotNotation<TuplefyKeys<T>, '.'>, string>;
 
 type MessageBundle<T extends MessageParameters> = {
   getMessage: <K extends keyof FlattenParameters<T>>(
@@ -88,11 +88,11 @@ type MessageBundle<T extends MessageParameters> = {
   ) => { message: string; template: string | null; key: K; parameters?: FlattenParameters<T>[K] };
 };
 
-const flatten = (object: Record<string, any>, prevKey = ""): Record<string | number | symbol, string> =>
+const flatten = (object: Record<string, any>, prevKey = ''): Record<string | number | symbol, string> =>
   Object.entries(object).reduce(
     (acc, [key, item]) => ({
       ...acc,
-      ...(typeof item === "object"
+      ...(typeof item === 'object'
         ? flatten(item, prevKey ? `${prevKey}.${key}` : key)
         : { [prevKey ? `${prevKey}.${key}` : key]: item }),
     }),
@@ -125,7 +125,7 @@ const makeMessegeBundle = <T extends MessageParameters>(
     const message = compiledBundle[key];
 
     if (!message) {
-      return "";
+      return '';
     }
 
     return message(...parameters);

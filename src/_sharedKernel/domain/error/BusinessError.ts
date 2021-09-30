@@ -1,9 +1,9 @@
-import { BaseError, Exception } from "@/_lib/errors/BaseError";
-import { makePredicate } from "@/_lib/Predicate";
+import { BaseError, Exception } from '@/_lib/errors/BaseError';
+import { makePredicate } from '@/_lib/Predicate';
 
 namespace BusinessError {
   const type = Symbol();
-  const code = "BusinessError";
+  const code = 'BusinessError';
 
   type Props = {
     key: string;

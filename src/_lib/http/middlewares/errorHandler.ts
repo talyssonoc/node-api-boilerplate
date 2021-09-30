@@ -1,5 +1,5 @@
-import { ErrorRequestHandler } from "express";
-import { Exception } from "@/_lib/errors/BaseError";
+import { ErrorRequestHandler } from 'express';
+import { Exception } from '@/_lib/errors/BaseError';
 
 type ErrorConverter<E extends Exception> = {
   test: (err: E | any) => err is E;
@@ -20,7 +20,7 @@ const makeErrorResponseBuilder = (errorConverters: ErrorConverter<any>[]) => (er
 };
 
 type ErrorHandlerOptions = {
-  logger: Pick<Console, "error">;
+  logger: Pick<Console, 'error'>;
 };
 
 const defaultOptions: ErrorHandlerOptions = {
@@ -42,7 +42,7 @@ const errorHandler = (
     if (errorResponse) {
       const { status, body } = errorResponse;
 
-      return res.status(status).json(typeof body === "object" ? body : { error: body });
+      return res.status(status).json(typeof body === 'object' ? body : { error: body });
     }
 
     res.status(500).json({ error: err.message });

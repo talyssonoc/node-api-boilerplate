@@ -1,10 +1,10 @@
-import { BaseError, Exception } from "@/_lib/errors/BaseError";
-import { makePredicate } from "@/_lib/Predicate";
+import { BaseError, Exception } from '@/_lib/errors/BaseError';
+import { makePredicate } from '@/_lib/Predicate';
 
 namespace ForbiddenError {
   const type = Symbol();
-  const code = "ForbiddenError";
-  const message = "Forbidden";
+  const code = 'ForbiddenError';
+  const message = 'Forbidden';
 
   export const create = (customMsg?: string): Exception => new BaseError({ type, code, message: customMsg || message });
 

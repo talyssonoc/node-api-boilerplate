@@ -1,7 +1,7 @@
-import { Collection, Db } from "mongodb";
-import MUUID from "uuid-mongodb";
+import { Collection, Db } from 'mongodb';
+import MUUID from 'uuid-mongodb';
 
-MUUID.mode("relaxed");
+MUUID.mode('relaxed');
 
 interface Dependencies {
   db: Db;

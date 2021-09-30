@@ -1,4 +1,4 @@
-import { Event, EventAddress } from "@/_lib/events/Event";
+import { Event, EventAddress } from '@/_lib/events/Event';
 
 type SubscriberOptions = {
   single: boolean;
@@ -7,7 +7,7 @@ type SubscriberOptions = {
 
 type Subscriber<OPTS = SubscriberOptions> = {
   add: <E extends Event<any>>(
-    address: EventAddress<E["eventType"], E["topic"]>,
+    address: EventAddress<E['eventType'], E['topic']>,
     handler: (event: E) => Promise<void>,
     opts?: Partial<OPTS>
   ) => Promise<void>;

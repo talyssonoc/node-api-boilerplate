@@ -1,6 +1,6 @@
-import { Publisher } from "@/_lib/events/Publisher";
-import { Subscriber, SubscriberOptions } from "@/_lib/events/Subscriber";
-import { EventEmitter } from "stream";
+import { Publisher } from '@/_lib/events/Publisher';
+import { Subscriber, SubscriberOptions } from '@/_lib/events/Subscriber';
+import { EventEmitter } from 'stream';
 
 const defaultOpts: SubscriberOptions = {
   nackOn: () => true,
@@ -20,7 +20,7 @@ const makeEventEmitterPubSub = (): Publisher & Subscriber => {
       const { single, nackOn } = { ...defaultOpts, ...opts };
 
       registrations.push(async () => {
-        emitter[single ? "once" : "on"](`${address.topic}.${address.eventType}`, async (event) => {
+        emitter[single ? 'once' : 'on'](`${address.topic}.${address.eventType}`, async (event) => {
           try {
             await handler(event);
           } catch (err) {
@@ -42,6 +42,6 @@ const makeEventEmitterPubSub = (): Publisher & Subscriber => {
   };
 };
 
-const key = "eventEmitterPubSub";
+const key = 'eventEmitterPubSub';
 
 export { key, makeEventEmitterPubSub };

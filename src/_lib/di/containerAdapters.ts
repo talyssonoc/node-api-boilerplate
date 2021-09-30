@@ -1,5 +1,5 @@
-import { Resolver } from "awilix/lib/resolvers";
-import { asValue } from "awilix";
+import { Resolver } from 'awilix/lib/resolvers';
+import { asValue } from 'awilix';
 
 type Values = Record<string, any>;
 

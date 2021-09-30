@@ -1,5 +1,5 @@
-import { DeleteArticle } from "@/article/application/useCases/DeleteArticle";
-import { handler } from "@/_lib/http/handler";
+import { DeleteArticle } from '@/article/application/useCases/DeleteArticle';
+import { handler } from '@/_lib/http/handler';
 
 type Dependencies = {
   deleteArticle: DeleteArticle;

@@ -1,20 +1,20 @@
-import { AggregateRoot } from "@/_lib/DDD";
-import { makeWithInvariants } from "@/_lib/WithInvariants";
-import { ArticleId } from "@/_sharedKernel/domain/ArticleId";
+import { AggregateRoot } from '@/_lib/DDD';
+import { makeWithInvariants } from '@/_lib/WithInvariants';
+import { ArticleId } from '@/_sharedKernel/domain/ArticleId';
 
 namespace Article {
   type Article = AggregateRoot<ArticleId> &
     Readonly<{
       title: string;
       content: string;
-      state: "DRAFT" | "PUBLISHED" | "DELETED";
+      state: 'DRAFT' | 'PUBLISHED' | 'DELETED';
       publishedAt: Date | null;
       createdAt: Date;
       updatedAt: Date;
       version: number;
     }>;
 
-  type PublishedArticle = Omit<Article, "publishedAt" | "state"> & Readonly<{ state: "PUBLISHED"; publishedAt: Date }>;
+  type PublishedArticle = Omit<Article, 'publishedAt' | 'state'> & Readonly<{ state: 'PUBLISHED'; publishedAt: Date }>;
 
   const withInvariants = makeWithInvariants<Article>((self, assert) => {
     assert(self.title?.length > 0);
@@ -32,7 +32,7 @@ namespace Article {
       id: props.id,
       title: props.title,
       content: props.content,
-      state: "DRAFT",
+      state: 'DRAFT',
       publishedAt: null,
       createdAt: new Date(),
       updatedAt: new Date(),
@@ -43,7 +43,7 @@ namespace Article {
   export const publish = withInvariants(
     (self: Article): PublishedArticle => ({
       ...self,
-      state: "PUBLISHED",
+      state: 'PUBLISHED',
       publishedAt: new Date(),
     })
   );
@@ -51,7 +51,7 @@ namespace Article {
   export const markAsDeleted = withInvariants(
     (self: Article): Article => ({
       ...self,
-      state: "DELETED",
+      state: 'DELETED',
     })
   );
 
@@ -62,7 +62,7 @@ namespace Article {
     })
   );
 
-  export const isPublished = (self: Article): self is PublishedArticle => self.state === "PUBLISHED";
+  export const isPublished = (self: Article): self is PublishedArticle => self.state === 'PUBLISHED';
 
   export type Type = Article;
 }

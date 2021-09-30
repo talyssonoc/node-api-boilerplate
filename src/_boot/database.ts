@@ -1,7 +1,7 @@
-import { makeModule } from "@/context";
-import { makeMongoProvider, MongoProvider } from "@/_lib/MongoProvider";
-import { asValue } from "awilix";
-import { Db, MongoClient } from "mongodb";
+import { makeModule } from '@/context';
+import { makeMongoProvider, MongoProvider } from '@/_lib/MongoProvider';
+import { asValue } from 'awilix';
+import { Db, MongoClient } from 'mongodb';
 
 type DatabaseConfig = {
   mongodb: {
@@ -12,7 +12,7 @@ type DatabaseConfig = {
   };
 };
 
-const database = makeModule("database", async ({ container: { register }, config: { mongodb } }) => {
+const database = makeModule('database', async ({ container: { register }, config: { mongodb } }) => {
   const client = new MongoClient(mongodb.host, {
     auth: { username: mongodb.username, password: mongodb.password },
   });

@@ -1,10 +1,10 @@
-import { Article } from "@/article/domain/Article";
-import { ArticleRepository } from "@/article/domain/ArticleRepository";
-import { ArticleCollection } from "@/article/infrastructure/ArticleCollection";
-import { ArticleMapper } from "@/article/infrastructure/ArticleMapper";
-import { ArticleId } from "@/_sharedKernel/domain/ArticleId";
-import { ArticleIdProvider } from "@/_sharedKernel/infrastructure/ArticleIdProvider";
-import { from, v4 } from "uuid-mongodb";
+import { Article } from '@/article/domain/Article';
+import { ArticleRepository } from '@/article/domain/ArticleRepository';
+import { ArticleCollection } from '@/article/infrastructure/ArticleCollection';
+import { ArticleMapper } from '@/article/infrastructure/ArticleMapper';
+import { ArticleId } from '@/_sharedKernel/domain/ArticleId';
+import { ArticleIdProvider } from '@/_sharedKernel/infrastructure/ArticleIdProvider';
+import { from, v4 } from 'uuid-mongodb';
 
 type Dependencies = {
   articleCollection: ArticleCollection;
@@ -18,7 +18,7 @@ const makeMongoArticleRepository = ({ articleCollection }: Dependencies): Articl
     const article = await articleCollection.findOne({ _id: from(id), deleted: false });
 
     if (!article) {
-      throw new Error("Article not found");
+      throw new Error('Article not found');
     }
 
     return ArticleMapper.toEntity(article);

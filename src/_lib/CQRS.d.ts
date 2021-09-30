@@ -1,6 +1,6 @@
 type Sort = Readonly<{
   field: string;
-  direction: "asc" | "desc";
+  direction: 'asc' | 'desc';
 }>;
 
 type Pagination = Readonly<{

@@ -1,7 +1,7 @@
-import { makeModule } from "@/context";
-import { resolve } from "path";
-import swaggerJSDoc from "swagger-jsdoc";
-import swaggerUi from "swagger-ui-express";
+import { makeModule } from '@/context';
+import { resolve } from 'path';
+import swaggerJSDoc from 'swagger-jsdoc';
+import swaggerUi from 'swagger-ui-express';
 
 type SwaggerConfig = {
   swagger: {
@@ -12,7 +12,7 @@ type SwaggerConfig = {
   };
 };
 
-const swagger = makeModule("swagger", async ({ container: { build }, config: { http, swagger } }) => {
+const swagger = makeModule('swagger', async ({ container: { build }, config: { http, swagger } }) => {
   const options = {
     swaggerDefinition: {
       info: {
@@ -22,7 +22,7 @@ const swagger = makeModule("swagger", async ({ container: { build }, config: { h
       host: `${http.host}:${http.port}`,
       basePath: swagger.basePath,
     },
-    apis: [resolve(__dirname, "../**/interface/http/**/*.yaml"), resolve(__dirname, "../**/interface/http/**/*.ts")],
+    apis: [resolve(__dirname, '../**/interface/http/**/*.yaml'), resolve(__dirname, '../**/interface/http/**/*.ts')],
   };
 
   // Initialize swagger-jsdoc -> returns validated swagger spec in json format

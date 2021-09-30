@@ -1,5 +1,5 @@
-import { Article } from "@/article/domain/Article";
-import { Comment } from "@/comment/domain/Comment";
+import { Article } from '@/article/domain/Article';
+import { Comment } from '@/comment/domain/Comment';
 
 type MemoryDB = {
   articles: Record<string, Article.Type>;

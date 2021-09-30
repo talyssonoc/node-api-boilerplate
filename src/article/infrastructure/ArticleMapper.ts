@@ -1,8 +1,8 @@
-import { Article } from "@/article/domain/Article";
-import { ArticleSchema } from "@/article/infrastructure/ArticleCollection";
-import { DataMapper } from "@/_lib/DDD";
-import { ArticleIdProvider } from "@/_sharedKernel/infrastructure/ArticleIdProvider";
-import { from } from "uuid-mongodb";
+import { Article } from '@/article/domain/Article';
+import { ArticleSchema } from '@/article/infrastructure/ArticleCollection';
+import { DataMapper } from '@/_lib/DDD';
+import { ArticleIdProvider } from '@/_sharedKernel/infrastructure/ArticleIdProvider';
+import { from } from 'uuid-mongodb';
 
 const ArticleMapper: DataMapper<Article.Type, ArticleSchema> = {
   toData: (entity: Article.Type) => ({
@@ -12,7 +12,7 @@ const ArticleMapper: DataMapper<Article.Type, ArticleSchema> = {
     status: entity.state,
     publishedAt: entity.publishedAt,
     createdAt: entity.createdAt,
-    deleted: entity.state === "DELETED",
+    deleted: entity.state === 'DELETED',
     updatedAt: entity.createdAt,
     version: entity.version,
   }),

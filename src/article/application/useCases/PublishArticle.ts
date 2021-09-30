@@ -1,9 +1,9 @@
-import { ArticleRepository } from "@/article/domain/ArticleRepository";
-import { Article } from "@/article/domain/Article";
-import { ApplicationService } from "@/_lib/DDD";
-import { BusinessError } from "@/_sharedKernel/domain/error/BusinessError";
-import { MessageBundle } from "@/messages";
-import { Logger } from "pino";
+import { ArticleRepository } from '@/article/domain/ArticleRepository';
+import { Article } from '@/article/domain/Article';
+import { ApplicationService } from '@/_lib/DDD';
+import { BusinessError } from '@/_sharedKernel/domain/error/BusinessError';
+import { MessageBundle } from '@/messages';
+import { Logger } from 'pino';
 
 type Dependencies = {
   articleRepository: ArticleRepository;
@@ -20,7 +20,7 @@ const makePublishArticle =
 
     if (Article.isPublished(article)) {
       throw BusinessError.create(
-        useBundle("article.error.alreadyPublished", { id: payload, publishedAt: article.publishedAt })
+        useBundle('article.error.alreadyPublished', { id: payload, publishedAt: article.publishedAt })
       );
     }
 
@@ -29,7 +29,7 @@ const makePublishArticle =
     await articleRepository.store(publishedArticle);
 
     logger.info(
-      getMessage("article.published", { id: publishedArticle.id.value, publishedAt: publishedArticle.publishedAt })
+      getMessage('article.published', { id: publishedArticle.id.value, publishedAt: publishedArticle.publishedAt })
     );
   };
 

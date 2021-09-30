@@ -1,6 +1,6 @@
-import { asValue } from "awilix";
-import { RequestHandler } from "express";
-import { Container } from "@/container";
+import { asValue } from 'awilix';
+import { RequestHandler } from 'express';
+import { Container } from '@/container';
 
 const requestContainer =
   (container: Container): RequestHandler =>

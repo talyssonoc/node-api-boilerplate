@@ -1,4 +1,4 @@
-import { AggregateId } from "@/_lib/DDD";
+import { AggregateId } from '@/_lib/DDD';
 
 type ArticleId = AggregateId<string>;
 

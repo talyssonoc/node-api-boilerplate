@@ -1,11 +1,11 @@
-import { Collection, Db } from "mongodb";
-import { MUUID } from "uuid-mongodb";
+import { Collection, Db } from 'mongodb';
+import { MUUID } from 'uuid-mongodb';
 
 type ArticleSchema = {
   _id: MUUID;
   title: string;
   content: string;
-  status: "DRAFT" | "PUBLISHED" | "DELETED";
+  status: 'DRAFT' | 'PUBLISHED' | 'DELETED';
   publishedAt: Date | null;
   deleted: boolean;
   createdAt: Date;
@@ -16,7 +16,7 @@ type ArticleSchema = {
 type ArticleCollection = Collection<ArticleSchema>;
 
 const initArticleCollection = async (db: Db): Promise<ArticleCollection> => {
-  const collection: ArticleCollection = db.collection("article");
+  const collection: ArticleCollection = db.collection('article');
 
   await collection.createIndex({ title: 1 }, { unique: true });
   await collection.createIndex({ _id: 1, version: 1 });

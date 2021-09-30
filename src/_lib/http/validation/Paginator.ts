@@ -1,11 +1,11 @@
-import { Request } from "express";
-import Joi, { InterfaceFrom } from "types-joi";
-import { ValidationError } from "@/_lib/errors/ValidationError";
-import { BadRequestError } from "@/_lib/errors/BadRequestError";
+import { Request } from 'express';
+import Joi, { InterfaceFrom } from 'types-joi';
+import { ValidationError } from '@/_lib/errors/ValidationError';
+import { BadRequestError } from '@/_lib/errors/BadRequestError';
 
 type FieldConfig = {
   name: string;
-  from: "query" | "params" | "body";
+  from: 'query' | 'params' | 'body';
 };
 
 type PaginatorOptions<T extends Record<string, any>> = {
@@ -19,10 +19,10 @@ type PaginatorOptions<T extends Record<string, any>> = {
   defaults?: {
     pageSize?: number;
     page?: number;
-    filter?: T["filter"] extends Joi.BaseSchema<any> ? NonNullable<InterfaceFrom<NonNullable<T["filter"]>>> : any;
+    filter?: T['filter'] extends Joi.BaseSchema<any> ? NonNullable<InterfaceFrom<NonNullable<T['filter']>>> : any;
     sort?: {
       field: string;
-      direction: "asc" | "desc";
+      direction: 'asc' | 'desc';
     }[];
   };
   filter?: Joi.BaseSchema<any> | null;
@@ -32,17 +32,17 @@ type Paginator<T extends PaginatorOptions<Record<string, any>>> = {
   getPagination: (req: Request) => { page: number; pageSize: number };
   getFilter: (
     req: Request
-  ) => T["filter"] extends Joi.BaseSchema<any> ? NonNullable<InterfaceFrom<NonNullable<T["filter"]>>> : any;
-  getSorter: (req: Request) => { field: string; direction: "asc" | "desc" }[];
+  ) => T['filter'] extends Joi.BaseSchema<any> ? NonNullable<InterfaceFrom<NonNullable<T['filter']>>> : any;
+  getSorter: (req: Request) => { field: string; direction: 'asc' | 'desc' }[];
 };
 
 const defaultOptions = {
   useDefaults: true,
   fields: {
-    page: "page",
-    pageSize: "limit",
-    sort: "sort",
-    filter: "filter",
+    page: 'page',
+    pageSize: 'limit',
+    sort: 'sort',
+    filter: 'filter',
   },
   defaults: {
     page: 1,
@@ -68,7 +68,7 @@ const makePaginator = <T extends PaginatorOptions<any>>(opts: Partial<T> = {}): 
   };
 
   const getField = (field: string | FieldConfig): FieldConfig =>
-    typeof field === "string" ? { name: field, from: "query" } : field;
+    typeof field === 'string' ? { name: field, from: 'query' } : field;
 
   const fromRequest = (req: Request, field: FieldConfig) => req[field.from][field.name];
 
@@ -91,7 +91,7 @@ const makePaginator = <T extends PaginatorOptions<any>>(opts: Partial<T> = {}): 
     };
   };
 
-  const getSorter = (req: Request): { field: string; direction: "asc" | "desc" }[] => {
+  const getSorter = (req: Request): { field: string; direction: 'asc' | 'desc' }[] => {
     const sortField = getField(fields.sort);
     const sortValues = fromRequest(req, sortField);
 
@@ -103,15 +103,15 @@ const makePaginator = <T extends PaginatorOptions<any>>(opts: Partial<T> = {}): 
 
     return sortList.length
       ? sortList.map((sort) => ({
-          field: sort.startsWith("-") ? sort.substr(1) : sort,
-          direction: sort.startsWith("-") ? "desc" : "asc",
+          field: sort.startsWith('-') ? sort.substr(1) : sort,
+          direction: sort.startsWith('-') ? 'desc' : 'asc',
         }))
       : defaults.sort;
   };
 
   const getFilter = (
     req: Request
-  ): T["filter"] extends Joi.BaseSchema<any> ? NonNullable<InterfaceFrom<NonNullable<T["filter"]>>> : any => {
+  ): T['filter'] extends Joi.BaseSchema<any> ? NonNullable<InterfaceFrom<NonNullable<T['filter']>>> : any => {
     const filterField = getField(fields.filter);
     const filterValue = fromRequest(req, filterField);
 

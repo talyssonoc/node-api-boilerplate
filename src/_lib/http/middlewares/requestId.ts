@@ -1,5 +1,5 @@
-import { v4 } from "uuid";
-import { RequestHandler } from "express";
+import { v4 } from 'uuid';
+import { RequestHandler } from 'express';
 
 const requestId =
   (idProvider: () => string = v4): RequestHandler =>

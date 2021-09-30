@@ -7,18 +7,18 @@ type HookStore = {
 };
 
 enum Lifecycle {
-  BOOTING = "BOOTING",
-  BOOTED = "BOOTED",
-  READY = "READY",
-  RUNNING = "RUNNING",
-  DISPOSING = "DISPOSING",
-  DISPOSED = "DISPOSED",
+  BOOTING = 'BOOTING',
+  BOOTED = 'BOOTED',
+  READY = 'READY',
+  RUNNING = 'RUNNING',
+  DISPOSING = 'DISPOSING',
+  DISPOSED = 'DISPOSED',
 }
 
 type LifecycleHooks = {
   [key in `on${Capitalize<Lowercase<keyof typeof Lifecycle>>}`]: (
     fn: HookFn | HookFn[],
-    order?: "append" | "prepend"
+    order?: 'append' | 'prepend'
   ) => void;
 };
 
@@ -32,7 +32,7 @@ type Application = {
 
 type ApplicationOptions = {
   shutdownTimeout: number;
-  logger: Pick<Console, "info" | "error" | "warn">;
+  logger: Pick<Console, 'info' | 'error' | 'warn'>;
 };
 
 const makeApp = ({ logger, shutdownTimeout }: ApplicationOptions): Application => {
@@ -43,7 +43,7 @@ const makeApp = ({ logger, shutdownTimeout }: ApplicationOptions): Application =
 
   const started: HookFn = () =>
     new Promise<void>((resolve) => {
-      logger.info("Application started");
+      logger.info('Application started');
 
       appState = AppState.STARTED;
 
@@ -57,9 +57,9 @@ const makeApp = ({ logger, shutdownTimeout }: ApplicationOptions): Application =
   const transition = (lifecycle: Lifecycle) => () => promiseChain(hooks.get(lifecycle));
 
   const start = memo(async () => {
-    if (appState !== AppState.IDLE) throw new Error("The application has already started.");
+    if (appState !== AppState.IDLE) throw new Error('The application has already started.');
 
-    logger.info("Starting application");
+    logger.info('Starting application');
 
     try {
       await promiseChain([
@@ -78,14 +78,14 @@ const makeApp = ({ logger, shutdownTimeout }: ApplicationOptions): Application =
   });
 
   const stop = memo(async () => {
-    if (appState === AppState.IDLE) throw new Error("The application is not running.");
+    if (appState === AppState.IDLE) throw new Error('The application is not running.');
 
     if (release) {
       release();
       release = null;
     }
 
-    logger.info("Stopping application");
+    logger.info('Stopping application');
 
     await promiseChain([
       status(AppState.STOPPING),
@@ -96,8 +96,8 @@ const makeApp = ({ logger, shutdownTimeout }: ApplicationOptions): Application =
 
     setTimeout(() => {
       logger.warn(
-        "The stop process has finished but something is keeping the application from exiting. " +
-          "Check your cleanup process!"
+        'The stop process has finished but something is keeping the application from exiting. ' +
+          'Check your cleanup process!'
       );
     }, 5000).unref();
   });
@@ -105,19 +105,19 @@ const makeApp = ({ logger, shutdownTimeout }: ApplicationOptions): Application =
   let forceShutdown = false;
 
   const shutdown = (code: number) => async () => {
-    process.stdout.write("\n");
+    process.stdout.write('\n');
 
     setTimeout(() => {
-      logger.error("Ok, my patience is over! #ragequit");
+      logger.error('Ok, my patience is over! #ragequit');
       process.exit(code);
     }, shutdownTimeout).unref();
 
     if ((appState === AppState.STOPPING || appState === AppState.STOPPED) && code === 0) {
       if (forceShutdown) {
-        process.kill(process.pid, "SIGKILL");
+        process.kill(process.pid, 'SIGKILL');
       }
 
-      logger.warn("The application is yet to finishing the shutdown process. Repeat the command to force exit");
+      logger.warn('The application is yet to finishing the shutdown process. Repeat the command to force exit');
       forceShutdown = true;
       return;
     }
@@ -131,24 +131,24 @@ const makeApp = ({ logger, shutdownTimeout }: ApplicationOptions): Application =
     process.exit(code);
   };
 
-  const terminate = () => process.kill(process.pid, "SIGTERM");
+  const terminate = () => process.kill(process.pid, 'SIGTERM');
 
-  process.on("SIGTERM", shutdown(0));
-  process.on("SIGINT", shutdown(0));
-  process.on("uncaughtException", shutdown(1));
-  process.on("unhandledRejection", shutdown(1));
+  process.on('SIGTERM', shutdown(0));
+  process.on('SIGINT', shutdown(0));
+  process.on('uncaughtException', shutdown(1));
+  process.on('unhandledRejection', shutdown(1));
 
   const lifecycleHooks = (
     decorator: (lifecycle: Lifecycle, fn: HookFn | HookFn[]) => HookFn | HookFn[] = (lifecycle, fn) => fn
   ) => {
-    const once = (lifecycle, fn, order = "append") => {
+    const once = (lifecycle, fn, order = 'append') => {
       const decoratedFn = decorator(lifecycle, fn);
       Array.isArray(decoratedFn) ? hooks[order](lifecycle, ...decoratedFn) : hooks[order](lifecycle, decoratedFn);
     };
     return Object.keys(Lifecycle).reduce(
       (acc, hook) => ({
         ...acc,
-        [`on${capitalize(hook)}`]: (fn: HookFn | HookFn[], order?: "append" | "prepend") =>
+        [`on${capitalize(hook)}`]: (fn: HookFn | HookFn[], order?: 'append' | 'prepend') =>
           once(Lifecycle[hook], fn, order),
       }),
       {}
@@ -171,11 +171,11 @@ const makeApp = ({ logger, shutdownTimeout }: ApplicationOptions): Application =
 };
 
 enum AppState {
-  IDLE = "IDLE",
-  STARTING = "STARTING",
-  STARTED = "STARTED",
-  STOPPING = "STOPPING",
-  STOPPED = "STOPED",
+  IDLE = 'IDLE',
+  STARTING = 'STARTING',
+  STARTED = 'STARTED',
+  STOPPING = 'STOPPING',
+  STOPPED = 'STOPED',
 }
 
 const capitalize = (str: string) => str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();

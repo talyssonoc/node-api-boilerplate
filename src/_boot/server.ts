@@ -1,13 +1,13 @@
-import express, { Router, Application, json, urlencoded } from "express";
-import { asValue } from "awilix";
-import httpLogger from "pino-http";
-import { createServer } from "http";
-import { requestId } from "@/_lib/http/middlewares/requestId";
-import { requestContainer } from "@/_lib/http/middlewares/requestContainer";
-import { errorHandler } from "@/_lib/http/middlewares/errorHandler";
-import { makeModule } from "@/context";
-import { gracefulShutdown } from "@/_lib/http/middlewares/gracefulShutdown";
-import { errorConverters } from "@/_sharedKernel/interface/http/ErrorConverters";
+import express, { Router, Application, json, urlencoded } from 'express';
+import { asValue } from 'awilix';
+import httpLogger from 'pino-http';
+import { createServer } from 'http';
+import { requestId } from '@/_lib/http/middlewares/requestId';
+import { requestContainer } from '@/_lib/http/middlewares/requestContainer';
+import { errorHandler } from '@/_lib/http/middlewares/errorHandler';
+import { makeModule } from '@/context';
+import { gracefulShutdown } from '@/_lib/http/middlewares/gracefulShutdown';
+import { errorConverters } from '@/_sharedKernel/interface/http/ErrorConverters';
 
 type ServerConfig = {
   http: {
@@ -17,7 +17,7 @@ type ServerConfig = {
 };
 
 const server = makeModule(
-  "server",
+  'server',
   async ({ app: { onBooted, onReady }, container, config: { cli, http, environment }, logger }) => {
     const { register } = container;
     const server = express();
@@ -36,7 +36,7 @@ const server = makeModule(
     const rootRouter = Router();
     const apiRouter = Router();
 
-    rootRouter.use("/api", apiRouter);
+    rootRouter.use('/api', apiRouter);
 
     server.use(rootRouter);
 
@@ -48,7 +48,7 @@ const server = makeModule(
       server.use(errorHandler(errorConverters, { logger }));
     });
 
-    if (!cli && environment !== "test") {
+    if (!cli && environment !== 'test') {
       onReady(
         async () =>
           new Promise<void>((resolve) => {

@@ -1,4 +1,4 @@
-import { messageSource } from "@/_lib/message/MessageBundle";
+import { messageSource } from '@/_lib/message/MessageBundle';
 
 type ArticleMessages = {
   article: {
@@ -18,8 +18,8 @@ const articleMessages = messageSource<ArticleMessages>({
         "Can't republish the article #({{ id }}) because it was already published on {{ publishedAt.toISOString() }}",
       notFound: "Can't find article #({{ id }})",
     },
-    created: "Article created with id #({{ id }})",
-    published: "Published article #({{ id }}) at {{ publishedAt.toISOString() }}",
+    created: 'Article created with id #({{ id }})',
+    published: 'Published article #({{ id }}) at {{ publishedAt.toISOString() }}',
   },
 });
 

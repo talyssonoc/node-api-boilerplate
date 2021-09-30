@@ -1,7 +1,7 @@
-import { ArticleRepository } from "@/article/domain/ArticleRepository";
-import { CommentRepository } from "@/comment/domain/CommentRepository";
-import { ApplicationService } from "@/_lib/DDD";
-import { Comment } from "@/comment/domain/Comment";
+import { ArticleRepository } from '@/article/domain/ArticleRepository';
+import { CommentRepository } from '@/comment/domain/CommentRepository';
+import { ApplicationService } from '@/_lib/DDD';
+import { Comment } from '@/comment/domain/Comment';
 
 type Dependencies = {
   commentRepository: CommentRepository;

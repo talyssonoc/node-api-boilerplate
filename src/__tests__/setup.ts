@@ -1,4 +1,4 @@
-process.env.NODE_ENV = "test";
+process.env.NODE_ENV = 'test';
 
 const catchAll = new Proxy(
   {},
@@ -9,6 +9,6 @@ const catchAll = new Proxy(
   }
 );
 
-jest.mock("pino", () => () => catchAll);
+jest.mock('pino', () => () => catchAll);
 
 console = catchAll;

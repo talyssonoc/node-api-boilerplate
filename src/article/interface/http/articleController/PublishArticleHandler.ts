@@ -1,6 +1,6 @@
-import { PublishArticle } from "@/article/application/useCases/PublishArticle";
-import { handler } from "@/_lib/http/handler";
-import { Request, Response } from "express";
+import { PublishArticle } from '@/article/application/useCases/PublishArticle';
+import { handler } from '@/_lib/http/handler';
+import { Request, Response } from 'express';
 
 type Dependencies = {
   publishArticle: PublishArticle;

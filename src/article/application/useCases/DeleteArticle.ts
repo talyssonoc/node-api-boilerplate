@@ -1,6 +1,6 @@
-import { ArticleRepository } from "@/article/domain/ArticleRepository";
-import { Article } from "@/article/domain/Article";
-import { ApplicationService } from "@/_lib/DDD";
+import { ArticleRepository } from '@/article/domain/ArticleRepository';
+import { Article } from '@/article/domain/Article';
+import { ApplicationService } from '@/_lib/DDD';
 
 type Dependencies = {
   articleRepository: ArticleRepository;

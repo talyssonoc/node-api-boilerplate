@@ -1,8 +1,8 @@
-import { ArticleCollection, ArticleSchema } from "@/article/infrastructure/ArticleCollection";
-import MUUID from "uuid-mongodb";
-import { FindArticles } from "@/article/query/FindArticles";
-import { CommentSchema } from "@/comment/infrastructure/CommentCollection";
-import { Filter } from "mongodb";
+import { ArticleCollection, ArticleSchema } from '@/article/infrastructure/ArticleCollection';
+import MUUID from 'uuid-mongodb';
+import { FindArticles } from '@/article/query/FindArticles';
+import { CommentSchema } from '@/comment/infrastructure/CommentCollection';
+import { Filter } from 'mongodb';
 
 type Dependencies = {
   articleCollection: ArticleCollection;
@@ -12,14 +12,14 @@ const makeMongoFindArticles =
   ({ articleCollection }: Dependencies): FindArticles =>
   async ({ pagination, filter, sort }) => {
     let match: Filter<ArticleSchema> = {
-      status: "PUBLISHED",
+      status: 'PUBLISHED',
       deleted: false,
     };
 
     if (filter.title) {
       match = {
         ...match,
-        title: { $regex: `^${filter.title}`, $options: "i" },
+        title: { $regex: `^${filter.title}`, $options: 'i' },
       };
     }
 
@@ -45,18 +45,18 @@ const makeMongoFindArticles =
           $limit: pagination.pageSize,
         },
         ...(sort?.length
-          ? [{ $sort: sort.reduce((acc, { field, direction }) => ({ [field]: direction === "asc" ? 1 : -1 }), {}) }]
+          ? [{ $sort: sort.reduce((acc, { field, direction }) => ({ [field]: direction === 'asc' ? 1 : -1 }), {}) }]
           : []),
         {
           $lookup: {
-            from: "comment",
-            as: "comments",
-            let: { articleId: "$_id" },
+            from: 'comment',
+            as: 'comments',
+            let: { articleId: '$_id' },
             pipeline: [
               {
                 $match: {
                   deleted: false,
-                  $expr: { $eq: ["$articleId", "$$articleId"] },
+                  $expr: { $eq: ['$articleId', '$$articleId'] },
                 },
               },
             ],

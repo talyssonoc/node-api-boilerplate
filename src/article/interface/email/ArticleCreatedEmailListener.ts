@@ -1,7 +1,7 @@
-import { ArticleCreatedEvent } from "@/article/application/events/ArticleCreatedEvent";
-import { ArticleCollection } from "@/article/infrastructure/ArticleCollection";
-import { from } from "uuid-mongodb";
-import { eventConsumer } from "@/_lib/pubSub/EventEmitterConsumer";
+import { ArticleCreatedEvent } from '@/article/application/events/ArticleCreatedEvent';
+import { ArticleCollection } from '@/article/infrastructure/ArticleCollection';
+import { from } from 'uuid-mongodb';
+import { eventConsumer } from '@/_lib/pubSub/EventEmitterConsumer';
 
 type Dependencies = {
   articleCollection: ArticleCollection;

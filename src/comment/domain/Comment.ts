@@ -1,9 +1,9 @@
-import { CommentId } from "@/comment/domain/CommentId";
-import { AggregateRoot } from "@/_lib/DDD";
-import { ArticleId } from "@/_sharedKernel/domain/ArticleId";
+import { CommentId } from '@/comment/domain/CommentId';
+import { AggregateRoot } from '@/_lib/DDD';
+import { ArticleId } from '@/_sharedKernel/domain/ArticleId';
 
 namespace Comment {
-  type Status = "ACTIVE" | "DELETED";
+  type Status = 'ACTIVE' | 'DELETED';
 
   type Comment = AggregateRoot<CommentId> &
     Readonly<{
@@ -23,7 +23,7 @@ namespace Comment {
 
   export const create = (props: CommentProps): Comment => ({
     ...props,
-    status: "ACTIVE",
+    status: 'ACTIVE',
     createdAt: new Date(),
     updatedAt: new Date(),
     version: 0,
@@ -31,7 +31,7 @@ namespace Comment {
 
   export const markAsDeleted = (self: Comment): Comment => ({
     ...self,
-    status: "DELETED",
+    status: 'DELETED',
   });
 
   export type Type = Comment;

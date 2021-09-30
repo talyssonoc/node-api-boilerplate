@@ -1,13 +1,13 @@
-import { DeleteArticle, makeDeleteArticle } from "@/article/application/useCases/DeleteArticle";
-import { Article } from "@/article/domain/Article";
-import { ArticleRepository } from "@/article/domain/ArticleRepository";
-import { BaseError } from "@/_lib/errors/BaseError";
-import { NotFoundError } from "@/_lib/errors/NotFoundError";
+import { DeleteArticle, makeDeleteArticle } from '@/article/application/useCases/DeleteArticle';
+import { Article } from '@/article/domain/Article';
+import { ArticleRepository } from '@/article/domain/ArticleRepository';
+import { BaseError } from '@/_lib/errors/BaseError';
+import { NotFoundError } from '@/_lib/errors/NotFoundError';
 
-describe("DeleteArticle", () => {
-  const id = "mock-article-id";
-  const title = "Title";
-  const content = "Some content";
+describe('DeleteArticle', () => {
+  const id = 'mock-article-id';
+  const title = 'Title';
+  const content = 'Some content';
 
   const articleRepository: ArticleRepository = {
     findById: jest.fn().mockImplementation(async (articleId) => {
@@ -32,18 +32,18 @@ describe("DeleteArticle", () => {
     deleteArticle = makeDeleteArticle({ articleRepository });
   });
 
-  it("should save the article as deleted", async () => {
+  it('should save the article as deleted', async () => {
     await deleteArticle(id);
 
     expect(articleRepository.store).toHaveBeenCalledWith(
       expect.objectContaining({
         id: { value: id },
-        state: "DELETED",
+        state: 'DELETED',
       })
     );
   });
 
-  it("should throw error if not found", async () => {
-    await expect(deleteArticle("some-wrong-id")).rejects.toThrowError(BaseError);
+  it('should throw error if not found', async () => {
+    await expect(deleteArticle('some-wrong-id')).rejects.toThrowError(BaseError);
   });
 });

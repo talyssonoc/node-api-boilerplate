@@ -6,7 +6,7 @@ type AggregateRoot<ID extends AggregateId<any>> = {
   readonly id: ID;
 };
 
-type Repository<T extends AggregateRoot<any>, ID extends AggregateId<any> = T["id"]> = {
+type Repository<T extends AggregateRoot<any>, ID extends AggregateId<any> = T['id']> = {
   getNextId(): Promise<ID>;
   store(entity: T): Promise<void>;
 };

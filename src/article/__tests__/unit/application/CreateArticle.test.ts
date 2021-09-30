@@ -1,12 +1,12 @@
-import { ArticleCreatedEvent } from "@/article/application/events/ArticleCreatedEvent";
-import { CreateArticle, makeCreateArticle } from "@/article/application/useCases/CreateArticle";
-import { ArticleRepository } from "@/article/domain/ArticleRepository";
-import { Publisher } from "@/_lib/events/Publisher";
+import { ArticleCreatedEvent } from '@/article/application/events/ArticleCreatedEvent';
+import { CreateArticle, makeCreateArticle } from '@/article/application/useCases/CreateArticle';
+import { ArticleRepository } from '@/article/domain/ArticleRepository';
+import { Publisher } from '@/_lib/events/Publisher';
 
-describe("CreateArticle", () => {
-  const id = "mock-article-id";
-  const title = "Title";
-  const content = "Some content";
+describe('CreateArticle', () => {
+  const id = 'mock-article-id';
+  const title = 'Title';
+  const content = 'Some content';
 
   const articleRepository: ArticleRepository = {
     findById: jest.fn(),
@@ -25,13 +25,13 @@ describe("CreateArticle", () => {
     createArticle = makeCreateArticle({ articleRepository, eventEmitterPubSub: publisher });
   });
 
-  it("should return the created id", async () => {
+  it('should return the created id', async () => {
     const result = await createArticle({ title, content });
 
     expect(result).toBe(id);
   });
 
-  it("should store the article", async () => {
+  it('should store the article', async () => {
     await createArticle({ title, content });
 
     expect(articleRepository.store).toHaveBeenCalledWith(
@@ -43,7 +43,7 @@ describe("CreateArticle", () => {
     );
   });
 
-  it("should enqueue ArticleCreatedEvent", async () => {
+  it('should enqueue ArticleCreatedEvent', async () => {
     await createArticle({ title, content });
 
     expect(publisher.publish).toHaveBeenCalledWith(

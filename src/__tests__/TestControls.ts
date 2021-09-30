@@ -1,8 +1,8 @@
-import { Container, container } from "@/container";
-import { withContext } from "@/context";
-import { main } from "@/_boot";
-import { Db } from "mongodb";
-import supertest, { SuperTest, Test } from "supertest";
+import { Container, container } from '@/container';
+import { withContext } from '@/context';
+import { main } from '@/_boot';
+import { Db } from 'mongodb';
+import supertest, { SuperTest, Test } from 'supertest';
 
 type Dependencies = {
   mongo: Db;
@@ -13,7 +13,7 @@ type TestControls = Readonly<{
   clearDatabase: () => Promise<void>;
   cleanUp: () => Promise<void>;
   container: Container;
-  registry: Container["cradle"];
+  registry: Container['cradle'];
 }>;
 
 const appRunning = withContext(

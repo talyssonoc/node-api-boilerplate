@@ -1,6 +1,6 @@
-import { articleModule, ArticleRegistry } from "@/article";
-import { ArticleMessages } from "@/article/messages";
-import { commentModule, CommentRegistry } from "@/comment";
+import { articleModule, ArticleRegistry } from '@/article';
+import { ArticleMessages } from '@/article/messages';
+import { commentModule, CommentRegistry } from '@/comment';
 
 type AppModulesMessages = ArticleMessages;
 

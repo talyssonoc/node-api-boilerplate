@@ -1,10 +1,10 @@
-import { Article } from "@/article/domain/Article";
-import { Event } from "@/_lib/events/Event";
-import { v4 } from "uuid-mongodb";
+import { Article } from '@/article/domain/Article';
+import { Event } from '@/_lib/events/Event';
+import { v4 } from 'uuid-mongodb';
 
 namespace ArticleCreatedEvent {
-  export const topic = "Article" as const;
-  export const eventType = "ArticleCreatedEvent" as const;
+  export const topic = 'Article' as const;
+  export const eventType = 'ArticleCreatedEvent' as const;
 
   type ArticleCreatedEvent = Event<Article.Type, typeof eventType, typeof topic>;
 

@@ -1,9 +1,9 @@
-import { CreateArticle } from "@/article/application/useCases/CreateArticle";
-import { makeValidator } from "@/_lib/http/validation/Validator";
-import { handler } from "@/_lib/http/handler";
-import { Request, Response } from "express";
-import Joi from "types-joi";
-import { HttpStatus } from "@/_lib/http/HttpStatus";
+import { CreateArticle } from '@/article/application/useCases/CreateArticle';
+import { makeValidator } from '@/_lib/http/validation/Validator';
+import { handler } from '@/_lib/http/handler';
+import { Request, Response } from 'express';
+import Joi from 'types-joi';
+import { HttpStatus } from '@/_lib/http/HttpStatus';
 
 type Dependencies = {
   createArticle: CreateArticle;
