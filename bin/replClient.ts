@@ -4,13 +4,13 @@ const main = () => {
   const { argv } = process;
 
   let host = "127.0.0.1";
-  let port;
+  let port = 2580;
 
   if (argv.length === 4) {
     host = argv[2];
-    port = argv[3];
+    port = Number(argv[3]);
   } else if (argv.length === 3) {
-    port = argv[2];
+    port = Number(argv[2]);
   } else {
     throw new Error("The command is supposed to be used as: yarn remote [server address] [REPL port]");
   }
