@@ -1,0 +1,26 @@
+{
+  "compilerOptions": {
+    "target": "esnext",
+    "module": "commonjs",
+    "lib": ["esnext"],
+    "allowJs": true,
+    "checkJs": true,
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "removeComments": false,
+    "strict": true,
+    "noImplicitAny": false,
+    "noUnusedLocals": true,
+    "moduleResolution": "node",
+    "baseUrl": "./src",
+    "paths": {
+      "@/*": ["*"],
+    },
+    "typeRoots": ["node_modules/@types"],
+    "esModuleInterop": true,
+    "skipLibCheck": false,
+    "forceConsistentCasingInFileNames": true
+  },
+  "include": ["typings.d.ts", "src/**/*"],
+  "exclude": ["./dist", "./node_modules"]
+}

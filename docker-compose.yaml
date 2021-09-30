@@ -1,0 +1,11 @@
+version: "3.5"
+
+services:
+  mongodb:
+    container_name: blog-mongodb
+    image: mongo:4.2
+    ports:
+      - 27017:27017
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: blog
+      MONGO_INITDB_ROOT_PASSWORD: blog

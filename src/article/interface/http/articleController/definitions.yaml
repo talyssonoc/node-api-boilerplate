@@ -1,0 +1,10 @@
+definitions:
+  ArticleDTO:
+    type: object
+    properties:
+      id:
+        type: string
+      title:
+        type: string
+      content:
+        type: string

@@ -1,0 +1,27 @@
+# @name article
+POST http://localhost:3000/api/articles
+Content-Type: application/json
+
+{
+  "title": "This is my first article",
+  "content": "Test article content"
+}
+
+###
+GET http://localhost:3000/api/articles
+
+###
+@articleId = {{article.response.body.$.id}}
+
+POST http://localhost:3000/api/articles/{{articleId}}/comments
+Content-Type: application/json
+
+{
+  "body": "Nice!"
+}
+
+###
+
+@articleId = {{article.response.body.$.id}}
+
+PATCH http://localhost:3000/api/articles/{{articleId}}/publish
