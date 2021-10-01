@@ -1,13 +1,15 @@
-import express, { Router, Application, json, urlencoded } from 'express';
+import { Router, Application, json, urlencoded } from 'express';
+import Fastify from 'fastify';
 import { asValue } from 'awilix';
 import httpLogger from 'pino-http';
-import { createServer } from 'http';
+// import { createServer } from 'http';
 import { requestId } from '@/_lib/http/middlewares/requestId';
 import { requestContainer } from '@/_lib/http/middlewares/requestContainer';
 import { errorHandler } from '@/_lib/http/middlewares/errorHandler';
 import { makeModule } from '@/context';
-import { gracefulShutdown } from '@/_lib/http/middlewares/gracefulShutdown';
+// import { gracefulShutdown } from '@/_lib/http/middlewares/gracefulShutdown';
 import { errorConverters } from '@/_sharedKernel/interface/http/ErrorConverters';
+import middie from 'middie';
 
 type ServerConfig = {
   http: {
@@ -20,13 +22,15 @@ const server = makeModule(
   'server',
   async ({ app: { onBooted, onReady }, container, config: { cli, http, environment }, logger }) => {
     const { register } = container;
-    const server = express();
+    const server = Fastify();
 
-    const httpServer = createServer(server);
+    await server.register(middie);
 
-    const { shutdownHook, shutdownHandler } = gracefulShutdown(httpServer);
+    // const httpServer = createServer(server);
 
-    server.use(shutdownHandler());
+    // const { shutdownHook, shutdownHandler } = gracefulShutdown(httpServer);
+
+    // server.use(shutdownHandler());
     server.use(requestId());
     server.use(requestContainer(container));
     server.use(httpLogger());
@@ -52,10 +56,10 @@ const server = makeModule(
       onReady(
         async () =>
           new Promise<void>((resolve) => {
-            httpServer.listen(http.port, http.host, () => {
-              logger.info(`Webserver listening at: http://${http.host}:${http.port}`);
-              resolve();
-            });
+            // httpServer.listen(http.port, http.host, () => {
+            //   logger.info(`Webserver listening at: http://${http.host}:${http.port}`);
+            //   resolve();
+            // });
           })
       );
     }
@@ -67,7 +71,7 @@ const server = makeModule(
     });
 
     return async () => {
-      await shutdownHook();
+      // await shutdownHook();
     };
   }
 );
