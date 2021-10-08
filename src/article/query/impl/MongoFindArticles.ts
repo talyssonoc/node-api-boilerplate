@@ -16,14 +16,14 @@ const makeMongoFindArticles =
       deleted: false,
     };
 
-    if (filter.title) {
+    if (filter?.title) {
       match = {
         ...match,
         title: { $regex: `^${filter.title}`, $options: 'i' },
       };
     }
 
-    if (filter.publishedBetween) {
+    if (filter?.publishedBetween) {
       match = {
         ...match,
         publishedAt: {

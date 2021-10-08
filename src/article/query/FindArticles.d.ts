@@ -1,4 +1,4 @@
-import { PaginatedQuery, PaginatedQueryResult, QueryHandler, QueryResult, SortedPaginatedQuery } from '@/_lib/CQRS';
+import { PaginatedQueryResult, QueryHandler, SortedPaginatedQuery } from '@/_lib/CQRS';
 
 type ArticleListItemDTO = Readonly<{
   id: string;
@@ -19,4 +19,4 @@ type ArticleFilter = {
 
 type FindArticles = QueryHandler<SortedPaginatedQuery<ArticleFilter>, PaginatedQueryResult<ArticleListItemDTO[]>>;
 
-export { FindArticles };
+export { FindArticles, ArticleListItemDTO };

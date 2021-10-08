@@ -13,6 +13,8 @@ import { makeMongoFindArticles } from '@/article/query/impl/MongoFindArticles';
 import { makeModule } from '@/context';
 import { makeArticleCreatedEmailListener } from '@/article/interface/email/ArticleCreatedEmailListener';
 import { articleMessages } from '@/article/messages';
+import { withSchemaRegister } from '@/_lib/graphql/schema';
+import { articleQueries } from './interface/graphql';
 
 const articleModule = makeModule(
   'article',
@@ -33,6 +35,13 @@ const articleModule = makeModule(
       deleteArticle: asFunction(makeDeleteArticle),
       findArticles: asFunction(makeMongoFindArticles),
     });
+
+    build(
+      withSchemaRegister({
+        queries: articleQueries,
+        mutations: {},
+      })
+    );
 
     build(makeArticleController);
     build(makeArticleCreatedEmailListener);
