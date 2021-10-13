@@ -3,11 +3,20 @@ import vm from 'vm';
 import { createServer, Server } from 'net';
 import { AwilixContainer } from 'awilix';
 import { Logger } from 'pino';
-import { REPLConfig } from '@/_boot/repl';
+import { EnvironmentConfig } from '../Environment';
+
+type REPLConfigType<T> = {
+  [key in keyof T]: T[key];
+};
 
 type ReplParameters = {
   container: AwilixContainer;
-  config: REPLConfig;
+  config: REPLConfigType<{
+    appName: string;
+    cli: boolean;
+    repl: { port: number };
+    environment: EnvironmentConfig['environment'];
+  }>;
   logger: Logger;
 };
 
@@ -29,7 +38,7 @@ const promisableEval: REPLEval = (cmd, context, filename, callback) => {
   return callback(null, result);
 };
 
-const makeNodeREPL = ({
+const makeREPL = ({
   container,
   config: {
     appName,
@@ -94,4 +103,5 @@ const makeNodeREPL = ({
   };
 };
 
-export { makeNodeREPL };
+export { makeREPL };
+export type { REPLConfigType };
