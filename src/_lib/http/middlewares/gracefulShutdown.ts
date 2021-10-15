@@ -1,6 +1,6 @@
 import { Server } from 'http';
 import { logger } from '@/_lib/logger';
-import { RequestHandler } from 'express';
+import { RequestHandler } from '@/_lib/http/RequestHandler';
 
 type ShutdownMiddleware = {
   shutdownHook: () => Promise<void>;
@@ -39,8 +39,8 @@ const gracefulShutdown = (server: Server, forceTimeout = 30000): ShutdownMiddlew
         return next();
       }
 
-      res.set('Connection', 'close');
-      res.status(503).send('Server is in the process of restarting.');
+      res.writeHead(503, { Connection: 'close' });
+      res.end('Server is in the process of restarting.');
     },
     shutdownHook,
   };

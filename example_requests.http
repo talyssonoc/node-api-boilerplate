@@ -3,9 +3,15 @@ POST http://localhost:3000/api/articles
 Content-Type: application/json
 
 {
-  "title": "This is my first article",
+  "title": "This is my first article draft",
   "content": "Test article content"
 }
+
+###
+
+@articleId = {{article.response.body.$.id}}
+
+PATCH http://localhost:3000/api/articles/{{articleId}}/publish
 
 ###
 GET http://localhost:3000/api/articles
@@ -19,9 +25,3 @@ Content-Type: application/json
 {
   "body": "Nice!"
 }
-
-###
-
-@articleId = {{article.response.body.$.id}}
-
-PATCH http://localhost:3000/api/articles/{{articleId}}/publish

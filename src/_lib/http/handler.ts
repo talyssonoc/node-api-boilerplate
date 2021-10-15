@@ -1,20 +1,21 @@
-import { RequestHandler } from 'express';
 import { asFunction } from 'awilix';
-import { AsyncHandler, runAsync } from '@/_lib/http/runAsync';
+import { FastifyRequest, FastifyReply } from 'fastify';
 
-type ControllerHandler = (dependencies: any) => AsyncHandler;
+type FastifyHandler = (request: FastifyRequest, reply: FastifyReply) => any;
 
-const handler = (handler: ControllerHandler): RequestHandler => {
+type ControllerHandler = (dependencies: any) => FastifyHandler;
+
+const handler = (handler: ControllerHandler): FastifyHandler => {
   const resolver = asFunction(handler);
 
-  return (req, res, next) => {
-    if (!('container' in req)) {
+  return (request, reply) => {
+    if (!('container' in request.raw)) {
       throw new Error("Can't find the request container! Have you registered the `requestContainer` middleware?");
     }
 
-    const injectedHandler = req.container.build(resolver);
+    const injectedHandler = request.raw.container.build(resolver);
 
-    return runAsync(injectedHandler)(req, res, next);
+    return injectedHandler(request, reply);
   };
 };
 
