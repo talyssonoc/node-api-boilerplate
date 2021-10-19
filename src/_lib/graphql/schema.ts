@@ -1,10 +1,10 @@
-type SchemaData = {
-  queries: any;
-  mutations: any;
+type Schema<Q = any, M = any> = {
+  queries: Q;
+  mutations: M;
 };
 
-type RegisterSchema = (schemaData: SchemaData) => void 
-type GetSchemaData = () => SchemaData;
+type RegisterSchema = (schemaData: Schema) => void 
+type GetSchemaData = () => Schema;
 
 type MakeSchemaStorage = {
   getSchemaData: GetSchemaData;
@@ -17,7 +17,7 @@ const makeSchemaStorage = (): MakeSchemaStorage => {
 
   return {
     getSchemaData: () => ({ queries, mutations }),
-    registerSchema: (schemaData: SchemaData): void => {
+    registerSchema: (schemaData: Schema): void => {
       queries = { ...queries, ...schemaData.queries };
       mutations = { ...mutations, ...schemaData.mutations };
     },
@@ -29,7 +29,7 @@ type Dependencies = {
 };
 
 const withSchemaRegister =
-  (schemaData: SchemaData) =>
+  (schemaData: Schema) =>
   ({ registerSchema }: Dependencies): void =>
     registerSchema(schemaData);
 
