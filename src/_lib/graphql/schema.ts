@@ -11,7 +11,7 @@ type MakeSchemaStorage = {
   addToSchema: AddToSchema;
 }
 
-const makeSchemaStorage = (): MakeSchemaStorage => {
+const makeSchema = (): MakeSchemaStorage => {
   let queries = {};
   let mutations = {};
 
@@ -28,10 +28,10 @@ type Dependencies = {
   addToSchema: AddToSchema;
 };
 
-const withSchemaRegister =
+const withRegisterSchema =
   (schemaData: Schema) =>
   ({ addToSchema }: Dependencies): void =>
   addToSchema(schemaData);
 
-export { makeSchemaStorage, withSchemaRegister };
+export { makeSchema, withRegisterSchema };
 export type { AddToSchema }
