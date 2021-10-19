@@ -2,7 +2,7 @@ import { Registry } from '@/container';
 import { GraphQLFieldConfig, GraphQLFieldResolver } from 'graphql';
 
 type GraphQLContext = {
-  container: Registry;
+  registry: Registry;
 };
 
 type Sort = Readonly<{

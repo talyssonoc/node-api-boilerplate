@@ -27,7 +27,7 @@ const graphql = makeModule('graphql', async ({ app: { onBooted }, container: { b
           }),
           graphiql: config.environment !== 'production',
           context: {
-            container: cradle,
+            registry: cradle,
           },
         })
       );
