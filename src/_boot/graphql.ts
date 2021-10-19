@@ -4,10 +4,9 @@ import { GraphQLObjectType, GraphQLSchema } from 'graphql';
 
 import { makeSchema, AddToSchema } from '@/_lib/graphql/schema';
 import { makeModule } from '@/context';
-import { config } from '@/config';
 
-const graphql = makeModule('graphql', async ({ app: { onBooted }, container: { build, register, cradle } }) => {
-  const { getSchema, addToSchema } = build(makeSchema);
+const graphql = makeModule('graphql', async ({ app: { onBooted }, container: { build, register, cradle }, config }) => {
+  const { getSchema, addToSchema } = makeSchema();
 
   onBooted(async () => {
     const { queries } = getSchema();
