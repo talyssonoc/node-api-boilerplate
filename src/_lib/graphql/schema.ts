@@ -4,10 +4,10 @@ type Schema<Q = any, M = any> = {
 };
 
 type AddToSchema = (schemaData: Schema) => void 
-type GetSchemaData = () => Schema;
+type GetSchema = () => Schema;
 
 type MakeSchemaStorage = {
-  getSchemaData: GetSchemaData;
+  getSchema: GetSchema;
   addToSchema: AddToSchema;
 }
 
@@ -16,7 +16,7 @@ const makeSchemaStorage = (): MakeSchemaStorage => {
   let mutations = {};
 
   return {
-    getSchemaData: () => ({ queries, mutations }),
+    getSchema: () => ({ queries, mutations }),
     addToSchema: (schemaData: Schema): void => {
       queries = { ...queries, ...schemaData.queries };
       mutations = { ...mutations, ...schemaData.mutations };

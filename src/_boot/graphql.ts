@@ -7,10 +7,10 @@ import { makeModule } from '@/context';
 import { config } from '@/config';
 
 const graphql = makeModule('graphql', async ({ app: { onBooted }, container: { build, register, cradle } }) => {
-  const { getSchemaData, addToSchema } = build(makeSchemaStorage);
+  const { getSchema, addToSchema } = build(makeSchemaStorage);
 
   onBooted(async () => {
-    const { queries } = getSchemaData();
+    const { queries } = getSchema();
 
     build(({ server }) => {
       server.use(
