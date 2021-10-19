@@ -2,12 +2,12 @@ import { asValue } from 'awilix';
 import { graphqlHTTP } from 'express-graphql';
 import { GraphQLObjectType, GraphQLSchema } from 'graphql';
 
-import { makeSchemaStorage, RegisterSchema } from '@/_lib/graphql/schema';
+import { makeSchemaStorage, AddToSchema } from '@/_lib/graphql/schema';
 import { makeModule } from '@/context';
 import { config } from '@/config';
 
 const graphql = makeModule('graphql', async ({ app: { onBooted }, container: { build, register, cradle } }) => {
-  const { getSchemaData, registerSchema } = build(makeSchemaStorage);
+  const { getSchemaData, addToSchema } = build(makeSchemaStorage);
 
   onBooted(async () => {
     const { queries } = getSchemaData();
@@ -35,12 +35,12 @@ const graphql = makeModule('graphql', async ({ app: { onBooted }, container: { b
   }, 'prepend');
 
   register({
-    registerSchema: asValue(registerSchema),
+    addToSchema: asValue(addToSchema),
   });
 });
 
 type GraphQLRegistry = {
-  registerSchema: RegisterSchema;
+  addToSchema: AddToSchema;
 };
 
 export { graphql };
