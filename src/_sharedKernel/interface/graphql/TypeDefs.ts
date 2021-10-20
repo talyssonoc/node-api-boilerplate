@@ -4,7 +4,7 @@ import {
   GraphQLInt, 
   GraphQLList, 
   GraphQLString,
-} from "graphql";
+} from 'graphql';
 
 const PaginationType = new GraphQLInputObjectType({
   name: 'Pagination',

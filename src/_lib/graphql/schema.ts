@@ -1,6 +1,6 @@
 type Schema<Q = any, M = any> = {
-  queries: Q;
-  mutations: M;
+  queries?: Q;
+  mutations?: M;
 };
 
 type AddToSchema = (schemaData: Schema) => void 

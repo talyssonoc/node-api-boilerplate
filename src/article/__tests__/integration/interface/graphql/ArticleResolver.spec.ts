@@ -8,24 +8,29 @@ describe('ArticleResolver', () => {
     controls = await makeTestControls();
   });
 
-  // beforeEach(async () => {
-  //   const { clearDatabase } = controls;
+  beforeEach(async () => {
+    const { clearDatabase } = controls;
 
-  //   await clearDatabase();
-  // });
+    await clearDatabase();
+  });
 
-  // afterAll(async () => {
-  //   const { cleanUp } = controls;
+  afterAll(async () => {
+    const { cleanUp } = controls;
 
-  //   await cleanUp();
-  // });
+    await cleanUp();
+  });
 
   describe('QUERY Articles', () => {
     it('gets the first page of articles', async () => {
-      const { request } = controls;
+      const { request, registry } = controls;
+      const { createArticle, publishArticle } = registry;
 
       const title = randomBytes(20).toString('hex');
       const content = 'New Article content';
+
+      const articleId = await createArticle({ title, content })
+      await publishArticle(articleId);
+
       const getArticlesQuery = `
           query Articles($filter: ArticleFilter, $sort: [Sort], $pagination: Pagination) {
             articles(filter: $filter, sort: $sort, pagination: $pagination) {
@@ -39,19 +44,13 @@ describe('ArticleResolver', () => {
             }
           }
         `;
+
       const variables = {
         pagination: {
           page: 1,
           pageSize: 10,
         },
       };
-
-      const response = await request().post('/api/articles').send({
-        title,
-        content,
-      });
-
-      await request().patch(`/api/articles/${response.body.id}/publish`);
 
       return request()
         .post('/graphql')
