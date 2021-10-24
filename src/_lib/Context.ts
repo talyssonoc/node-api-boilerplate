@@ -57,14 +57,16 @@ const makeContext = <T extends Record<string | symbol, any>>(
 
             return (Array.isArray(fn) ? fn : [fn]).reduce(
               (chain, hook) =>
-                chain.then(() =>
-                  hook().catch((err) => {
+                chain.then(async () => {
+                  try {
+                    return await hook();
+                  } catch (err) {
                     logger.error(
                       `Error while performing ${lifecycle.toLowerCase()} hook${isArray ? 's' : ''} from ${name} module.`
                     );
                     logger.error(err);
-                  })
-                ),
+                  }
+                }),
               Promise.resolve()
             );
           }),
@@ -75,10 +77,12 @@ const makeContext = <T extends Record<string | symbol, any>>(
         app.onDisposing(async () => {
           logger.info(`Disposing ${name} module.`);
 
-          return result().catch((err) => {
+          try {
+            return await result();
+          } catch (err) {
             logger.error(`Error while disposing of ${name} module. Trying to resume teardown`);
             logger.error(err);
-          });
+          }
         }, 'prepend');
       }
     });

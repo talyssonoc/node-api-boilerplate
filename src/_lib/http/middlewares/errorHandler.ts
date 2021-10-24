@@ -41,6 +41,7 @@ const errorHandler = (errorMap: ErrorConverter<any>[], options: Partial<ErrorHan
       const { status, body } = errorResponse;
 
       reply.status(status).send(typeof body === 'object' ? body : { error: body });
+      return;
     }
 
     reply.status(HttpStatus.INTERNAL_SERVER_ERROR).send({ error: err.message });

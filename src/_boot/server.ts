@@ -44,7 +44,7 @@ const server = makeModule(
       );
     };
 
-    onBooted(async () => {
+    onBooted(() => {
       fastifyServer.use((req, res) => {
         res.writeHead(HttpStatus.NOT_FOUND).end();
       });
@@ -54,7 +54,7 @@ const server = makeModule(
 
     if (!cli && environment !== 'test') {
       onReady(
-        async () =>
+        () =>
           new Promise<void>((resolve, reject) => {
             fastifyServer.listen(http.port, http.host, (error, address) => {
               if (error) {

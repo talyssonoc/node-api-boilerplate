@@ -70,7 +70,7 @@ const makePaginator = <T extends PaginatorOptions<any>>(opts: Partial<T> = {}): 
   const getField = (field: string | FieldConfig): FieldConfig =>
     typeof field === 'string' ? { name: field, from: 'query' } : field;
 
-  const fromRequest = (req: FastifyRequest, field: FieldConfig) => {
+  const fromRequest = (req: FastifyRequest, field: FieldConfig): unknown => {
     const fieldValue = req[field.from];
     if (typeof fieldValue === 'object' && fieldValue != null) {
       return fieldValue[field.name];

@@ -9,7 +9,7 @@ type Dependencies = {
 };
 
 const makeArticleController = ({ apiRouter }: Dependencies): void => {
-  apiRouter((fastify) => {
+  apiRouter((router) => {
     /**
      * @swagger
      *
@@ -28,10 +28,10 @@ const makeArticleController = ({ apiRouter }: Dependencies): void => {
      *           items:
      *             $ref: '#/definitions/ArticleDTO'
      */
-    fastify.get('/articles', findArticlesHandler);
-    fastify.post('/articles', createArticleHandler);
-    fastify.delete('/articles/:articleId', deleteArticleHandler);
-    fastify.patch('/articles/:articleId/publish', publishArticleHandler);
+    router.get('/articles', findArticlesHandler);
+    router.post('/articles', createArticleHandler);
+    router.delete('/articles/:articleId', deleteArticleHandler);
+    router.patch('/articles/:articleId/publish', publishArticleHandler);
   });
 };
 
