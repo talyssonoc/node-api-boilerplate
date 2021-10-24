@@ -34,6 +34,8 @@ const server = makeModule(
     fastifyServer.use(requestContainer(container));
     fastifyServer.use(httpLogger());
 
+    fastifyServer.setErrorHandler(errorHandler(errorConverters, { logger }));
+
     const apiRouter: ApiRouter = (fn) => {
       fastifyServer.register(
         (fastify, _, done) => {
@@ -48,8 +50,6 @@ const server = makeModule(
       fastifyServer.use((req, res) => {
         res.writeHead(HttpStatus.NOT_FOUND).end();
       });
-
-      fastifyServer.setErrorHandler(errorHandler(errorConverters, { logger }));
     });
 
     if (!cli && environment !== 'test') {

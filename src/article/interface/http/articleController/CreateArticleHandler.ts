@@ -19,8 +19,7 @@ const createArticleHandler = handler(({ createArticle }: Dependencies) => async 
   const { title, content } = getBody(request);
   const articleId = await createArticle({ title, content });
 
-  reply.send({ id: articleId });
-  reply.status(HttpStatus.CREATED);
+  reply.status(HttpStatus.CREATED).send({ id: articleId });
 });
 
 export { createArticleHandler };

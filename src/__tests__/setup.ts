@@ -10,5 +10,3 @@ const catchAll = new Proxy(
 );
 
 jest.mock('pino', () => () => catchAll);
-
-console = catchAll;

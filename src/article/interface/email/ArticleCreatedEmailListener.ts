@@ -2,18 +2,20 @@ import { ArticleCreatedEvent } from '@/article/application/events/ArticleCreated
 import { ArticleCollection } from '@/article/infrastructure/ArticleCollection';
 import { from } from 'uuid-mongodb';
 import { eventConsumer } from '@/_lib/pubSub/EventEmitterConsumer';
+import { Logger } from 'pino';
 
 type Dependencies = {
   articleCollection: ArticleCollection;
+  logger: Logger;
 };
 
 const makeArticleCreatedEmailListener = eventConsumer<ArticleCreatedEvent.Type, Dependencies>(
   ArticleCreatedEvent,
-  ({ articleCollection }) =>
+  ({ articleCollection, logger }) =>
     async (event) => {
       const article = await articleCollection.findOne({ _id: from(event.payload.id.value) });
 
-      console.log(article);
+      logger.info(article || {});
     }
 );
 
