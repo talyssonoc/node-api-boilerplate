@@ -6,8 +6,8 @@ import {
   GraphQLString,
 } from 'graphql';
 
-import { GraphQLContext } from '@/_lib/graphql/Graphql';
 import { ArticleListItemDTO } from '@/article/query/FindArticles';
+import { GraphQLContext } from '@/_boot/graphql';
 
 type ArticlesConfigType = GraphQLObjectTypeConfig<ArticleListItemDTO, GraphQLContext>;
 
