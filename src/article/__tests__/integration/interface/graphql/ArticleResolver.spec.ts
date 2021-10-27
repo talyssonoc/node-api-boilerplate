@@ -22,7 +22,7 @@ describe('ArticleResolver', () => {
 
   describe('QUERY Articles', () => {
     it('gets the first page of articles', async () => {
-      const { request, registry } = controls;
+      const { graphQLRequest, registry } = controls;
       const { createArticle, publishArticle } = registry;
 
       const title = randomBytes(20).toString('hex');
@@ -52,15 +52,12 @@ describe('ArticleResolver', () => {
         },
       };
 
-      return request()
-        .post('/graphql')
-        .send({
-          operationName: 'Articles',
-          query: getArticlesQuery,
-          variables,
-        })
-        .expect(async (res) => {
-          console.log(res);
+      return graphQLRequest({ 
+        name: 'Articles', 
+        queryOrMutation: getArticlesQuery, 
+        variables
+      })
+      .expect(async (res) => {
           expect(res.status).toBe(200);
           const { data } = res.body;
           expect(data).toHaveProperty('articles');
