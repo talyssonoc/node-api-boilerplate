@@ -1,9 +1,5 @@
-import { Registry } from '@/container';
+import { GraphQLContext } from '@/_boot/graphql';
 import { GraphQLFieldConfig, GraphQLFieldResolver } from 'graphql';
-
-type GraphQLContext = {
-  registry: Registry;
-};
 
 type Sort = Readonly<{
   field: string;
@@ -29,4 +25,4 @@ type GraphQLQueryMap<TSource, TContext> = {
   [key: string]: GraphQLFieldConfig<TSource, TContext, Args>;
 } 
 
-export { GraphQLContext, GraphQLQueryMap, GraphQLResolver };
+export { GraphQLQueryMap, GraphQLResolver };

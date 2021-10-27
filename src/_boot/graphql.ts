@@ -4,6 +4,7 @@ import { GraphQLObjectType, GraphQLSchema } from 'graphql';
 
 import { makeSchema, AddToSchema } from '@/_lib/graphql/schema';
 import { makeModule } from '@/context';
+import { Registry } from '@/container';
 
 const graphql = makeModule('graphql', async ({ app: { onBooted }, container: { build, register, cradle }, config }) => {
   const { getSchema, addToSchema } = makeSchema();
@@ -42,5 +43,9 @@ type GraphQLRegistry = {
   addToSchema: AddToSchema;
 };
 
+type GraphQLContext = {
+  registry: Registry;
+};
+
 export { graphql };
-export type { GraphQLRegistry };
+export type { GraphQLRegistry, GraphQLContext };

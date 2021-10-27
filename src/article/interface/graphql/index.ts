@@ -1,10 +1,12 @@
-import { GraphQLContext,GraphQLQueryMap } from '@/_lib/graphql/Graphql';
+import { GraphQLInputObjectType, GraphQLList, GraphQLString } from 'graphql';
+
+import { GraphQLContext } from '@/_boot/graphql';
+import { GraphQLQueryMap } from '@/_lib/graphql/Graphql';
+import { PaginationType, SortType } from '@/_sharedKernel/interface/graphql/TypeDefs';
+import { ArticleSchema } from '@/article/infrastructure/ArticleCollection';
 
 import { ArticleType } from './ArticleTypeDef';
 import { articleResolver } from './ArticleResolver';
-import { ArticleSchema } from '@/article/infrastructure/ArticleCollection';
-import { PaginationType, SortType } from '@/_sharedKernel/interface/graphql/TypeDefs';
-import { GraphQLInputObjectType, GraphQLList, GraphQLString } from 'graphql';
 
 type ArticleQueries = GraphQLQueryMap<ArticleSchema, GraphQLContext>;
 
