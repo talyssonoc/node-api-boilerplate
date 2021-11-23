@@ -1,8 +1,21 @@
-version: "3.5"
+version: "3.9"
 
 services:
+  api:
+    build: .
+    container_name: node-api-boilerplate
+    command: yarn dev
+    volumes:
+      - .:/api
+    ports:
+      - 3000:3000
+    environment:
+      HOST: 0.0.0.0
+      SWAGGER_HOST: localhost
+      DB_HOST: mongodb://node-api-boilerplate-mongodb:27017
+
   mongodb:
-    container_name: blog-mongodb
+    container_name: node-api-boilerplate-mongodb
     image: mongo:4.2
     ports:
       - 27017:27017
