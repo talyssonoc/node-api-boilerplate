@@ -22,3 +22,11 @@ services:
     environment:
       MONGO_INITDB_ROOT_USERNAME: blog
       MONGO_INITDB_ROOT_PASSWORD: blog
+
+  mongo-express:
+    container_name: node-api-boilerplate-mongo-express
+    image: mongo-express
+    ports:
+      - 8081:8081
+    environment:
+      ME_CONFIG_MONGODB_URL: mongodb://blog:blog@node-api-boilerplate-mongodb:27017
