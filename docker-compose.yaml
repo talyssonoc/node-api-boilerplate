@@ -2,9 +2,10 @@ version: "3.9"
 
 services:
   api:
-    build: .
+    image: node:16.13
     container_name: node-api-boilerplate
-    command: yarn dev
+    command: bash -c "yarn install && yarn dev"
+    working_dir: /api
     volumes:
       - .:/api
     ports:
