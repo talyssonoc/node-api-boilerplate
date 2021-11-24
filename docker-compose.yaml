@@ -4,6 +4,8 @@ services:
   api:
     image: node:16.13
     container_name: node-api-boilerplate
+    depends_on:
+      - mongodb
     command: bash -c "yarn install && yarn dev"
     working_dir: /api
     volumes:
@@ -27,6 +29,8 @@ services:
   mongo-express:
     container_name: node-api-boilerplate-mongo-express
     image: mongo-express
+    depends_on:
+      - mongodb
     ports:
       - 8081:8081
     environment:
