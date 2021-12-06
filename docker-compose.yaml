@@ -14,7 +14,6 @@ services:
       - 3000:3000
     environment:
       HOST: 0.0.0.0
-      SWAGGER_HOST: localhost
       DB_HOST: mongodb://node-api-boilerplate-mongodb:27017
 
   mongodb:

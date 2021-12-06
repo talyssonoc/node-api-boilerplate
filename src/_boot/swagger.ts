@@ -7,7 +7,6 @@ type SwaggerConfig = {
   swagger: {
     title: string;
     version: string;
-    host: string;
     basePath: string;
     docEndpoint: string;
   };
@@ -20,7 +19,6 @@ const swagger = makeModule('swagger', async ({ container: { build }, config: { h
         title: swagger.title,
         version: swagger.version,
       },
-      host: `${swagger.host}:${http.port}`,
       basePath: swagger.basePath,
     },
     apis: [resolve(__dirname, '../**/interface/http/**/*.yaml'), resolve(__dirname, '../**/interface/http/**/*.ts')],
