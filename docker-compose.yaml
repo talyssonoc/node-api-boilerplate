@@ -1,11 +1,36 @@
-version: "3.5"
+version: "3.9"
 
 services:
+  api:
+    image: node:16.13
+    container_name: node-api-boilerplate
+    depends_on:
+      - mongodb
+    command: bash -c "yarn install && yarn dev"
+    working_dir: /api
+    volumes:
+      - .:/api
+    ports:
+      - 3000:3000
+    environment:
+      HOST: 0.0.0.0
+      DB_HOST: mongodb://node-api-boilerplate-mongodb:27017
+
   mongodb:
-    container_name: blog-mongodb
+    container_name: node-api-boilerplate-mongodb
     image: mongo:4.2
     ports:
       - 27017:27017
     environment:
       MONGO_INITDB_ROOT_USERNAME: blog
       MONGO_INITDB_ROOT_PASSWORD: blog
+
+  mongo-express:
+    container_name: node-api-boilerplate-mongo-express
+    image: mongo-express
+    depends_on:
+      - mongodb
+    ports:
+      - 8081:8081
+    environment:
+      ME_CONFIG_MONGODB_URL: mongodb://blog:blog@node-api-boilerplate-mongodb:27017
