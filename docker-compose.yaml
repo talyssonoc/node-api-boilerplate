@@ -12,6 +12,7 @@ services:
       - .:/api
     ports:
       - 3000:3000
+      - 2580:2580
     environment:
       HOST: 0.0.0.0
       DB_HOST: mongodb://node-api-boilerplate-mongodb:27017
