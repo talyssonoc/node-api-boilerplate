@@ -1,0 +1,3 @@
+services:
+  api:
+    command: bash -c "yarn install && yarn debug"
