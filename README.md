@@ -10,10 +10,29 @@ This version of the boilerplate is still in beta, so might contain abstractions 
 
 ## How to run the server
 
+### Requisites
+* To run the project wit Docker you need to have Docker installed in your computer: [Docker](https://docs.docker.com/engine/install/)
+* To run locally you need to have project dependencies installed globally in your machine
+
 During development, the project can be run in two different ways.
+
+### With Docker
 
 If you want to just run the application in development mode, use the following command:
 
+```sh
+$ docker compose up
+```
+
+To run the application in debug mode in a way that the execution will stop when a debugger statement is called, use:
+
+```sh
+$ docker-compose -f docker-compose.yaml -f docker-compose.debug.yaml up
+```
+
+### Locally
+
+If you want to just run the application in development mode, use the following command:
 ```sh
 $ yarn dev
 ```
@@ -44,9 +63,19 @@ $ yarn remote [server address] [REPL port]
 
 ## Tests
 
-The boilerplate is prepared to run tests using Jest. We usually group the tests in folders called `__tests__` (following Jest convention) for each module of the application. To run the tests use the following command:
+The boilerplate is prepared to run tests using Jest. We usually group the tests in folders called `__tests__` (following Jest convention) for each module of the application. To run the tests use the following commands:
 
+### With Docker
 ```sh
+$ docker compose up
+
+$ yarn test
+```
+
+### Locally
+```sh
+$ yarn dev
+
 $ yarn test
 ```
 
@@ -80,6 +109,17 @@ This boilerplate follows ideas from multiple good software development practices
 ## Going to production
 
 To run your app in production mode, you'll need to follow these steps:
+
+### With Docker
+
+1. Define any environment variable important for production
+2. Go to `docker-compose.production.yaml` file, and add necessary configurations
+3. Run the following command:
+```sh
+$ docker-compose -f docker-compose.yaml -f docker-compose.production.yaml up
+```
+
+### Locally
 
 1. Build the application with `yarn build`
 2. Define any environment variable important for production
