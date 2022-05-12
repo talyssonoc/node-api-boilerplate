@@ -58,7 +58,7 @@
   },
   "scripts": {
     "prebuild": "rimraf dist",
-    "build": "tsc",
+    "build": "tsc -p tsconfig.prod.json",
     "dev": "tsnd --transpile-only --files src/index.ts | pino-pretty -c -l",
     "debug": "tsnd --transpile-only --inspect --files src/index.ts | pino-pretty -c -l",
     "cli": "tsnd --transpile-only --files src/index.ts --cli",
