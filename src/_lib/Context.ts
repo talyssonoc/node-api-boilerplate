@@ -1,39 +1,35 @@
 import { Application, HookFn, makeApp } from '@/_lib/Application';
 
-type EntrypointFn<T extends Record<string | symbol, any>> = (arg: Context<T>) => Promise<void>;
+type RecordAny<T extends string | symbol = string | symbol> = Record<T, any>
 
-type BootFn<T extends Record<string | symbol, any>> = (arg: Context<T>) => Promise<void | HookFn>;
+type EntrypointFn<T extends RecordAny> = (arg: Context<T>) => Promise<void>;
 
-type Module<T extends Record<string | symbol, any>, F extends BootFn<T> = BootFn<any>> = {
+type BootFn<T extends RecordAny> = (arg: Context<T>) => Promise<void | HookFn>;
+
+type Module<T extends RecordAny, F extends BootFn<T> = BootFn<any>> = {
   name: string;
   fn: F;
 };
 
-type Context<T extends Record<string | symbol, any>> = {
+type Context<T extends RecordAny> = {
   app: Omit<Application, 'start' | 'onBooting'>;
   bootstrap: <M extends Module<T>[]>(...modules: M) => Promise<void>;
 } & T;
 
-type ContextProvider<T extends Record<string | symbol, any>> = {
+type ContextProvider<T extends RecordAny> = {
   makeModule: <F extends BootFn<T>, M extends Module<F>>(name: string, fn: F) => M;
   withContext: <F extends EntrypointFn<T>>(fn: F) => () => Promise<void>;
 };
 
 type ContextOptions = {
-  shutdownTimeout: number;
-  logger: Pick<Console, 'info' | 'error' | 'warn'>;
+  shutdownTimeout?: number;
+  logger?: Pick<Console, 'info' | 'error' | 'warn'>;
 };
 
-const defaultOptions: ContextOptions = {
-  shutdownTimeout: 5000,
-  logger: console,
-};
-
-const makeContext = <T extends Record<string | symbol, any>>(
+const makeContext = <T extends RecordAny>(
   localContext: T,
-  opts: Partial<ContextOptions> = {}
+  { logger = console, shutdownTimeout = 5000 }: ContextOptions
 ): ContextProvider<T> => {
-  const { shutdownTimeout, logger } = { ...defaultOptions, ...opts };
   const moduleKey = Symbol();
 
   const app = makeApp({ shutdownTimeout, logger });
