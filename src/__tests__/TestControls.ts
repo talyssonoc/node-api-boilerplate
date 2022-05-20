@@ -40,6 +40,8 @@ const makeTestControls = async (): Promise<TestControls> => {
 
   const { server } = container.cradle;
 
+  await server.ready();
+
   const clearDatabase = container.build(makeClearDatabase);
 
   const cleanUp = withContext(async ({ app }) => {
@@ -48,7 +50,7 @@ const makeTestControls = async (): Promise<TestControls> => {
   });
 
   return {
-    request: () => supertest(server),
+    request: () => supertest(server.server),
     registry: container.cradle,
     clearDatabase,
     container,

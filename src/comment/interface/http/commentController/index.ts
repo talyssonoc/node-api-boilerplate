@@ -1,16 +1,14 @@
 import { createCommentHandler } from '@/comment/interface/http/commentController/CreateCommentHandler';
-import { Router } from 'express';
+import { ApiRouter } from '@/_lib/http/apiRouter';
 
 type Dependencies = {
-  apiRouter: Router;
+  apiRouter: ApiRouter;
 };
 
-const makeCommentController = ({ apiRouter }: Dependencies) => {
-  const router = Router();
-
-  router.post('/articles/:articleId/comments', createCommentHandler);
-
-  apiRouter.use(router);
+const makeCommentController = ({ apiRouter }: Dependencies): void => {
+  apiRouter((router) => {
+    router.post('/articles/:articleId/comments', createCommentHandler);
+  });
 };
 
 export { makeCommentController };

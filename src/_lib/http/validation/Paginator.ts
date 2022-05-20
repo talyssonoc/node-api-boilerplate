@@ -1,4 +1,4 @@
-import { Request } from 'express';
+import { FastifyRequest } from 'fastify';
 import Joi, { InterfaceFrom } from 'types-joi';
 import { ValidationError } from '@/_lib/errors/ValidationError';
 import { BadRequestError } from '@/_lib/errors/BadRequestError';
@@ -29,11 +29,11 @@ type PaginatorOptions<T extends Record<string, any>> = {
 };
 
 type Paginator<T extends PaginatorOptions<Record<string, any>>> = {
-  getPagination: (req: Request) => { page: number; pageSize: number };
+  getPagination: (req: FastifyRequest) => { page: number; pageSize: number };
   getFilter: (
-    req: Request
+    req: FastifyRequest
   ) => T['filter'] extends Joi.BaseSchema<any> ? NonNullable<InterfaceFrom<NonNullable<T['filter']>>> : any;
-  getSorter: (req: Request) => { field: string; direction: 'asc' | 'desc' }[];
+  getSorter: (req: FastifyRequest) => { field: string; direction: 'asc' | 'desc' }[];
 };
 
 const defaultOptions = {
@@ -70,9 +70,14 @@ const makePaginator = <T extends PaginatorOptions<any>>(opts: Partial<T> = {}): 
   const getField = (field: string | FieldConfig): FieldConfig =>
     typeof field === 'string' ? { name: field, from: 'query' } : field;
 
-  const fromRequest = (req: Request, field: FieldConfig) => req[field.from][field.name];
+  const fromRequest = (req: FastifyRequest, field: FieldConfig): unknown => {
+    const fieldValue = req[field.from];
+    if (typeof fieldValue === 'object' && fieldValue != null) {
+      return fieldValue[field.name];
+    }
+  };
 
-  const getPagination = (req: Request): { page: number; pageSize: number } => {
+  const getPagination = (req: FastifyRequest): { page: number; pageSize: number } => {
     const pageField = getField(fields.page);
     const pageSizeField = getField(fields.pageSize);
 
@@ -91,7 +96,7 @@ const makePaginator = <T extends PaginatorOptions<any>>(opts: Partial<T> = {}): 
     };
   };
 
-  const getSorter = (req: Request): { field: string; direction: 'asc' | 'desc' }[] => {
+  const getSorter = (req: FastifyRequest): { field: string; direction: 'asc' | 'desc' }[] => {
     const sortField = getField(fields.sort);
     const sortValues = fromRequest(req, sortField);
 
@@ -110,7 +115,7 @@ const makePaginator = <T extends PaginatorOptions<any>>(opts: Partial<T> = {}): 
   };
 
   const getFilter = (
-    req: Request
+    req: FastifyRequest
   ): T['filter'] extends Joi.BaseSchema<any> ? NonNullable<InterfaceFrom<NonNullable<T['filter']>>> : any => {
     const filterField = getField(fields.filter);
     const filterValue = fromRequest(req, filterField);

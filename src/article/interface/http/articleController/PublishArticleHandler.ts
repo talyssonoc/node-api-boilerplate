@@ -1,17 +1,25 @@
 import { PublishArticle } from '@/article/application/useCases/PublishArticle';
 import { handler } from '@/_lib/http/handler';
-import { Request, Response } from 'express';
+import { HttpStatus } from '@/_lib/http/HttpStatus';
+import { makeValidator } from '@/_lib/http/validation/Validator';
+import Joi from 'types-joi';
 
 type Dependencies = {
   publishArticle: PublishArticle;
 };
 
-const publishArticleHandler = handler(({ publishArticle }: Dependencies) => async (req: Request, res: Response) => {
-  const { articleId } = req.params;
+const { getParams } = makeValidator({
+  params: Joi.object({
+    articleId: Joi.string().required(),
+  }).required(),
+});
+
+const publishArticleHandler = handler(({ publishArticle }: Dependencies) => async (request, reply) => {
+  const { articleId } = getParams(request);
 
   await publishArticle(articleId);
 
-  res.sendStatus(204);
+  reply.status(HttpStatus.NO_CONTENT);
 });
 
 export { publishArticleHandler };

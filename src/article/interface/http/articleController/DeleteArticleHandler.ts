@@ -1,16 +1,25 @@
+import { makeValidator } from '@/_lib/http/validation/Validator';
 import { DeleteArticle } from '@/article/application/useCases/DeleteArticle';
 import { handler } from '@/_lib/http/handler';
+import { HttpStatus } from '@/_lib/http/HttpStatus';
+import Joi from 'types-joi';
 
 type Dependencies = {
   deleteArticle: DeleteArticle;
 };
 
-const deleteArticleHandler = handler(({ deleteArticle }: Dependencies) => async (req, res) => {
-  const { articleId } = req.params;
+const { getParams } = makeValidator({
+  params: Joi.object({
+    articleId: Joi.string().required(),
+  }).required(),
+});
+
+const deleteArticleHandler = handler(({ deleteArticle }: Dependencies) => async (request, reply) => {
+  const { articleId } = getParams(request);
 
   await deleteArticle(articleId);
 
-  res.sendStatus(204);
+  reply.status(HttpStatus.NO_CONTENT);
 });
 
 export { deleteArticleHandler };

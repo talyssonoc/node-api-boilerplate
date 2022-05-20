@@ -1,7 +1,6 @@
-declare namespace Express {
-  export interface Request {
+declare module 'http' {
+  export interface IncomingMessage {
     id: string;
-    container: import("@/container").Container;
-    accessToken: any;
+    container: import('@/container').Container;
   }
 }

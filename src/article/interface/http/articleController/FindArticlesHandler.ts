@@ -14,10 +14,10 @@ const { getFilter, getPagination, getSorter } = makePaginator({
   }),
 });
 
-const findArticlesHandler = handler(({ findArticles }: Dependencies) => async (req, res) => {
-  const filter = getFilter(req);
-  const pagination = getPagination(req);
-  const sort = getSorter(req);
+const findArticlesHandler = handler(({ findArticles }: Dependencies) => async (request, reply) => {
+  const filter = getFilter(request);
+  const pagination = getPagination(request);
+  const sort = getSorter(request);
 
   const articles = await findArticles({
     filter,
@@ -25,7 +25,7 @@ const findArticlesHandler = handler(({ findArticles }: Dependencies) => async (r
     pagination,
   });
 
-  res.json(articles);
+  reply.send(articles);
 });
 
 export { findArticlesHandler };

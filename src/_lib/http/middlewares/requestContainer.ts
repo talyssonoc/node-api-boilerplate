@@ -1,9 +1,8 @@
-import { asValue } from 'awilix';
-import { RequestHandler } from 'express';
-import { Container } from '@/container';
+import { asValue, AwilixContainer } from 'awilix';
+import { RequestHandler } from '@/_lib/http/RequestHandler';
 
 const requestContainer =
-  (container: Container): RequestHandler =>
+  <T extends AwilixContainer>(container: T): RequestHandler =>
   (req, res, next) => {
     const scopedContainer = container.createScope();
 

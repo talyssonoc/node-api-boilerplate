@@ -1,7 +1,7 @@
 import * as Joi from 'types-joi';
-import { Request } from 'express';
 import { InterfaceFrom } from 'types-joi';
 import { ValidationError } from '@/_lib/errors/ValidationError';
+import { FastifyRequest } from 'fastify';
 
 type ValidationSchemas = {
   body?: Joi.BaseSchema<any>;
@@ -14,15 +14,15 @@ type ValidationSchemas = {
 type ValidationType<T> = T extends Joi.BaseSchema<any> ? InterfaceFrom<NonNullable<T>> : any;
 
 type ValidationHelpers<T extends ValidationSchemas> = {
-  getBody(req: Request): ValidationType<T['body']>;
-  getParams(req: Request): ValidationType<T['params']>;
-  getQuery(req: Request): ValidationType<T['query']>;
-  getCookies(req: Request): ValidationType<T['cookies']>;
-  getHeaders(req: Request): ValidationType<T['headers']>;
+  getBody(req: FastifyRequest): ValidationType<T['body']>;
+  getParams(req: FastifyRequest): ValidationType<T['params']>;
+  getQuery(req: FastifyRequest): ValidationType<T['query']>;
+  getCookies(req: FastifyRequest): ValidationType<T['cookies']>;
+  getHeaders(req: FastifyRequest): ValidationType<T['headers']>;
 };
 
 const makeValidator = <T extends ValidationSchemas>(schemas: T): ValidationHelpers<typeof schemas> => {
-  const createValidator = (key: keyof ValidationSchemas) => (req: Request) => {
+  const createValidator = (key: keyof ValidationSchemas) => (req: FastifyRequest) => {
     if (!schemas[key]) {
       return req[key];
     }

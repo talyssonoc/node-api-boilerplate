@@ -1,5 +1,6 @@
-import { ErrorRequestHandler } from 'express';
 import { Exception } from '@/_lib/errors/BaseError';
+import { HttpStatus } from '@/_lib/http/HttpStatus';
+import { ErrorHandler } from '@/_lib/http/RequestHandler';
 
 type ErrorConverter<E extends Exception> = {
   test: (err: E | any) => err is E;
@@ -27,14 +28,11 @@ const defaultOptions: ErrorHandlerOptions = {
   logger: console,
 };
 
-const errorHandler = (
-  errorMap: ErrorConverter<any>[],
-  options: Partial<ErrorHandlerOptions> = {}
-): ErrorRequestHandler => {
+const errorHandler = (errorMap: ErrorConverter<any>[], options: Partial<ErrorHandlerOptions> = {}): ErrorHandler => {
   const { logger } = { ...defaultOptions, ...options };
   const errorResponseBuilder = makeErrorResponseBuilder(errorMap);
 
-  return (err, req, res, next) => {
+  return (err, request, reply) => {
     logger.error(err.stack);
 
     const errorResponse = errorResponseBuilder(err);
@@ -42,10 +40,11 @@ const errorHandler = (
     if (errorResponse) {
       const { status, body } = errorResponse;
 
-      return res.status(status).json(typeof body === 'object' ? body : { error: body });
+      reply.status(status).send(typeof body === 'object' ? body : { error: body });
+      return;
     }
 
-    res.status(500).json({ error: err.message });
+    reply.status(HttpStatus.INTERNAL_SERVER_ERROR).send({ error: err.message });
   };
 };
 

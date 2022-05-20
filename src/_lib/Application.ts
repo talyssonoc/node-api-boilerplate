@@ -1,4 +1,4 @@
-type HookFn = () => Promise<void>;
+type HookFn = () => void | Promise<void>;
 
 type HookStore = {
   get: (lifecycle: Lifecycle) => HookFn[];

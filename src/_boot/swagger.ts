@@ -1,7 +1,7 @@
 import { makeModule } from '@/context';
 import { resolve } from 'path';
 import swaggerJSDoc from 'swagger-jsdoc';
-import swaggerUi from 'swagger-ui-express';
+import fastifySwagger from 'fastify-swagger';
 
 type SwaggerConfig = {
   swagger: {
@@ -28,7 +28,11 @@ const swagger = makeModule('swagger', async ({ container: { build }, config: { h
   const swaggerSpec = swaggerJSDoc(options);
 
   build(({ server }) => {
-    server.use(swagger.docEndpoint, swaggerUi.serve, swaggerUi.setup(swaggerSpec, { explorer: true }));
+    server.register(fastifySwagger, {
+      routePrefix: swagger.docEndpoint,
+      swagger: swaggerSpec,
+      exposeRoute: true,
+    });
   });
 });
 

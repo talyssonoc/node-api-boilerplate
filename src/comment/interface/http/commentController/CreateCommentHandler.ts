@@ -22,7 +22,7 @@ const createCommentHandler = handler(({ createComment }: Dependencies) => async 
 
   const id = await createComment({ body, articleId });
 
-  res.json({ id });
+  res.send({ id });
 });
 
 export { createCommentHandler };
