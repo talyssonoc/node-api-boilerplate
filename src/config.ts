@@ -3,10 +3,8 @@ import { environment, EnvironmentConfig, envNumber, envString } from '@/_lib/Env
 import { ServerConfig } from '@/_boot/server';
 import { DatabaseConfig } from '@/_boot/database';
 import { SwaggerConfig } from '@/_boot/swagger';
-import { AppModulesConfig } from '@/_boot/appModules';
 
-type Configuration = ServerConfig & DatabaseConfig & EnvironmentConfig & REPLConfig & SwaggerConfig & AppModulesConfig;
-
+type Configuration = ServerConfig & DatabaseConfig & EnvironmentConfig & REPLConfig & SwaggerConfig
 const config: Configuration = {
   appName: 'node-api-boilerplate',
   cli: process.argv.includes('--cli'),

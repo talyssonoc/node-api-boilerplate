@@ -4,11 +4,10 @@ import { commentModule, CommentRegistry } from '@/comment';
 
 type AppModulesMessages = ArticleMessages;
 
-type AppModulesConfig = {};
 
 const appModules = [articleModule, commentModule];
 
 type AppModulesRegistry = ArticleRegistry & CommentRegistry;
 
 export { appModules };
-export type { AppModulesMessages, AppModulesConfig, AppModulesRegistry };
+export type { AppModulesMessages, AppModulesRegistry };
