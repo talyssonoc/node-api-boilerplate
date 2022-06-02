@@ -14,6 +14,16 @@
         "<node_internals>/**"
       ],
       "restart": true
+    },
+    {
+      "name": "Attach Locally",
+      "port": 9229,
+      "request": "attach",
+      "skipFiles": [
+        "<node_internals>/**"
+      ],
+      "type": "node",
+      "restart": true
     }
   ]
 }
