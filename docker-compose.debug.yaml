@@ -1,0 +1,6 @@
+services:
+  api:
+    command: bash -c "yarn install && yarn debug"
+    ports:
+      - 9229:9229
+
