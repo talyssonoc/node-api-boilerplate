@@ -10,20 +10,20 @@ type Dependencies = {
 
 const makeMongoFindArticles =
   ({ articleCollection }: Dependencies): FindArticles =>
-  async ({ pagination, filter, sort }) => {
+  async ({ pagination, filter, sort, fields }) => {
     let match: Filter<ArticleSchema> = {
       status: 'PUBLISHED',
       deleted: false,
     };
 
-    if (filter.title) {
+    if (filter?.title) {
       match = {
         ...match,
         title: { $regex: `^${filter.title}`, $options: 'i' },
       };
     }
 
-    if (filter.publishedBetween) {
+    if (filter?.publishedBetween) {
       match = {
         ...match,
         publishedAt: {
@@ -47,23 +47,27 @@ const makeMongoFindArticles =
         ...(sort?.length
           ? [{ $sort: sort.reduce((acc, { field, direction }) => ({ [field]: direction === 'asc' ? 1 : -1 }), {}) }]
           : []),
-        {
-          $lookup: {
-            from: 'comment',
-            as: 'comments',
-            let: { articleId: '$_id' },
-            pipeline: [
+        ...(fields?.find((field) => field === 'comments')
+          ? [
               {
-                $match: {
-                  deleted: false,
-                  $expr: { $eq: ['$articleId', '$$articleId'] },
+                $lookup: {
+                  from: 'comment',
+                  as: 'comments',
+                  let: { articleId: '$_id' },
+                  pipeline: [
+                    {
+                      $match: {
+                        deleted: false,
+                        $expr: { $eq: ['$articleId', '$$articleId'] },
+                      },
+                    },
+                  ],
                 },
               },
-            ],
-          },
-        },
+            ]
+          : []),
       ])
-      .toArray<ArticleSchema & { comments: CommentSchema[]; publishedAt: Date }>();
+      .toArray<ArticleSchema & { comments?: CommentSchema[]; publishedAt: Date }>();
 
     const totalElements = await articleCollection.countDocuments(match);
 
@@ -75,7 +79,7 @@ const makeMongoFindArticles =
         title: article.title,
         content: article.content,
         publishedAt: article.publishedAt,
-        comments: article.comments.map((comment) => ({
+        comments: article.comments?.map((comment) => ({
           id: MUUID.from(comment._id).toString(),
           body: comment.body,
           createdAt: comment.createdAt,

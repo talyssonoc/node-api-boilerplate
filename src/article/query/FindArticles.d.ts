@@ -1,11 +1,11 @@
-import { PaginatedQuery, PaginatedQueryResult, QueryHandler, QueryResult, SortedPaginatedQuery } from '@/_lib/CQRS';
+import { PaginatedQueryResult, QueryHandler, SortedPaginatedWithFieldsQuery } from '@/_lib/CQRS';
 
 type ArticleListItemDTO = Readonly<{
   id: string;
   title: string;
   content: string;
   publishedAt: Date;
-  comments: ReadonlyArray<{
+  comments?: ReadonlyArray<{
     id: string;
     body: string;
     createdAt: Date;
@@ -17,6 +17,7 @@ type ArticleFilter = {
   publishedBetween?: Date[];
 };
 
-type FindArticles = QueryHandler<SortedPaginatedQuery<ArticleFilter>, PaginatedQueryResult<ArticleListItemDTO[]>>;
+type FindArticles = 
+  QueryHandler<SortedPaginatedWithFieldsQuery<ArticleFilter>, PaginatedQueryResult<ArticleListItemDTO[]>>;
 
-export { FindArticles };
+export { FindArticles, ArticleListItemDTO };

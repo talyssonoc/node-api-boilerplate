@@ -23,6 +23,7 @@ const findArticlesHandler = handler(({ findArticles }: Dependencies) => async (r
     filter,
     sort,
     pagination,
+    fields: ['comments'],
   });
 
   res.json(articles);

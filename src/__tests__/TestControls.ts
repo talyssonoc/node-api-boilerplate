@@ -8,8 +8,15 @@ type Dependencies = {
   mongo: Db;
 };
 
+type GraphQLRequest = {
+  name: string;
+  queryOrMutation: string;
+  variables?: { [key: string]: any };
+}
+
 type TestControls = Readonly<{
   request: () => SuperTest<Test>;
+  graphQLRequest: (params: GraphQLRequest) => Test;
   clearDatabase: () => Promise<void>;
   cleanUp: () => Promise<void>;
   container: Container;
@@ -47,8 +54,18 @@ const makeTestControls = async (): Promise<TestControls> => {
     await app.stop();
   });
 
+  const graphQlRequest = ({name,queryOrMutation,variables}: GraphQLRequest) => 
+    supertest(server)
+    .post('/graphql')
+    .send({
+      operationName: name,
+      query: queryOrMutation,
+      variables,
+    });
+
   return {
     request: () => supertest(server),
+    graphQLRequest: graphQlRequest,
     registry: container.cradle,
     clearDatabase,
     container,

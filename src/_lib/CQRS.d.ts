@@ -41,6 +41,13 @@ type SortedPaginatedQuery<F = void> = Query<F> &
     pagination: Pagination;
   }>;
 
+type SortedPaginatedWithFieldsQuery<F = void> = Query<F> &
+  Readonly<{
+    sort: Sort[];
+    pagination: Pagination;
+    fields: string[];
+  }>;
+
 type QueryResult<T> = Readonly<{
   data: T;
 }>;
@@ -52,4 +59,13 @@ type PaginatedQueryResult<T> = QueryResult<T> &
 
 type QueryHandler<P extends Query<any> | void, R extends QueryResult<any>> = (payload: P) => Promise<R>;
 
-export { Query, PaginatedQuery, SortedQuery, SortedPaginatedQuery, QueryResult, PaginatedQueryResult, QueryHandler };
+export {
+  Query,
+  PaginatedQuery,
+  SortedQuery,
+  SortedPaginatedQuery,
+  SortedPaginatedWithFieldsQuery,
+  QueryResult,
+  PaginatedQueryResult,
+  QueryHandler,
+};
