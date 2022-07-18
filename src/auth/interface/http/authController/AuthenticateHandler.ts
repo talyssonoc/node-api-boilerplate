@@ -16,7 +16,7 @@ const { getBody } = makeValidator({
 });
 
 const authenticateHandler = handler(({ authenticate }: Dependencies) => async (req, res) => {
-  ensureRole('WRITER'); //estava como um array, mas a func handler reclamou [ensure(), handler()]
+  // ensureRole('WRITER'); //estava como um array, mas a func handler reclamou [ensure(), handler()]
   const { username, password } = getBody(req);
 
   const securityPass = await authenticate({ username, password });

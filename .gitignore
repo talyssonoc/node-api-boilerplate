@@ -3,5 +3,6 @@ dist/
 .index/
 *.log
 .idea/
-.vscode/
 coverage/
+.vscode/*
+!.vscode/launch.json

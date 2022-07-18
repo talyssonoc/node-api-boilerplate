@@ -19,6 +19,8 @@ const authModule = makeModule('auth', async ({ container: { register, build } })
     })
   );
 
+  //registrar o signer
+  //registrar o keyPair e verifier no security.ts no boot
   register({
     ...toContainerValues(collections),
     userRepository: asFunction(makeMongoUserRepository),
