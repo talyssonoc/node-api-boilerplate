@@ -1,0 +1,14 @@
+#!/bin/bash
+
+user=""
+
+if [[ $1 == --root ]] ; then
+  user="--user root"
+  shift 1
+fi
+
+if docker-compose ps -a | grep -E -i -q 'app(\s*)running'; then
+  USER_ID=$(id -u) GROUP_ID=$(id -g) docker-compose --profile dev exec $user dev "$@"
+else
+  USER_ID=$(id -u) GROUP_ID=$(id -g) docker-compose --profile dev run --rm $user --service-ports dev "$@"
+fi

@@ -1,0 +1,23 @@
+#!/bin/bash
+
+DIR="$(cd "$(dirname "$0")" && pwd)"
+
+if [[ $1 == --root ]] ; then
+  runner="\$DIR/run --root"
+  name=$2
+  shift 2
+else
+  runner="\$DIR/run"
+  name=$1
+  shift 1
+fi
+
+cat >"$DIR/$name" <<EOL
+#!/bin/bash
+
+DIR="\$(cd "\$(dirname "\$0")" && pwd)"
+
+. "$runner" $@ "\$@"
+EOL
+
+chmod +x "$DIR/$name"

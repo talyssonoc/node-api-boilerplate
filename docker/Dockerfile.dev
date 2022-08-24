@@ -1,0 +1,30 @@
+FROM node:16-alpine
+
+ARG USER_ID=1000
+ARG GROUP_ID=1000
+
+RUN apk update \
+    && apk add --no-cache \
+        ca-certificates \
+        curl \
+        tzdata \
+        git \
+        build-base \
+        linux-headers \
+        coreutils \
+        shadow \
+        sudo \
+  && usermod -u ${USER_ID} node \
+  && groupmod -g ${GROUP_ID} node \
+  && mkdir /opt/node-app \
+  && chown -R node:node /opt/node-app \
+  && mkdir /home/node/.npm-packages \
+  && chown -R node:node /home/node/.npm-packages \
+  && npm config set -g prefix "/home/node/.npm-packages" \
+  && echo "node ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
+
+ENV PATH="$PATH:/home/node/.npm-packages/bin"
+
+USER node
+
+WORKDIR /opt/node-app

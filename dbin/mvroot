@@ -1,0 +1,11 @@
+#!/bin/bash
+
+PARENT_DIR="$(cd "$(dirname "$0")" && cd .. && pwd)"
+
+TARGET_DIR="$1"
+
+mv "$PARENT_DIR/README.md" "$PARENT_DIR/INSTRUCTIONS.md" 2>/dev/null
+
+(shopt -s dotglob; mv "$PARENT_DIR/$TARGET_DIR"/* "$PARENT_DIR")
+
+rm -r "${PARENT_DIR:?}/$TARGET_DIR"
