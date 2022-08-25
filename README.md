@@ -53,7 +53,7 @@ $ yarn test
 
 ## Docker wrapper
 
-This project includes a [docker wrapper](https://github.com/brunohcastro/node-base) for development. Any command can be executed by calling the scripts under the `dbin/` folder.
+In case you want to use Docker to run it, this project includes a [docker wrapper](https://github.com/brunohcastro/node-base) for development. Any command can be executed by calling the scripts under the `dbin/` folder.
 
 ```sh
 $ dbin/yarn dev
