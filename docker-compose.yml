@@ -2,7 +2,7 @@ version: '3.9'
 
 services:
   mongodb:
-    container_name: nab-mongodb
+    container_name: blog-mongodb
     image: mongo:4.2
     ports:
       - 27017:27017
@@ -13,17 +13,17 @@ services:
       MONGO_INITDB_ROOT_PASSWORD: blog
 
   mongo-express:
-    container_name: nab-mongo-express
+    container_name: blog-mongo-express
     image: mongo-express
     depends_on:
       - mongodb
     ports:
       - 8081:8081
     environment:
-      ME_CONFIG_MONGODB_URL: mongodb://blog:blog@nab-mongodb:27017
+      ME_CONFIG_MONGODB_URL: mongodb://blog:blog@blog-mongodb:27017
 
   dev:
-    container_name: nab-dev
+    container_name: blog-dev
     build:
       context: .
       dockerfile: ./docker/Dockerfile.dev

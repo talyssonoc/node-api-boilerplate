@@ -4,9 +4,9 @@ import { makePredicate } from '@/_lib/Predicate';
 namespace NotFoundError {
   const type = Symbol();
   const name = 'NotFoundError';
-  const _message = 'Not Found';
+  const defaultMessage = 'Not Found';
 
-  export const create = (message: string = _message, code: string = name): Exception =>
+  export const create = (message: string = defaultMessage, code: string = name): Exception =>
     new BaseError({ type, name, code, message });
 
   export const is = makePredicate<Exception>(type);

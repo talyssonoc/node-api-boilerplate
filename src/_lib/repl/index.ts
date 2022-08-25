@@ -1,6 +1,6 @@
 import REPL, { REPLEval, ReplOptions, REPLServer } from 'repl';
 import vm from 'vm';
-import { createServer, Server } from 'net';
+import { createServer, Server, Socket } from 'net';
 
 type REPLProps = {
   context: Record<string, any>;
@@ -44,7 +44,7 @@ const makeREPL = ({ context, prompt, cli, remote, logger }: REPLProps): REPLInst
     return repl;
   };
 
-  let destroySocket: (...args: any) => void = () => null;
+  let destroySocket: Socket['destroy'] = () => null;
 
   return {
     create,

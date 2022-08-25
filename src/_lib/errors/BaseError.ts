@@ -1,3 +1,5 @@
+import { PartializeProperties } from '@/_lib/PartializeProperties';
+
 type Exception<M = any> = Readonly<{
   name: string;
   type: symbol;
@@ -6,7 +8,7 @@ type Exception<M = any> = Readonly<{
   meta?: M;
 }>;
 
-type Props<M = any> = Omit<Exception<M>, 'name'> & { name?: string };
+type Props<M = any> = PartializeProperties<Exception<M>, 'name'>;
 
 class BaseError<M = any> extends Error implements Exception<M> {
   public readonly type: symbol;

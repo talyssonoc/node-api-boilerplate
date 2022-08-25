@@ -19,7 +19,7 @@ const makePublishArticle =
     if (Article.isPublished(article)) {
       throw BusinessError.create(
         // eslint-disable-next-line max-len
-        `Can't republish the Article(id=${payload}) because it was already published on ${article.publishedAt.toISOString()}`
+        `Can't republish the Article(id=${payload}) because it was already published at ${article.publishedAt.toISOString()}`
       );
     }
 

@@ -1,4 +1,3 @@
-    accessToken: any;
 declare module 'http' {
   export interface IncomingMessage {
     id?: string;

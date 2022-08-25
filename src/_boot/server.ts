@@ -6,7 +6,7 @@ import { requestContainer } from '@/_lib/http/middlewares/requestContainer';
 import { statusHandler } from '@/_lib/http/middlewares/statusHandler';
 import { errorConverters } from '@/_sharedKernel/interface/http/ErrorConverters';
 import { asValue } from 'awilix';
-import cors from 'cors';
+import cors, { CorsOptions } from 'cors';
 import express, { Application, json, Router, urlencoded } from 'express';
 import helmet from 'helmet';
 import { createServer, Server } from 'http';
@@ -15,11 +15,7 @@ type ServerConfig = {
   http: {
     host: string;
     port: number;
-    cors?:
-      | boolean
-      | {
-          allowedOrigins: string | string[];
-        };
+    cors?: boolean | CorsOptions;
   };
 };
 
@@ -42,15 +38,7 @@ const server = makeModule(
     server.use(shutdownHandler());
 
     if (http.cors) {
-      server.use((req, res, next) => {
-        return cors({
-          allowedHeaders:
-            'accept, accept-encoding, origin, referer, sec-fetch-*, user-agent, content-type, authorization',
-          credentials: true,
-          origin: typeof http.cors === 'boolean' ? req.get('origin') : http.cors?.allowedOrigins,
-          methods: '*',
-        })(req, res, next);
-      });
+      server.use(cors(typeof http.cors !== 'boolean' ? http.cors : {}));
     }
 
     server.use(httpLogger());
