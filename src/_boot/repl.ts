@@ -1,10 +1,16 @@
 import { makeModule } from '@/context';
-import { makeREPL, REPLConfigType } from '@/_lib/repl';
+import { makeREPL } from '@/_lib/repl';
 
-type REPLConfig = REPLConfigType<{ appName: string; cli: boolean; repl: { port: number } }>;
+type REPLConfig = { appName: string; environment: string; cli: boolean; repl: { port: number } };
 
 const repl = makeModule('repl', async ({ app: { onReady, terminate }, container, config, logger }) => {
-  const repl = makeREPL({ container, config, logger });
+  const repl = makeREPL({
+    context: { registry: container.cradle, container },
+    cli: config.cli,
+    prompt: config.appName,
+    remote: !['production', 'test'].includes(config.environment) && config.repl,
+    logger,
+  });
 
   onReady(async () => {
     await repl.start({ terminate });

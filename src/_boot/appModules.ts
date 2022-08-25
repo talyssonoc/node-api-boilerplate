@@ -1,9 +1,7 @@
 import { articleModule, ArticleRegistry } from '@/article';
-import { ArticleMessages } from '@/article/messages';
 import { commentModule, CommentRegistry } from '@/comment';
 
-type AppModulesMessages = ArticleMessages;
-
+// eslint-disable-next-line @typescript-eslint/ban-types
 type AppModulesConfig = {};
 
 const appModules = [articleModule, commentModule];
@@ -11,4 +9,4 @@ const appModules = [articleModule, commentModule];
 type AppModulesRegistry = ArticleRegistry & CommentRegistry;
 
 export { appModules };
-export type { AppModulesMessages, AppModulesConfig, AppModulesRegistry };
+export type { AppModulesConfig, AppModulesRegistry };
