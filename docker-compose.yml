@@ -1,0 +1,47 @@
+version: '3.9'
+
+services:
+  mongodb:
+    container_name: blog-mongodb
+    image: mongo:4.2
+    ports:
+      - 27017:27017
+    volumes:
+      - mongo_data:/data/db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: blog
+      MONGO_INITDB_ROOT_PASSWORD: blog
+
+  mongo-express:
+    container_name: blog-mongo-express
+    image: mongo-express
+    depends_on:
+      - mongodb
+    ports:
+      - 8081:8081
+    environment:
+      ME_CONFIG_MONGODB_URL: mongodb://blog:blog@blog-mongodb:27017
+
+  dev:
+    container_name: blog-dev
+    build:
+      context: .
+      dockerfile: ./docker/Dockerfile.dev
+      args:
+        USER_ID: ${USER_ID:-1000}
+        GROUP_ID: ${GROUP_ID:-1000}
+    depends_on:
+      - mongodb
+    network_mode: host
+    environment:
+      - NODE_ENV=${NODE_ENV:-development}
+    volumes:
+      - .:/opt/node-app
+      - npm_cache:/home/node/.npm-packages
+    tty: true
+    profiles:
+      - dev
+
+volumes:
+  npm_cache:
+  mongo_data:

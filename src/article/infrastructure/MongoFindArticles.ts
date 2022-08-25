@@ -1,6 +1,6 @@
 import { ArticleCollection, ArticleSchema } from '@/article/infrastructure/ArticleCollection';
 import MUUID from 'uuid-mongodb';
-import { FindArticles } from '@/article/query/FindArticles';
+import { FindArticles } from '@/article/application/query/FindArticles';
 import { CommentSchema } from '@/comment/infrastructure/CommentCollection';
 import { Filter } from 'mongodb';
 

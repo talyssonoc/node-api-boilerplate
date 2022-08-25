@@ -6,38 +6,31 @@ import { ArticleRepository } from '@/article/domain/ArticleRepository';
 import { ArticleCollection, initArticleCollection } from '@/article/infrastructure/ArticleCollection';
 import { makeMongoArticleRepository } from '@/article/infrastructure/MongoArticleRepository';
 import { makeArticleController } from '@/article/interface/http/articleController';
-import { FindArticles } from '@/article/query/FindArticles';
+import { FindArticles } from '@/article/application/query/FindArticles';
 import { withMongoProvider } from '@/_lib/MongoProvider';
 import { toContainerValues } from '@/_lib/di/containerAdapters';
-import { makeMongoFindArticles } from '@/article/query/impl/MongoFindArticles';
+import { makeMongoFindArticles } from '@/article/infrastructure/MongoFindArticles';
 import { makeModule } from '@/context';
 import { makeArticleCreatedEmailListener } from '@/article/interface/email/ArticleCreatedEmailListener';
-import { articleMessages } from '@/article/messages';
 
-const articleModule = makeModule(
-  'article',
-  async ({ container: { register, build }, messageBundle: { updateBundle } }) => {
-    const collections = await build(
-      withMongoProvider({
-        articleCollection: initArticleCollection,
-      })
-    );
+const articleModule = makeModule('article', async ({ container: { register }, initialize }) => {
+  const [collections] = await initialize(
+    withMongoProvider({
+      articleCollection: initArticleCollection,
+    })
+  );
 
-    updateBundle(articleMessages);
+  register({
+    ...toContainerValues(collections),
+    articleRepository: asFunction(makeMongoArticleRepository),
+    createArticle: asFunction(makeCreateArticle),
+    publishArticle: asFunction(makePublishArticle),
+    deleteArticle: asFunction(makeDeleteArticle),
+    findArticles: asFunction(makeMongoFindArticles),
+  });
 
-    register({
-      ...toContainerValues(collections),
-      articleRepository: asFunction(makeMongoArticleRepository),
-      createArticle: asFunction(makeCreateArticle),
-      publishArticle: asFunction(makePublishArticle),
-      deleteArticle: asFunction(makeDeleteArticle),
-      findArticles: asFunction(makeMongoFindArticles),
-    });
-
-    build(makeArticleController);
-    build(makeArticleCreatedEmailListener);
-  }
-);
+  await initialize(makeArticleController, makeArticleCreatedEmailListener);
+});
 
 type ArticleRegistry = {
   articleCollection: ArticleCollection;

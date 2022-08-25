@@ -3,10 +3,11 @@ import { makePredicate } from '@/_lib/Predicate';
 
 namespace ForbiddenError {
   const type = Symbol();
-  const code = 'ForbiddenError';
-  const message = 'Forbidden';
+  const name = 'ForbiddenError';
+  const defaultMessage = 'Forbidden';
 
-  export const create = (customMsg?: string): Exception => new BaseError({ type, code, message: customMsg || message });
+  export const create = (message: string = defaultMessage, code: string = name): Exception =>
+    new BaseError({ type, name, code, message });
 
   export const is = makePredicate<Exception>(type);
 }

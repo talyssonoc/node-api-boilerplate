@@ -16,6 +16,7 @@ If you want to just run the application in development mode, use the following c
 
 ```sh
 $ yarn dev
+
 ```
 
 To run the application in debug mode in a way that the execution will stop when a debugger statement is called, use:
@@ -48,6 +49,68 @@ The boilerplate is prepared to run tests using Jest. We usually group the tests 
 
 ```sh
 $ yarn test
+```
+
+## Docker wrapper
+
+In case you want to use Docker to run it, this project includes a [docker wrapper](https://github.com/brunohcastro/node-base) for development. Any command can be executed by calling the scripts under the `dbin/` folder.
+
+```sh
+$ dbin/yarn dev
+
+$ dbin/yarn debug
+
+$ dbin/yarn cli
+
+$ dbin/yarn remote [server address] [REPL port]
+
+$ dbin/yarn test
+```
+
+The container runs using host networking, so there's no need to map ports. Keep in mind that environment variables should be added to the docker-compose.yml.
+
+### Wrapper commands
+
+```sh
+# Runs the command inside an ephemeral container using the app service described in the docker-compose file as a base (use the --root flag if the command should be run as root)
+$ dbin/run [--root] <command>
+
+# Rebuild the image after any changes to the dockerfile
+$ dbin/build
+
+# Remove all containers and their volumes (WARNING any cache or files not stored in the filesystem will be deleted)
+$ dbin/dispose
+
+# Appends a RUN command to the base image, useful to install new packages
+$ dbin/chimg <command>
+```
+
+### Wrapper Aliases
+
+```sh
+# Creates a new <name> file in dbin to alias the <command> inside the docker container (use the --root flag if the command should be run as root)
+$ dbin/mkalias [--root] <name> <command>
+
+# Opens a new terminal in the project folder (use the --root flag if the shell should assume the root user)
+$ dbin/shell [--root]
+
+# Runs npm in the project folder
+$ dbin/npm
+
+# Runs npx in the project folder
+$ dbin/npx
+
+# Runs yarn in the project folder
+$ dbin/yarn
+```
+
+### Wrapper Helpers
+
+```bash
+# Adds dbin folder to the PATH only for the current terminal session.
+$ source dbin/local-env
+
+# After using this command you can use the any script inside the dbin folder without the dbin/ prefix
 ```
 
 ## Dependency injection

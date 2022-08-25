@@ -3,9 +3,11 @@ import { makePredicate } from '@/_lib/Predicate';
 
 namespace BadRequestError {
   const type = Symbol();
-  const code = 'BadRequestError';
+  const name = 'BadRequestError';
+  const defaultMessage = 'Bad Request';
 
-  export const create = (message: string): Exception => new BaseError({ type, code, message });
+  export const create = (message: string = defaultMessage, code: string = name): Exception =>
+    new BaseError({ type, name, code, message });
 
   export const is = makePredicate<Exception>(type);
 }

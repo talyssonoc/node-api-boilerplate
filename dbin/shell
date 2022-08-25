@@ -1,0 +1,10 @@
+#!/bin/bash
+
+DIR="$(cd "$(dirname "$0")" && pwd)"
+
+if [[ $1 == --root ]] ; then
+  shift
+  . "$DIR/run" --root /bin/ash "$@"
+else
+  . "$DIR/run" /bin/ash "$@"
+fi

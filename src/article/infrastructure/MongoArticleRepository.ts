@@ -2,6 +2,7 @@ import { Article } from '@/article/domain/Article';
 import { ArticleRepository } from '@/article/domain/ArticleRepository';
 import { ArticleCollection } from '@/article/infrastructure/ArticleCollection';
 import { ArticleMapper } from '@/article/infrastructure/ArticleMapper';
+import { NotFoundError } from '@/_lib/errors/NotFoundError';
 import { ArticleId } from '@/_sharedKernel/domain/ArticleId';
 import { ArticleIdProvider } from '@/_sharedKernel/infrastructure/ArticleIdProvider';
 import { from, v4 } from 'uuid-mongodb';
@@ -18,7 +19,7 @@ const makeMongoArticleRepository = ({ articleCollection }: Dependencies): Articl
     const article = await articleCollection.findOne({ _id: from(id), deleted: false });
 
     if (!article) {
-      throw new Error('Article not found');
+      throw NotFoundError.create();
     }
 
     return ArticleMapper.toEntity(article);

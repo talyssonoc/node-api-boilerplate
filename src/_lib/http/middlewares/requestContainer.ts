@@ -4,7 +4,7 @@ import { Container } from '@/container';
 
 const requestContainer =
   (container: Container): RequestHandler =>
-  (req, res, next) => {
+  (req, _, next) => {
     const scopedContainer = container.createScope();
 
     scopedContainer.register({

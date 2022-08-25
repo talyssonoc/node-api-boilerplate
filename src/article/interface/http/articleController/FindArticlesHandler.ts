@@ -1,4 +1,4 @@
-import { FindArticles } from '@/article/query/FindArticles';
+import { FindArticles } from '@/article/application/query/FindArticles';
 import { handler } from '@/_lib/http/handler';
 import Joi from 'types-joi';
 import { makePaginator } from '@/_lib/http/validation/Paginator';
