@@ -8,8 +8,8 @@ import { withMongoProvider } from '@/_lib/MongoProvider';
 import { toContainerValues } from '@/_lib/di/containerAdapters';
 import { asFunction } from 'awilix';
 
-const commentModule = makeModule('comment', async ({ container: { register, build } }) => {
-  const collections = await build(
+const commentModule = makeModule('comment', async ({ container: { register }, initialize }) => {
+  const [collections] = await initialize(
     withMongoProvider({
       commentCollection: initCommentCollection,
     })
@@ -21,7 +21,7 @@ const commentModule = makeModule('comment', async ({ container: { register, buil
     createComment: asFunction(makeCreateComment),
   });
 
-  build(makeCommentController);
+  await initialize(makeCommentController);
 });
 
 type CommentRegistry = {

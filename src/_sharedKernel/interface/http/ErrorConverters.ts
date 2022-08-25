@@ -15,7 +15,8 @@ const errorConverters = [
     return {
       status,
       body: {
-        error: err.code,
+        error: err.name,
+        code: err.code,
         status,
         message: err.message,
         details: err.meta?.error.details.map((detail) => ({
@@ -28,7 +29,8 @@ const errorConverters = [
   errorConverter(BadRequestError.is, (err) => ({
     status: HttpStatus.BAD_REQUEST,
     body: {
-      error: err.code,
+      error: err.name,
+      code: err.code,
       status: HttpStatus.BAD_REQUEST,
       message: err.message,
     },
@@ -36,7 +38,8 @@ const errorConverters = [
   errorConverter(NotFoundError.is, (err) => ({
     status: HttpStatus.NOT_FOUND,
     body: {
-      error: err.code,
+      error: err.name,
+      code: err.code,
       status: HttpStatus.NOT_FOUND,
       message: err.message,
     },
@@ -44,7 +47,8 @@ const errorConverters = [
   errorConverter(UnauthorizedError.is, (err) => ({
     status: HttpStatus.UNAUTHORIZED,
     body: {
-      error: err.code,
+      error: err.name,
+      code: err.code,
       status: HttpStatus.UNAUTHORIZED,
       message: err.message,
     },
@@ -52,7 +56,8 @@ const errorConverters = [
   errorConverter(ForbiddenError.is, (err) => ({
     status: HttpStatus.FORBIDDEN,
     body: {
-      error: err.code,
+      error: err.name,
+      code: err.code,
       status: HttpStatus.FORBIDDEN,
       message: err.message,
     },
@@ -60,7 +65,8 @@ const errorConverters = [
   errorConverter(BusinessError.is, (err) => ({
     status: HttpStatus.CONFLICT,
     body: {
-      error: err.code,
+      error: err.name,
+      code: err.code,
       status: HttpStatus.CONFLICT,
       kind: err.meta?.key,
       message: err.message,
@@ -69,8 +75,14 @@ const errorConverters = [
   errorConverter(
     (err: any | BaseError): err is BaseError => err instanceof BaseError,
     (err) => ({
-      status: HttpStatus.BAD_REQUEST,
-      body: err.message,
+      status: HttpStatus.INTERNAL_SERVER_ERROR,
+      body: {
+        error: err.name,
+        code: err.code,
+        status: HttpStatus.INTERNAL_SERVER_ERROR,
+        meta: err.meta,
+        message: err.message,
+      },
     })
   ),
 ];
