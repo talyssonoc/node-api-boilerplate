@@ -3,7 +3,6 @@ import { errorHandler } from '@/_lib/http/middlewares/errorHandler';
 import { gracefulShutdown } from '@/_lib/http/middlewares/gracefulShutdown';
 import { httpLogger, reqStartTimeKey } from '@/_lib/http/middlewares/httpLogger';
 import { requestContainer } from '@/_lib/http/middlewares/requestContainer';
-import { requestId } from '@/_lib/http/middlewares/requestId';
 import { statusHandler } from '@/_lib/http/middlewares/statusHandler';
 import { errorConverters } from '@/_sharedKernel/interface/http/ErrorConverters';
 import { asValue } from 'awilix';
@@ -54,9 +53,8 @@ const server = makeModule(
       });
     }
 
-    server.use(requestId());
-    server.use(requestContainer(container));
     server.use(httpLogger());
+    server.use(requestContainer(container));
     server.use(helmet());
     server.use(json());
     server.use(urlencoded({ extended: false }));
