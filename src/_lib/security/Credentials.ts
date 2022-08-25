@@ -1,36 +1,34 @@
 import { makeWithInvariants } from '@/_lib/WithInvariants';
 
 namespace Credentials {
-  type Credentials<M extends Record<string, any> = Record<string, any>, R = string> = Readonly<{
+  type Credentials = Readonly<{
     principalId: string;
-    role: R[];
-    meta?: M;
+    roles: string[];
+    meta?: Record<string, any>;
     emittedAt?: Date;
   }>;
 
   const withInvariants = makeWithInvariants<Credentials>((self, assert) => {
     assert(self.principalId, 'Credentials principalId is mandatory');
-    assert(self.role.length, 'Credentials should have at least one role');
+    assert(self.roles.length, 'Credentials should have at least one role');
   });
 
-  type CredentialsProps<M extends Record<string, any> = Record<string, any>, R = string> = Readonly<{
+  type CredentialsProps = Readonly<{
     principalId: string;
-    role: R[];
-    meta?: M;
+    roles: string[];
+    meta?: Record<string, any>;
   }>;
 
   export const create = withInvariants(
-    <M extends Record<string, any> = Record<string, any>, R = string>(
-      props: CredentialsProps<M, R>
-    ): Credentials<M, R> => ({
+    (props: CredentialsProps): Credentials => ({
       principalId: props.principalId,
-      role: props.role,
+      roles: props.roles,
       meta: props.meta,
       emittedAt: new Date(),
     })
   );
 
-  export type Type<M extends Record<string, any> = Record<string, any>, R = string> = Credentials<M, R>;
+  export type Type = Credentials;
 }
 
 export { Credentials };

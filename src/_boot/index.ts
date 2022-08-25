@@ -11,8 +11,15 @@ import { swagger, SwaggerConfig } from '@/_boot/swagger';
 import { EnvironmentConfig } from '@/_lib/Environment';
 import { ContextApp } from '@/_lib/Context';
 import { Container, Initialize } from '@/container';
+import { security, SecurityConfig, SecurityRegistry } from '@/_boot/security';
 
-type MainConfig = ServerConfig & DatabaseConfig & EnvironmentConfig & REPLConfig & SwaggerConfig & AppModulesConfig;
+type MainConfig = DatabaseConfig &
+  ServerConfig &
+  SecurityConfig &
+  EnvironmentConfig &
+  REPLConfig &
+  SwaggerConfig &
+  AppModulesConfig;
 
 const main = withContext(async ({ app, container, config, bootstrap, logger, initialize }) => {
   container.register({
@@ -24,7 +31,7 @@ const main = withContext(async ({ app, container, config, bootstrap, logger, ini
     config: asValue(config),
   });
 
-  await bootstrap(database, server, swagger, pubSub, repl, ...appModules);
+  await bootstrap(database, server, security, swagger, pubSub, repl, ...appModules);
 });
 
 type MainRegistry = {
@@ -36,6 +43,7 @@ type MainRegistry = {
   config: Configuration;
 } & DatabaseRegistry &
   ServerRegistry &
+  SecurityRegistry &
   PubSubRegistry &
   AppModulesRegistry;
 

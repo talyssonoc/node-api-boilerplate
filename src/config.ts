@@ -1,5 +1,6 @@
 import { MainConfig } from '@/_boot';
 import { environment, EnvironmentConfig, envNumber, envString } from '@/_lib/Environment';
+import { join } from 'path';
 
 type Configuration = MainConfig & EnvironmentConfig;
 
@@ -25,6 +26,10 @@ const config: Configuration = {
     host: envString('DB_HOST', 'mongodb://localhost:27017'),
     username: envString('DB_USER', 'blog'),
     password: envString('DB_PASS', 'blog'),
+  },
+  keyPair: {
+    publicKey: envString('PUBLIC_KEY', join(process.cwd(), 'secrets/public-key.pem')),
+    privateKey: envString('PRIVATE_KEY', join(process.cwd(), 'secrets/private-key.pem')),
   },
 };
 
