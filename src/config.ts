@@ -1,11 +1,7 @@
-import { REPLConfig } from '@/_boot/repl';
+import { MainConfig } from '@/_boot';
 import { environment, EnvironmentConfig, envNumber, envString } from '@/_lib/Environment';
-import { ServerConfig } from '@/_boot/server';
-import { DatabaseConfig } from '@/_boot/database';
-import { SwaggerConfig } from '@/_boot/swagger';
-import { AppModulesConfig } from '@/_boot/appModules';
 
-type Configuration = ServerConfig & DatabaseConfig & EnvironmentConfig & REPLConfig & SwaggerConfig & AppModulesConfig;
+type Configuration = MainConfig & EnvironmentConfig;
 
 const config: Configuration = {
   appName: 'node-api-boilerplate',

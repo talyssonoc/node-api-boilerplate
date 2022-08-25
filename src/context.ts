@@ -1,9 +1,8 @@
 import { makeContext } from '@/_lib/Context';
-import { container } from '@/container';
+import { container, initialize } from '@/container';
 import { config } from '@/config';
 import { logger } from '@/_lib/logger';
-import { messageBundle } from '@/messages';
 
-const { withContext, makeModule } = makeContext({ config, container, logger, messageBundle }, { logger });
+const { withContext, makeModule } = makeContext({ config, container, logger, initialize }, { logger });
 
 export { withContext, makeModule };

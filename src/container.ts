@@ -1,15 +1,14 @@
-import { createContainer } from 'awilix';
+import { BuildResolverOptions, createContainer } from 'awilix';
 import { MainRegistry } from '@/_boot';
-import { DatabaseRegistry } from '@/_boot/database';
-import { ServerRegistry } from '@/_boot/server';
-import { PubSubRegistry } from '@/_boot/pubSub';
-import { AppModulesRegistry } from '@/_boot/appModules';
+import { makeInitialize } from '@/_lib/Initialize';
 
-type Registry = MainRegistry & DatabaseRegistry & ServerRegistry & PubSubRegistry & AppModulesRegistry;
+type Registry = MainRegistry;
 
 const container = createContainer<Registry>();
+const initialize = makeInitialize<Registry, BuildResolverOptions<any>>(container.build);
 
 type Container = typeof container;
+type Initialize = typeof initialize;
 
-export { container };
-export type { Container, Registry };
+export { container, initialize };
+export type { Container, Registry, Initialize };

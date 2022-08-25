@@ -9,8 +9,10 @@ type Module<T extends Record<string | symbol, any>, F extends BootFn<T> = BootFn
   fn: F;
 };
 
+type ContextApp = Omit<Application, 'start' | 'onBooting'>;
+
 type Context<T extends Record<string | symbol, any>> = {
-  app: Omit<Application, 'start' | 'onBooting'>;
+  app: ContextApp;
   bootstrap: <M extends Module<T>[]>(...modules: M) => Promise<void>;
 } & T;
 
@@ -109,3 +111,4 @@ const makeContext = <T extends Record<string | symbol, any>>(
 };
 
 export { makeContext };
+export type { ContextApp };
