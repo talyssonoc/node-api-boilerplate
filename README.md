@@ -53,7 +53,7 @@ $ yarn test
 
 ## Docker wrapper
 
-This project includes a docker wrapper for development. Any command can be executed by calling the scripts under the `dbin/` folder.
+This project includes a [docker wrapper](https://github.com/brunohcastro/node-base) for development. Any command can be executed by calling the scripts under the `dbin/` folder.
 
 ```sh
 $ dbin/yarn dev
@@ -63,6 +63,8 @@ $ dbin/yarn debug
 $ dbin/yarn cli
 
 $ dbin/yarn remote [server address] [REPL port]
+
+$ dbin/yarn test
 ```
 
 The container runs using host networking, so there's no need to map ports. Keep in mind that environment variables should be added to the docker-compose.yml.
